@@ -49,6 +49,16 @@ class Company extends Model
     }
 
     /**
+     * Get the departments defined for this company.
+     *
+     * @return HasMany<Department, $this>
+     */
+    public function departments(): HasMany
+    {
+        return $this->hasMany(Department::class);
+    }
+
+    /**
      * @return HasMany<Workflow, $this>
      */
     public function workflows(): HasMany

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -41,6 +42,16 @@ class User extends Authenticatable implements HasLocalePreference
         return $this->belongsToMany(Role::class)
             ->withPivot('company_id')
             ->withTimestamps();
+    }
+
+    /**
+     * Get the departments managed by this user.
+     *
+     * @return HasMany<Department, $this>
+     */
+    public function managedDepartments(): HasMany
+    {
+        return $this->hasMany(Department::class, 'manager_id');
     }
 
     public function hasPermission(string $permissionKey, ?int $companyId = null): bool
