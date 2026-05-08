@@ -19,7 +19,11 @@ class ApplyLocale
      */
     public function handle(Request $request, Closure $next): Response
     {
-        App::setLocale($this->localeResolver->resolveForRequest($request));
+        $locale = $this->localeResolver->resolveForRequest($request);
+
+        App::setLocale($locale);
+        $request->attributes->set('locale', $locale);
+        $request->attributes->set('text_direction', $this->localeResolver->direction($locale));
 
         return $next($request);
     }
