@@ -69,6 +69,16 @@ class Company extends Model
     }
 
     /**
+     * Get the employees assigned to this company.
+     *
+     * @return HasMany<Employee, $this>
+     */
+    public function employees(): HasMany
+    {
+        return $this->hasMany(Employee::class);
+    }
+
+    /**
      * @return HasMany<Workflow, $this>
      */
     public function workflows(): HasMany

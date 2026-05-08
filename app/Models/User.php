@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -52,6 +53,16 @@ class User extends Authenticatable implements HasLocalePreference
     public function managedDepartments(): HasMany
     {
         return $this->hasMany(Department::class, 'manager_id');
+    }
+
+    /**
+     * Get the employee profile linked to this user.
+     *
+     * @return HasOne<Employee, $this>
+     */
+    public function employeeProfile(): HasOne
+    {
+        return $this->hasOne(Employee::class);
     }
 
     public function hasPermission(string $permissionKey, ?int $companyId = null): bool

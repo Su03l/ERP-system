@@ -1,0 +1,104 @@
+<?php
+
+namespace App\Models;
+
+use App\Models\Concerns\BelongsToCompany;
+use Database\Factories\EmployeeFactory;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+#[Fillable([
+    'company_id',
+    'user_id',
+    'department_id',
+    'job_title_id',
+    'manager_id',
+    'employee_number',
+    'first_name_ar',
+    'last_name_ar',
+    'first_name_en',
+    'last_name_en',
+    'email',
+    'phone',
+    'national_id',
+    'nationality',
+    'gender',
+    'date_of_birth',
+    'hire_date',
+    'employment_status',
+    'work_type',
+    'basic_salary',
+])]
+class Employee extends Model
+{
+    /** @use HasFactory<EmployeeFactory> */
+    use BelongsToCompany, HasFactory, SoftDeletes;
+
+    /**
+     * Get the user account linked to this employee.
+     *
+     * @return BelongsTo<User, $this>
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the department this employee belongs to.
+     *
+     * @return BelongsTo<Department, $this>
+     */
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class);
+    }
+
+    /**
+     * Get the job title assigned to this employee.
+     *
+     * @return BelongsTo<JobTitle, $this>
+     */
+    public function jobTitle(): BelongsTo
+    {
+        return $this->belongsTo(JobTitle::class);
+    }
+
+    /**
+     * Get the employee's manager.
+     *
+     * @return BelongsTo<Employee, $this>
+     */
+    public function manager(): BelongsTo
+    {
+        return $this->belongsTo(Employee::class, 'manager_id');
+    }
+
+    /**
+     * Get employees managed by this employee.
+     *
+     * @return HasMany<Employee, $this>
+     */
+    public function directReports(): HasMany
+    {
+        return $this->hasMany(Employee::class, 'manager_id');
+    }
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'date_of_birth' => 'date',
+            'hire_date' => 'date',
+            'basic_salary' => 'decimal:2',
+        ];
+    }
+}

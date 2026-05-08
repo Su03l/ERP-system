@@ -55,4 +55,14 @@ class Department extends Model
     {
         return $this->belongsTo(User::class, 'manager_id');
     }
+
+    /**
+     * Get the employees assigned to this department.
+     *
+     * @return HasMany<Employee, $this>
+     */
+    public function employees(): HasMany
+    {
+        return $this->hasMany(Employee::class);
+    }
 }

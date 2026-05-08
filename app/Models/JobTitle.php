@@ -7,6 +7,7 @@ use Database\Factories\JobTitleFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable([
@@ -21,4 +22,14 @@ class JobTitle extends Model
 {
     /** @use HasFactory<JobTitleFactory> */
     use BelongsToCompany, HasFactory, SoftDeletes;
+
+    /**
+     * Get the employees assigned to this job title.
+     *
+     * @return HasMany<Employee, $this>
+     */
+    public function employees(): HasMany
+    {
+        return $this->hasMany(Employee::class);
+    }
 }
