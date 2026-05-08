@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\JobTitleStatus;
 use App\Models\Concerns\BelongsToCompany;
 use Database\Factories\JobTitleFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -31,5 +32,17 @@ class JobTitle extends Model
     public function employees(): HasMany
     {
         return $this->hasMany(Employee::class);
+    }
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'status' => JobTitleStatus::class,
+        ];
     }
 }

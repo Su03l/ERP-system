@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\JobTitleStatus;
 use App\Models\Company;
 use App\Models\JobTitle;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -24,7 +25,7 @@ class JobTitleFactory extends Factory
             'name_en' => fake()->unique()->jobTitle(),
             'code' => fake()->unique()->bothify('JOB-###'),
             'description' => fake()->optional()->sentence(),
-            'status' => 'active',
+            'status' => JobTitleStatus::Active->value,
         ];
     }
 }

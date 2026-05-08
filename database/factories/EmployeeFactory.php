@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Enums\EmployeeStatus;
+use App\Enums\Gender;
+use App\Enums\WorkType;
 use App\Models\Company;
 use App\Models\Employee;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -33,11 +36,11 @@ class EmployeeFactory extends Factory
             'phone' => fake()->optional()->phoneNumber(),
             'national_id' => fake()->optional()->numerify('##########'),
             'nationality' => fake()->optional()->country(),
-            'gender' => fake()->optional()->randomElement(['male', 'female']),
+            'gender' => fake()->optional()->randomElement(Gender::values()),
             'date_of_birth' => fake()->optional()->date(),
             'hire_date' => fake()->optional()->date(),
-            'employment_status' => 'active',
-            'work_type' => fake()->optional()->randomElement(['full_time', 'part_time', 'contract']),
+            'employment_status' => EmployeeStatus::Active->value,
+            'work_type' => fake()->optional()->randomElement(WorkType::values()),
             'basic_salary' => fake()->optional()->randomFloat(2, 3000, 30000),
         ];
     }

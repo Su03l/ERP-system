@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\DepartmentStatus;
 use App\Models\Company;
 use App\Models\Department;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -25,7 +26,7 @@ class DepartmentFactory extends Factory
             'code' => fake()->unique()->bothify('DEP-###'),
             'parent_id' => null,
             'manager_id' => null,
-            'status' => 'active',
+            'status' => DepartmentStatus::Active->value,
             'description' => fake()->optional()->sentence(),
         ];
     }

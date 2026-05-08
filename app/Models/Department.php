@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\DepartmentStatus;
 use App\Models\Concerns\BelongsToCompany;
 use Database\Factories\DepartmentFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -64,5 +65,17 @@ class Department extends Model
     public function employees(): HasMany
     {
         return $this->hasMany(Employee::class);
+    }
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'status' => DepartmentStatus::class,
+        ];
     }
 }

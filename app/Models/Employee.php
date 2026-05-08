@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\EmployeeStatus;
+use App\Enums\Gender;
+use App\Enums\WorkType;
 use App\Models\Concerns\BelongsToCompany;
 use Database\Factories\EmployeeFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -98,6 +101,9 @@ class Employee extends Model
         return [
             'date_of_birth' => 'date',
             'hire_date' => 'date',
+            'employment_status' => EmployeeStatus::class,
+            'gender' => Gender::class,
+            'work_type' => WorkType::class,
             'basic_salary' => 'decimal:2',
         ];
     }
