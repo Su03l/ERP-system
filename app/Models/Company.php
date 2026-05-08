@@ -48,6 +48,38 @@ class Company extends Model
         return $this->hasMany(Role::class);
     }
 
+    /**
+     * @return HasMany<Workflow, $this>
+     */
+    public function workflows(): HasMany
+    {
+        return $this->hasMany(Workflow::class);
+    }
+
+    /**
+     * @return HasMany<ImportJob, $this>
+     */
+    public function importJobs(): HasMany
+    {
+        return $this->hasMany(ImportJob::class);
+    }
+
+    /**
+     * @return HasMany<ExportJob, $this>
+     */
+    public function exportJobs(): HasMany
+    {
+        return $this->hasMany(ExportJob::class);
+    }
+
+    /**
+     * @return HasMany<MigrationSession, $this>
+     */
+    public function migrationSessions(): HasMany
+    {
+        return $this->hasMany(MigrationSession::class);
+    }
+
     public function hasModule(CompanyModule|string $module): bool
     {
         return app(CompanyModuleService::class)->isEnabled($this, $module);
