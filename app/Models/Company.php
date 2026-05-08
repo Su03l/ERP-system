@@ -59,6 +59,16 @@ class Company extends Model
     }
 
     /**
+     * Get the job titles defined for this company.
+     *
+     * @return HasMany<JobTitle, $this>
+     */
+    public function jobTitles(): HasMany
+    {
+        return $this->hasMany(JobTitle::class);
+    }
+
+    /**
      * @return HasMany<Workflow, $this>
      */
     public function workflows(): HasMany
