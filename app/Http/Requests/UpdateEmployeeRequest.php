@@ -17,7 +17,10 @@ class UpdateEmployeeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()?->company_id !== null;
+        $employee = $this->employee();
+
+        return $employee instanceof Employee
+            && ($this->user()?->can('update', $employee) ?? false);
     }
 
     /**
@@ -90,14 +93,19 @@ class UpdateEmployeeRequest extends FormRequest
 
     private function employeeId(): ?int
     {
+        return $this->employee()?->id;
+    }
+
+    private function employee(): ?Employee
+    {
         $employee = $this->route('employee');
 
         if ($employee instanceof Employee) {
-            return $employee->id;
+            return $employee;
         }
 
         if (is_numeric($employee)) {
-            return (int) $employee;
+            return Employee::query()->find((int) $employee);
         }
 
         return null;

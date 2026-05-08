@@ -9,11 +9,25 @@ use App\Models\Company;
 use App\Models\Department;
 use App\Models\Employee;
 use App\Models\JobTitle;
+use App\Models\Permission;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Route;
 
 uses(RefreshDatabase::class);
+
+function grantEmployeeValidationPermissions(User $user, array $permissionKeys): void
+{
+    $role = Role::factory()->for($user->company)->create();
+
+    foreach ($permissionKeys as $permissionKey) {
+        $permission = Permission::factory()->create(['key' => $permissionKey]);
+        $role->permissions()->attach($permission);
+    }
+
+    $user->roles()->attach($role, ['company_id' => $user->company_id]);
+}
 
 function validEmployeePayload(array $overrides = []): array
 {
@@ -36,6 +50,7 @@ test('store employee request accepts valid tenant scoped input', function () {
 
     $company = Company::factory()->create();
     $user = User::factory()->for($company)->create();
+    grantEmployeeValidationPermissions($user, ['employees.create']);
     $department = Department::factory()->for($company)->create();
     $jobTitle = JobTitle::factory()->for($company)->create();
     $manager = Employee::factory()->for($company)->create();
@@ -56,6 +71,7 @@ test('store employee request blocks cross company relationship ids', function ()
     $company = Company::factory()->create();
     $otherCompany = Company::factory()->create();
     $user = User::factory()->for($company)->create();
+    grantEmployeeValidationPermissions($user, ['employees.create']);
     $department = Department::factory()->for($otherCompany)->create();
     $jobTitle = JobTitle::factory()->for($otherCompany)->create();
     $manager = Employee::factory()->for($otherCompany)->create();
@@ -76,6 +92,7 @@ test('store employee request enforces company scoped employee number uniqueness'
     $company = Company::factory()->create();
     $otherCompany = Company::factory()->create();
     $user = User::factory()->for($company)->create();
+    grantEmployeeValidationPermissions($user, ['employees.create']);
 
     Employee::factory()->for($company)->create(['employee_number' => 'EMP-100']);
     Employee::factory()->for($otherCompany)->create(['employee_number' => 'EMP-200']);
@@ -95,6 +112,7 @@ test('store employee request requires arabic names and validates email and salar
 
     $company = Company::factory()->create();
     $user = User::factory()->for($company)->create();
+    grantEmployeeValidationPermissions($user, ['employees.create']);
 
     $this->actingAs($user)
         ->postJson('/employee-validation-required', validEmployeePayload([
@@ -113,6 +131,7 @@ test('update employee request ignores current employee number and blocks self ma
     $company = Company::factory()->create();
     $user = User::factory()->for($company)->create();
     $employee = Employee::factory()->for($company)->create(['employee_number' => 'EMP-100']);
+    grantEmployeeValidationPermissions($user, ['employees.update']);
 
     $this->actingAs($user)
         ->patchJson("/employee-validation-update/{$employee->id}", [

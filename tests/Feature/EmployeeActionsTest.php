@@ -8,6 +8,8 @@ use App\Enums\EmployeeStatus;
 use App\Models\AuditLog;
 use App\Models\Company;
 use App\Models\Employee;
+use App\Models\Permission;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -24,9 +26,22 @@ function employeeActionPayload(array $overrides = []): array
     ], $overrides);
 }
 
+function grantEmployeeActionPermissions(User $user, array $permissionKeys): void
+{
+    $role = Role::factory()->for($user->company)->create();
+
+    foreach ($permissionKeys as $permissionKey) {
+        $permission = Permission::factory()->create(['key' => $permissionKey]);
+        $role->permissions()->attach($permission);
+    }
+
+    $user->roles()->attach($role, ['company_id' => $user->company_id]);
+}
+
 test('create employee action attaches current company and audits creation', function () {
     $company = Company::factory()->create();
     $actor = User::factory()->for($company)->create();
+    grantEmployeeActionPermissions($actor, ['employees.create']);
 
     $this->actingAs($actor);
 
@@ -41,6 +56,7 @@ test('update employee action respects current company and audits changes', funct
     $company = Company::factory()->create();
     $actor = User::factory()->for($company)->create();
     $employee = Employee::factory()->for($company)->create(['first_name_ar' => 'قديم']);
+    grantEmployeeActionPermissions($actor, ['employees.update']);
 
     $this->actingAs($actor);
 
@@ -54,6 +70,7 @@ test('archive employee action soft deletes and audits employee', function () {
     $company = Company::factory()->create();
     $actor = User::factory()->for($company)->create();
     $employee = Employee::factory()->for($company)->create();
+    grantEmployeeActionPermissions($actor, ['employees.delete']);
 
     $this->actingAs($actor);
 
@@ -70,6 +87,7 @@ test('assign employee to user action requires same current company', function ()
     $employee = Employee::factory()->for($company)->create();
     $user = User::factory()->for($company)->create();
     $otherUser = User::factory()->for($otherCompany)->create();
+    grantEmployeeActionPermissions($actor, ['employees.update']);
 
     $this->actingAs($actor);
 
@@ -85,6 +103,7 @@ test('employee actions reject employees outside current company', function () {
     $otherCompany = Company::factory()->create();
     $actor = User::factory()->for($company)->create();
     $employee = Employee::factory()->for($otherCompany)->create();
+    grantEmployeeActionPermissions($actor, ['employees.update']);
 
     $this->actingAs($actor);
 

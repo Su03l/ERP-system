@@ -7,7 +7,9 @@ use App\Models\User;
 use App\Services\AuditLogger;
 use App\Support\TenantContext;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class ArchiveEmployee
 {
@@ -21,6 +23,13 @@ class ArchiveEmployee
      */
     public function handle(Employee $employee, ?User $actor = null): Employee
     {
+        $actor ??= Auth::user();
+
+        if (! $actor instanceof User) {
+            throw new AuthorizationException('An authenticated user is required to archive employees.');
+        }
+
+        Gate::forUser($actor)->authorize('delete', $employee);
         $this->ensureEmployeeBelongsToCurrentCompany($employee);
 
         return DB::transaction(function () use ($actor, $employee): Employee {

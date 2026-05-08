@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Enums\EmployeeStatus;
 use App\Enums\Gender;
 use App\Enums\WorkType;
+use App\Models\Employee;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -16,7 +17,7 @@ class StoreEmployeeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()?->company_id !== null;
+        return $this->user()?->can('create', Employee::class) ?? false;
     }
 
     /**

@@ -7,7 +7,9 @@ use App\Models\User;
 use App\Services\AuditLogger;
 use App\Support\TenantContext;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class CreateEmployee
 {
@@ -23,6 +25,14 @@ class CreateEmployee
      */
     public function handle(array $data, ?User $actor = null): Employee
     {
+        $actor ??= Auth::user();
+
+        if (! $actor instanceof User) {
+            throw new AuthorizationException('An authenticated user is required to create employees.');
+        }
+
+        Gate::forUser($actor)->authorize('create', Employee::class);
+
         $companyId = $this->tenantContext->companyId();
 
         if ($companyId === null) {

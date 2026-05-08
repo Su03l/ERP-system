@@ -7,7 +7,9 @@ use App\Models\User;
 use App\Services\AuditLogger;
 use App\Support\TenantContext;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class AssignEmployeeToUser
 {
@@ -21,6 +23,14 @@ class AssignEmployeeToUser
      */
     public function handle(Employee $employee, User $user, ?User $actor = null): Employee
     {
+        $actor ??= Auth::user();
+
+        if (! $actor instanceof User) {
+            throw new AuthorizationException('An authenticated user is required to assign employees.');
+        }
+
+        Gate::forUser($actor)->authorize('update', $employee);
+
         $companyId = $this->tenantContext->companyId();
 
         if ($companyId === null || $employee->company_id !== $companyId || $user->company_id !== $companyId) {
