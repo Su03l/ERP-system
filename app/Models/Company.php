@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\CompanyModule;
+use App\Services\CompanyModuleService;
 use Database\Factories\CompanyFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -44,6 +46,11 @@ class Company extends Model
     public function roles(): HasMany
     {
         return $this->hasMany(Role::class);
+    }
+
+    public function hasModule(CompanyModule|string $module): bool
+    {
+        return app(CompanyModuleService::class)->isEnabled($this, $module);
     }
 
     /**
