@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Services\PermissionChecker;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -39,6 +40,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class)
             ->withPivot('company_id')
             ->withTimestamps();
+    }
+
+    public function hasPermission(string $permissionKey, ?int $companyId = null): bool
+    {
+        return app(PermissionChecker::class)->userHasPermission($this, $permissionKey, $companyId);
     }
 
     /**
