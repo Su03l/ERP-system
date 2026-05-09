@@ -51,4 +51,17 @@ return [
         'documents_expiring_soon' => 'المستندات التي ستنتهي قريباً',
         'unassigned_department' => 'غير معين',
     ],
+    'import' => [
+        'columns' => [
+            'employee_number' => 'رقم الموظف',
+            'first_name_ar' => 'الاسم الأول بالعربية',
+            'last_name_ar' => 'اسم العائلة بالعربية',
+            'email' => 'البريد الإلكتروني',
+            'phone' => 'الهاتف',
+            'department' => 'الإدارة',
+            'job_title' => 'المسمى الوظيفي',
+            'hire_date' => 'تاريخ التعيين',
+            'basic_salary' => 'الراتب الأساسي',
+        ],
+    ],
 ];

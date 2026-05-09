@@ -51,4 +51,17 @@ return [
         'documents_expiring_soon' => 'Documents expiring soon',
         'unassigned_department' => 'Unassigned',
     ],
+    'import' => [
+        'columns' => [
+            'employee_number' => 'Employee number',
+            'first_name_ar' => 'Arabic first name',
+            'last_name_ar' => 'Arabic last name',
+            'email' => 'Email',
+            'phone' => 'Phone',
+            'department' => 'Department',
+            'job_title' => 'Job title',
+            'hire_date' => 'Hire date',
+            'basic_salary' => 'Basic salary',
+        ],
+    ],
 ];
