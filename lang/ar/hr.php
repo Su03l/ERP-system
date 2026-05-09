@@ -64,4 +64,20 @@ return [
             'basic_salary' => 'الراتب الأساسي',
         ],
     ],
+    'export' => [
+        'columns' => [
+            'employee_number' => 'رقم الموظف',
+            'name_ar' => 'الاسم بالعربية',
+            'name_en' => 'الاسم بالإنجليزية',
+            'email' => 'البريد الإلكتروني',
+            'phone' => 'الهاتف',
+            'department' => 'الإدارة',
+            'job_title' => 'المسمى الوظيفي',
+            'manager' => 'المدير',
+            'hire_date' => 'تاريخ التعيين',
+            'employment_status' => 'حالة التوظيف',
+            'work_type' => 'نوع العمل',
+            'basic_salary' => 'الراتب الأساسي',
+        ],
+    ],
 ];

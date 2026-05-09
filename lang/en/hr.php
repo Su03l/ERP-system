@@ -64,4 +64,20 @@ return [
             'basic_salary' => 'Basic salary',
         ],
     ],
+    'export' => [
+        'columns' => [
+            'employee_number' => 'Employee number',
+            'name_ar' => 'Arabic name',
+            'name_en' => 'English name',
+            'email' => 'Email',
+            'phone' => 'Phone',
+            'department' => 'Department',
+            'job_title' => 'Job title',
+            'manager' => 'Manager',
+            'hire_date' => 'Hire date',
+            'employment_status' => 'Employment status',
+            'work_type' => 'Work type',
+            'basic_salary' => 'Basic salary',
+        ],
+    ],
 ];
