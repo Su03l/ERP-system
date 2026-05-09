@@ -92,6 +92,16 @@ class Employee extends Model
     }
 
     /**
+     * Get the documents linked to this employee.
+     *
+     * @return HasMany<EmployeeDocument, $this>
+     */
+    public function documents(): HasMany
+    {
+        return $this->hasMany(EmployeeDocument::class);
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
