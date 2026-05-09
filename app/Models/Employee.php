@@ -102,6 +102,16 @@ class Employee extends Model
     }
 
     /**
+     * Get the attendance records linked to this employee.
+     *
+     * @return HasMany<AttendanceRecord, $this>
+     */
+    public function attendanceRecords(): HasMany
+    {
+        return $this->hasMany(AttendanceRecord::class);
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
