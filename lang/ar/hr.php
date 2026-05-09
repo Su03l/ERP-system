@@ -41,4 +41,14 @@ return [
         'hire_date' => 'تاريخ التعيين',
         'employment_status' => 'حالة التوظيف',
     ],
+    'metrics' => [
+        'total_employees' => 'إجمالي الموظفين',
+        'active_employees' => 'الموظفون النشطون',
+        'inactive_employees' => 'الموظفون غير النشطين',
+        'employees_by_department' => 'الموظفون حسب الإدارة',
+        'employees_by_status' => 'الموظفون حسب الحالة',
+        'new_hires' => 'التعيينات الجديدة',
+        'documents_expiring_soon' => 'المستندات التي ستنتهي قريباً',
+        'unassigned_department' => 'غير معين',
+    ],
 ];

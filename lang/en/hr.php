@@ -41,4 +41,14 @@ return [
         'hire_date' => 'Hire date',
         'employment_status' => 'Employment status',
     ],
+    'metrics' => [
+        'total_employees' => 'Total employees',
+        'active_employees' => 'Active employees',
+        'inactive_employees' => 'Inactive employees',
+        'employees_by_department' => 'Employees by department',
+        'employees_by_status' => 'Employees by status',
+        'new_hires' => 'New hires',
+        'documents_expiring_soon' => 'Documents expiring soon',
+        'unassigned_department' => 'Unassigned',
+    ],
 ];
