@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Employee;
 use App\Models\User;
 use App\Support\TenantContext;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,18 +18,19 @@ class EmployeeExportQuery
     /**
      * @param  array<string, mixed>  $filters
      * @return array{entity_type: string, module_key: string, includes_salary: bool, columns: array<int, array{key: string, label: string}>, rows: array<int, array<string, mixed>>}
+     *
+     * @throws AuthorizationException
      */
     public function export(array $filters = [], ?User $actor = null): array
     {
         $actor ??= Auth::user();
         $companyId = $this->tenantContext->companyId();
-        $canViewSalary = $actor instanceof User
-            && $companyId !== null
-            && $actor->hasPermission('employees.view_salary', $companyId);
 
-        if ($companyId === null) {
-            return $this->emptyExport($canViewSalary);
+        if (! $actor instanceof User || $companyId === null || ! $actor->hasPermission('employees.view', $companyId)) {
+            throw new AuthorizationException('You are not authorized to export employees.');
         }
+
+        $canViewSalary = $actor->hasPermission('employees.view_salary', $companyId);
 
         $rows = $this->query($filters, $companyId)
             ->get()
@@ -133,19 +135,5 @@ class EmployeeExportQuery
         }
 
         return $columns;
-    }
-
-    /**
-     * @return array{entity_type: string, module_key: string, includes_salary: bool, columns: array<int, array{key: string, label: string}>, rows: array<int, array<string, mixed>>}
-     */
-    private function emptyExport(bool $canViewSalary): array
-    {
-        return [
-            'entity_type' => 'employees',
-            'module_key' => 'hr',
-            'includes_salary' => $canViewSalary,
-            'columns' => $this->columns($canViewSalary),
-            'rows' => [],
-        ];
     }
 }

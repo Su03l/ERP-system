@@ -10,6 +10,7 @@ use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
 use App\Services\EmployeeExportQuery;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -54,6 +55,7 @@ test('employee export is scoped to current company and supports filters', functi
     ]);
     Employee::factory()->for($company)->create(['employee_number' => 'EMP-701', 'employment_status' => EmployeeStatus::Inactive->value]);
     Employee::factory()->for($otherCompany)->create(['employee_number' => 'EMP-700']);
+    grantEmployeeExportPermissions($user, ['employees.view']);
 
     $this->actingAs($user);
 
@@ -80,7 +82,8 @@ test('employee export includes salary only with salary permission', function () 
     $salaryUser = User::factory()->for($company)->create();
     Employee::factory()->for($company)->create(['employee_number' => 'EMP-702', 'basic_salary' => 12345.67]);
 
-    grantEmployeeExportPermissions($salaryUser, ['employees.view_salary']);
+    grantEmployeeExportPermissions($user, ['employees.view']);
+    grantEmployeeExportPermissions($salaryUser, ['employees.view', 'employees.view_salary']);
 
     $this->actingAs($user);
     $export = app(EmployeeExportQuery::class)->export(actor: $user);
@@ -95,12 +98,12 @@ test('employee export includes salary only with salary permission', function () 
         ->and(collect($salaryExport['columns'])->pluck('key')->all())->toContain('basic_salary');
 });
 
-test('employee export returns empty rows without current company context', function () {
+test('employee export requires employee view permission', function () {
     $company = Company::factory()->create();
+    $user = User::factory()->for($company)->create();
     Employee::factory()->for($company)->create(['employee_number' => 'EMP-703']);
 
-    $export = app(EmployeeExportQuery::class)->export();
+    $this->actingAs($user);
 
-    expect($export['rows'])->toBe([])
-        ->and($export['includes_salary'])->toBeFalse();
-});
+    app(EmployeeExportQuery::class)->export(actor: $user);
+})->throws(AuthorizationException::class);
