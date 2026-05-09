@@ -10,6 +10,7 @@ use App\Support\TenantContext;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class RecalculateAttendanceRecord
 {
@@ -29,6 +30,8 @@ class RecalculateAttendanceRecord
         if (! $actor instanceof User) {
             throw new AuthorizationException('An authenticated user is required to recalculate attendance records.');
         }
+
+        Gate::forUser($actor)->authorize('recalculate', $attendanceRecord);
 
         if ($this->tenantContext->companyId() !== $attendanceRecord->company_id) {
             throw new AuthorizationException('Attendance record does not belong to the current company.');

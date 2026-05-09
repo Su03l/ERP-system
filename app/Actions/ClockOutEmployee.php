@@ -14,6 +14,7 @@ use Carbon\CarbonInterface;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class ClockOutEmployee
 {
@@ -35,6 +36,7 @@ class ClockOutEmployee
             throw new AuthorizationException('An authenticated user is required to clock out.');
         }
 
+        Gate::forUser($actor)->authorize('clock', [AttendanceRecord::class, $employee]);
         $this->ensureEmployeeBelongsToCurrentCompany($employee);
 
         return DB::transaction(function () use ($actor, $clockOutAt, $employee, $ipAddress): AttendanceRecord {

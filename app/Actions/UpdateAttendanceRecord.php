@@ -11,6 +11,7 @@ use App\Support\TenantContext;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 
 class UpdateAttendanceRecord
@@ -35,6 +36,7 @@ class UpdateAttendanceRecord
             throw new AuthorizationException('An authenticated user is required to update attendance records.');
         }
 
+        Gate::forUser($actor)->authorize('update', $attendanceRecord);
         $this->ensureRecordBelongsToCurrentCompany($attendanceRecord);
 
         $companyId = $attendanceRecord->company_id;

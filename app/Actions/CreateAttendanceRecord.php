@@ -11,6 +11,7 @@ use App\Support\TenantContext;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 
 class CreateAttendanceRecord
@@ -34,6 +35,8 @@ class CreateAttendanceRecord
         if (! $actor instanceof User) {
             throw new AuthorizationException('An authenticated user is required to create attendance records.');
         }
+
+        Gate::forUser($actor)->authorize('create', AttendanceRecord::class);
 
         $companyId = $this->currentCompanyId();
         $this->ensureEmployeeBelongsToCompany((int) $data['employee_id'], $companyId);

@@ -10,6 +10,8 @@ use App\Models\AttendanceRecord;
 use App\Models\AuditLog;
 use App\Models\Company;
 use App\Models\Employee;
+use App\Models\Permission;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -17,6 +19,25 @@ use Illuminate\Support\Carbon;
 use Illuminate\Validation\ValidationException;
 
 uses(RefreshDatabase::class);
+
+function grantAttendanceActionPermissions(User $user, array $permissionKeys): void
+{
+    $role = Role::factory()->for($user->company)->create();
+
+    foreach ($permissionKeys as $permissionKey) {
+        $permission = Permission::query()->firstOrCreate(
+            ['key' => $permissionKey],
+            [
+                'name' => $permissionKey,
+                'description' => null,
+            ],
+        );
+
+        $role->permissions()->attach($permission);
+    }
+
+    $user->roles()->attach($role, ['company_id' => $user->company_id]);
+}
 
 function attendanceActionPayload(array $overrides = []): array
 {
@@ -33,6 +54,7 @@ test('create attendance action attaches current company calculates values and au
     $company = Company::factory()->create();
     $user = User::factory()->for($company)->create();
     $employee = Employee::factory()->for($company)->create();
+    grantAttendanceActionPermissions($user, ['attendance.create']);
 
     $this->actingAs($user);
 
@@ -53,6 +75,7 @@ test('create attendance action rejects duplicates and cross company employees', 
     $user = User::factory()->for($company)->create();
     $employee = Employee::factory()->for($company)->create();
     $otherEmployee = Employee::factory()->for($otherCompany)->create();
+    grantAttendanceActionPermissions($user, ['attendance.create']);
 
     $this->actingAs($user);
 
@@ -70,6 +93,7 @@ test('update and recalculate attendance actions respect tenant scope and audit c
         'clock_in_at' => '2026-05-11 09:00:00',
         'clock_out_at' => '2026-05-11 17:00:00',
     ]);
+    grantAttendanceActionPermissions($user, ['attendance.update', 'attendance.recalculate']);
 
     $this->actingAs($user);
 
@@ -91,6 +115,7 @@ test('clock in and clock out actions update one tenant scoped attendance record'
     $company = Company::factory()->create();
     $user = User::factory()->for($company)->create();
     $employee = Employee::factory()->for($company)->create();
+    grantAttendanceActionPermissions($user, ['attendance.clock']);
 
     $this->actingAs($user);
 
@@ -116,6 +141,7 @@ test('attendance actions reject records outside current company', function () {
     $user = User::factory()->for($company)->create();
     $employee = Employee::factory()->for($otherCompany)->create();
     $attendanceRecord = AttendanceRecord::factory()->for($otherCompany)->for($employee)->create();
+    grantAttendanceActionPermissions($user, ['attendance.update']);
 
     $this->actingAs($user);
 
