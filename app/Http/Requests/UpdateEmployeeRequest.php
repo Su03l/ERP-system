@@ -19,8 +19,15 @@ class UpdateEmployeeRequest extends FormRequest
     {
         $employee = $this->employee();
 
-        return $employee instanceof Employee
-            && ($this->user()?->can('update', $employee) ?? false);
+        if (! $employee instanceof Employee || ! ($this->user()?->can('update', $employee) ?? false)) {
+            return false;
+        }
+
+        if ($this->has('basic_salary')) {
+            return $this->user()?->can('updateSalary', $employee) ?? false;
+        }
+
+        return true;
     }
 
     /**

@@ -17,7 +17,15 @@ class StoreEmployeeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()?->can('create', Employee::class) ?? false;
+        if (! ($this->user()?->can('create', Employee::class) ?? false)) {
+            return false;
+        }
+
+        if ($this->has('basic_salary')) {
+            return $this->user()?->hasPermission('employees.update_salary') ?? false;
+        }
+
+        return true;
     }
 
     /**

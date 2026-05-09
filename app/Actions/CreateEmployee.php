@@ -39,6 +39,10 @@ class CreateEmployee
             throw new AuthorizationException('A current company is required to create employees.');
         }
 
+        if (array_key_exists('basic_salary', $data) && ! $actor->hasPermission('employees.update_salary', $companyId)) {
+            throw new AuthorizationException('You are not authorized to set employee salary.');
+        }
+
         return DB::transaction(function () use ($actor, $companyId, $data): Employee {
             $employee = Employee::create([
                 ...$data,

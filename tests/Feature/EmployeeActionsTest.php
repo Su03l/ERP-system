@@ -52,6 +52,16 @@ test('create employee action attaches current company and audits creation', func
         ->and(AuditLog::query()->where('action', 'employee.created')->where('auditable_id', $employee->id)->exists())->toBeTrue();
 });
 
+test('create employee action requires salary permission when salary is present', function () {
+    $company = Company::factory()->create();
+    $actor = User::factory()->for($company)->create();
+
+    grantEmployeeActionPermissions($actor, ['employees.create']);
+    $this->actingAs($actor);
+
+    app(CreateEmployee::class)->handle(employeeActionPayload(['basic_salary' => 10000]), $actor);
+})->throws(AuthorizationException::class);
+
 test('update employee action respects current company and audits changes', function () {
     $company = Company::factory()->create();
     $actor = User::factory()->for($company)->create();
@@ -65,6 +75,17 @@ test('update employee action respects current company and audits changes', funct
     expect($updatedEmployee->first_name_ar)->toBe('جديد')
         ->and(AuditLog::query()->where('action', 'employee.updated')->where('auditable_id', $employee->id)->exists())->toBeTrue();
 });
+
+test('update employee action requires salary permission when salary changes', function () {
+    $company = Company::factory()->create();
+    $actor = User::factory()->for($company)->create();
+    $employee = Employee::factory()->for($company)->create();
+
+    grantEmployeeActionPermissions($actor, ['employees.update']);
+    $this->actingAs($actor);
+
+    app(UpdateEmployee::class)->handle($employee, ['basic_salary' => 20000], $actor);
+})->throws(AuthorizationException::class);
 
 test('archive employee action soft deletes and audits employee', function () {
     $company = Company::factory()->create();

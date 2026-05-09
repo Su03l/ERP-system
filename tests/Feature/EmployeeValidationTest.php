@@ -50,7 +50,7 @@ test('store employee request accepts valid tenant scoped input', function () {
 
     $company = Company::factory()->create();
     $user = User::factory()->for($company)->create();
-    grantEmployeeValidationPermissions($user, ['employees.create']);
+    grantEmployeeValidationPermissions($user, ['employees.create', 'employees.update_salary']);
     $department = Department::factory()->for($company)->create();
     $jobTitle = JobTitle::factory()->for($company)->create();
     $manager = Employee::factory()->for($company)->create();
@@ -71,7 +71,7 @@ test('store employee request blocks cross company relationship ids', function ()
     $company = Company::factory()->create();
     $otherCompany = Company::factory()->create();
     $user = User::factory()->for($company)->create();
-    grantEmployeeValidationPermissions($user, ['employees.create']);
+    grantEmployeeValidationPermissions($user, ['employees.create', 'employees.update_salary']);
     $department = Department::factory()->for($otherCompany)->create();
     $jobTitle = JobTitle::factory()->for($otherCompany)->create();
     $manager = Employee::factory()->for($otherCompany)->create();
@@ -92,7 +92,7 @@ test('store employee request enforces company scoped employee number uniqueness'
     $company = Company::factory()->create();
     $otherCompany = Company::factory()->create();
     $user = User::factory()->for($company)->create();
-    grantEmployeeValidationPermissions($user, ['employees.create']);
+    grantEmployeeValidationPermissions($user, ['employees.create', 'employees.update_salary']);
 
     Employee::factory()->for($company)->create(['employee_number' => 'EMP-100']);
     Employee::factory()->for($otherCompany)->create(['employee_number' => 'EMP-200']);
@@ -112,7 +112,7 @@ test('store employee request requires arabic names and validates email and salar
 
     $company = Company::factory()->create();
     $user = User::factory()->for($company)->create();
-    grantEmployeeValidationPermissions($user, ['employees.create']);
+    grantEmployeeValidationPermissions($user, ['employees.create', 'employees.update_salary']);
 
     $this->actingAs($user)
         ->postJson('/employee-validation-required', validEmployeePayload([

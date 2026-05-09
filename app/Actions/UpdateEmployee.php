@@ -32,6 +32,11 @@ class UpdateEmployee
         }
 
         Gate::forUser($actor)->authorize('update', $employee);
+
+        if (array_key_exists('basic_salary', $data)) {
+            Gate::forUser($actor)->authorize('updateSalary', $employee);
+        }
+
         $this->ensureEmployeeBelongsToCurrentCompany($employee);
 
         return DB::transaction(function () use ($actor, $data, $employee): Employee {
