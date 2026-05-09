@@ -47,6 +47,11 @@ return [
         'device' => 'Device',
         'import' => 'Import',
     ],
+    'attendance' => [
+        'fields' => [
+            'attendance_date' => 'attendance date',
+        ],
+    ],
     'fields' => [
         'employee_number' => 'Employee number',
         'job_title' => 'Job title',

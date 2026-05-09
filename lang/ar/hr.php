@@ -47,6 +47,11 @@ return [
         'device' => 'جهاز',
         'import' => 'استيراد',
     ],
+    'attendance' => [
+        'fields' => [
+            'attendance_date' => 'تاريخ الحضور',
+        ],
+    ],
     'fields' => [
         'employee_number' => 'رقم الموظف',
         'job_title' => 'المسمى الوظيفي',
