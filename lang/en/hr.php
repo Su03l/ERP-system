@@ -33,6 +33,20 @@ return [
         'remote' => 'Remote',
         'hybrid' => 'Hybrid',
     ],
+    'attendance_statuses' => [
+        'present' => 'Present',
+        'absent' => 'Absent',
+        'late' => 'Late',
+        'on_leave' => 'On leave',
+        'holiday' => 'Holiday',
+        'remote' => 'Remote',
+    ],
+    'attendance_sources' => [
+        'manual' => 'Manual',
+        'web' => 'Web',
+        'device' => 'Device',
+        'import' => 'Import',
+    ],
     'fields' => [
         'employee_number' => 'Employee number',
         'job_title' => 'Job title',

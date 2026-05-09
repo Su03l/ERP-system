@@ -33,6 +33,20 @@ return [
         'remote' => 'عن بعد',
         'hybrid' => 'هجين',
     ],
+    'attendance_statuses' => [
+        'present' => 'حاضر',
+        'absent' => 'غائب',
+        'late' => 'متأخر',
+        'on_leave' => 'في إجازة',
+        'holiday' => 'عطلة',
+        'remote' => 'عن بعد',
+    ],
+    'attendance_sources' => [
+        'manual' => 'يدوي',
+        'web' => 'الويب',
+        'device' => 'جهاز',
+        'import' => 'استيراد',
+    ],
     'fields' => [
         'employee_number' => 'رقم الموظف',
         'job_title' => 'المسمى الوظيفي',

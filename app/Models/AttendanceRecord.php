@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\AttendanceSource;
+use App\Enums\AttendanceStatus;
 use App\Models\Concerns\BelongsToCompany;
 use Database\Factories\AttendanceRecordFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -51,6 +53,8 @@ class AttendanceRecord extends Model
             'attendance_date' => 'date',
             'clock_in_at' => 'datetime',
             'clock_out_at' => 'datetime',
+            'status' => AttendanceStatus::class,
+            'source' => AttendanceSource::class,
             'late_minutes' => 'integer',
             'overtime_minutes' => 'integer',
             'total_work_minutes' => 'integer',

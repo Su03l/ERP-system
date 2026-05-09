@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Enums\AttendanceSource;
+use App\Enums\AttendanceStatus;
 use App\Models\AttendanceRecord;
 use App\Models\Company;
 use App\Models\Employee;
@@ -29,8 +31,8 @@ class AttendanceRecordFactory extends Factory
             'clock_out_at' => fake()->optional()->dateTime(),
             'clock_in_ip' => fake()->optional()->ipv4(),
             'clock_out_ip' => fake()->optional()->ipv4(),
-            'status' => 'present',
-            'source' => fake()->optional()->randomElement(['manual', 'web', 'device', 'import']),
+            'status' => AttendanceStatus::Present->value,
+            'source' => fake()->optional()->randomElement(AttendanceSource::values()),
             'late_minutes' => 0,
             'overtime_minutes' => 0,
             'total_work_minutes' => fake()->optional()->numberBetween(60, 600),
