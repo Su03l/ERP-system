@@ -25,6 +25,7 @@ return [
     'timezone' => 'يجب أن يكون حقل :attribute منطقة زمنية صحيحة.',
     'unique' => 'قيمة حقل :attribute مستخدمة من قبل.',
     'leave_balance_insufficient' => 'رصيد الإجازة غير كاف لهذا الطلب.',
+    'leave_request_must_be_approved' => 'يجب اعتماد طلب الإجازة قبل تعديل الرصيد.',
     'custom' => [],
     'attributes' => [
         'name' => 'الاسم',

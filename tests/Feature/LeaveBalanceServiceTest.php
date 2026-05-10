@@ -24,6 +24,7 @@ test('leave balance service calculates inclusive leave days and checks remaining
         'start_date' => '2026-05-10',
         'end_date' => '2026-05-12',
         'total_days' => 3,
+        'status' => LeaveRequestStatus::Approved->value,
     ]);
     LeaveBalance::factory()->for($company)->create([
         'employee_id' => $employee->id,
@@ -85,12 +86,14 @@ test('leave balance service prevents negative balances unless leave type allows 
         'leave_type_id' => $strictLeaveType->id,
         'start_date' => '2026-05-10',
         'total_days' => 3,
+        'status' => LeaveRequestStatus::Approved->value,
     ]);
     $flexibleRequest = LeaveRequest::factory()->for($company)->create([
         'employee_id' => $employee->id,
         'leave_type_id' => $flexibleLeaveType->id,
         'start_date' => '2026-05-10',
         'total_days' => 3,
+        'status' => LeaveRequestStatus::Approved->value,
     ]);
     LeaveBalance::factory()->for($company)->create([
         'employee_id' => $employee->id,
@@ -117,6 +120,7 @@ test('leave balance service allows negative balance when configured', function (
         'leave_type_id' => $leaveType->id,
         'start_date' => '2026-05-10',
         'total_days' => 3,
+        'status' => LeaveRequestStatus::Approved->value,
     ]);
     LeaveBalance::factory()->for($company)->create([
         'employee_id' => $employee->id,
@@ -131,3 +135,18 @@ test('leave balance service allows negative balance when configured', function (
     expect($balance->used_days)->toBe('3.00')
         ->and($balance->remaining_days)->toBe('-2.00');
 });
+
+test('leave balance service does not deduct pending leave requests', function () {
+    $company = Company::factory()->create();
+    $employee = Employee::factory()->for($company)->create();
+    $leaveType = LeaveType::factory()->for($company)->create();
+    $leaveRequest = LeaveRequest::factory()->for($company)->create([
+        'employee_id' => $employee->id,
+        'leave_type_id' => $leaveType->id,
+        'start_date' => '2026-05-10',
+        'total_days' => 1,
+        'status' => LeaveRequestStatus::Pending->value,
+    ]);
+
+    app(LeaveBalanceService::class)->deductOnApproval($leaveRequest);
+})->throws(ValidationException::class);

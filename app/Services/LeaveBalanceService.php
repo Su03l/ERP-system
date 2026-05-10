@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\LeaveRequestStatus;
 use App\Models\LeaveBalance;
 use App\Models\LeaveRequest;
 use App\Models\User;
@@ -46,6 +47,12 @@ class LeaveBalanceService
         $actor ??= Auth::user();
 
         return DB::transaction(function () use ($actor, $leaveRequest): LeaveBalance {
+            if ($leaveRequest->status !== LeaveRequestStatus::Approved) {
+                throw ValidationException::withMessages([
+                    'leave_request' => __('validation.leave_request_must_be_approved'),
+                ]);
+            }
+
             $balance = $this->lockedBalanceFor($leaveRequest);
             $oldValues = $balance->attributesToArray();
             $totalDays = (float) $leaveRequest->total_days;

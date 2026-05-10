@@ -25,6 +25,7 @@ return [
     'timezone' => 'The :attribute field must be a valid timezone.',
     'unique' => 'The :attribute has already been taken.',
     'leave_balance_insufficient' => 'The leave balance is insufficient for this request.',
+    'leave_request_must_be_approved' => 'The leave request must be approved before changing the balance.',
     'custom' => [],
     'attributes' => [
         'name' => 'name',
