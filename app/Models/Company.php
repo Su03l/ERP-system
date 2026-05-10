@@ -99,6 +99,26 @@ class Company extends Model
     }
 
     /**
+     * Get the leave types configured for this company.
+     *
+     * @return HasMany<LeaveType, $this>
+     */
+    public function leaveTypes(): HasMany
+    {
+        return $this->hasMany(LeaveType::class);
+    }
+
+    /**
+     * Get the leave balances owned by this company.
+     *
+     * @return HasMany<LeaveBalance, $this>
+     */
+    public function leaveBalances(): HasMany
+    {
+        return $this->hasMany(LeaveBalance::class);
+    }
+
+    /**
      * @return HasMany<Workflow, $this>
      */
     public function workflows(): HasMany

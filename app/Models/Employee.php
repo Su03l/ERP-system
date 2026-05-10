@@ -112,6 +112,16 @@ class Employee extends Model
     }
 
     /**
+     * Get the leave balances tracked for this employee.
+     *
+     * @return HasMany<LeaveBalance, $this>
+     */
+    public function leaveBalances(): HasMany
+    {
+        return $this->hasMany(LeaveBalance::class);
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
