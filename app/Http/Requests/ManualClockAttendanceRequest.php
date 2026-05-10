@@ -9,6 +9,17 @@ use Illuminate\Validation\Rule;
 
 class ManualClockAttendanceRequest extends FormRequest
 {
+    protected function prepareForValidation(): void
+    {
+        if ($this->routeIs('attendance-records.clock-in')) {
+            $this->merge(['clock_action' => 'clock_in']);
+        }
+
+        if ($this->routeIs('attendance-records.clock-out')) {
+            $this->merge(['clock_action' => 'clock_out']);
+        }
+    }
+
     public function authorize(): bool
     {
         return $this->user()?->company_id !== null;

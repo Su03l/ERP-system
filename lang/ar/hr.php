@@ -51,6 +51,17 @@ return [
         'fields' => [
             'attendance_date' => 'تاريخ الحضور',
         ],
+        'import' => [
+            'columns' => [
+                'employee_number' => 'رقم الموظف',
+                'attendance_date' => 'تاريخ الحضور',
+                'clock_in_at' => 'وقت الحضور',
+                'clock_out_at' => 'وقت الانصراف',
+                'status' => 'الحالة',
+                'source' => 'المصدر',
+                'notes' => 'ملاحظات',
+            ],
+        ],
     ],
     'fields' => [
         'employee_number' => 'رقم الموظف',

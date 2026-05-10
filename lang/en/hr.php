@@ -51,6 +51,17 @@ return [
         'fields' => [
             'attendance_date' => 'attendance date',
         ],
+        'import' => [
+            'columns' => [
+                'employee_number' => 'Employee number',
+                'attendance_date' => 'Attendance date',
+                'clock_in_at' => 'Clock in time',
+                'clock_out_at' => 'Clock out time',
+                'status' => 'Status',
+                'source' => 'Source',
+                'notes' => 'Notes',
+            ],
+        ],
     ],
     'fields' => [
         'employee_number' => 'Employee number',
