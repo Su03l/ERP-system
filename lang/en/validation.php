@@ -26,7 +26,11 @@ return [
     'unique' => 'The :attribute has already been taken.',
     'leave_balance_insufficient' => 'The leave balance is insufficient for this request.',
     'leave_request_must_be_approved' => 'The leave request must be approved before changing the balance.',
-    'custom' => [],
+    'custom' => [
+        'payroll_periods' => [
+            'overlap' => 'Payroll periods may not overlap for the same company.',
+        ],
+    ],
     'attributes' => [
         'name' => 'name',
         'email' => 'email',

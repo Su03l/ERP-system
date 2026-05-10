@@ -22,4 +22,22 @@ return [
         'active' => 'نشط',
         'inactive' => 'غير نشط',
     ],
+    'period_statuses' => [
+        'draft' => 'مسودة',
+        'open' => 'مفتوحة',
+        'processing' => 'قيد المعالجة',
+        'approved' => 'معتمدة',
+        'paid' => 'مدفوعة',
+        'closed' => 'مغلقة',
+        'cancelled' => 'ملغاة',
+    ],
+    'run_statuses' => [
+        'draft' => 'مسودة',
+        'processing' => 'قيد المعالجة',
+        'generated' => 'منشأة',
+        'pending_approval' => 'بانتظار الاعتماد',
+        'approved' => 'معتمدة',
+        'paid' => 'مدفوعة',
+        'cancelled' => 'ملغاة',
+    ],
 ];

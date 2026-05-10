@@ -22,4 +22,22 @@ return [
         'active' => 'Active',
         'inactive' => 'Inactive',
     ],
+    'period_statuses' => [
+        'draft' => 'Draft',
+        'open' => 'Open',
+        'processing' => 'Processing',
+        'approved' => 'Approved',
+        'paid' => 'Paid',
+        'closed' => 'Closed',
+        'cancelled' => 'Cancelled',
+    ],
+    'run_statuses' => [
+        'draft' => 'Draft',
+        'processing' => 'Processing',
+        'generated' => 'Generated',
+        'pending_approval' => 'Pending approval',
+        'approved' => 'Approved',
+        'paid' => 'Paid',
+        'cancelled' => 'Cancelled',
+    ],
 ];

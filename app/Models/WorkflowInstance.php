@@ -73,6 +73,14 @@ class WorkflowInstance extends Model
     }
 
     /**
+     * @return HasMany<PayrollRun, $this>
+     */
+    public function payrollRuns(): HasMany
+    {
+        return $this->hasMany(PayrollRun::class);
+    }
+
+    /**
      * @return array<string, string>
      */
     protected function casts(): array

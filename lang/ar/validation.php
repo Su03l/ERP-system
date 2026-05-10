@@ -26,7 +26,11 @@ return [
     'unique' => 'قيمة حقل :attribute مستخدمة من قبل.',
     'leave_balance_insufficient' => 'رصيد الإجازة غير كاف لهذا الطلب.',
     'leave_request_must_be_approved' => 'يجب اعتماد طلب الإجازة قبل تعديل الرصيد.',
-    'custom' => [],
+    'custom' => [
+        'payroll_periods' => [
+            'overlap' => 'لا يمكن أن تتداخل فترات الرواتب لنفس الشركة.',
+        ],
+    ],
     'attributes' => [
         'name' => 'الاسم',
         'email' => 'البريد الإلكتروني',

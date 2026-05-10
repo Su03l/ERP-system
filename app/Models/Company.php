@@ -170,6 +170,26 @@ class Company extends Model
     }
 
     /**
+     * Get payroll periods owned by this company.
+     *
+     * @return HasMany<PayrollPeriod, $this>
+     */
+    public function payrollPeriods(): HasMany
+    {
+        return $this->hasMany(PayrollPeriod::class);
+    }
+
+    /**
+     * Get payroll runs owned by this company.
+     *
+     * @return HasMany<PayrollRun, $this>
+     */
+    public function payrollRuns(): HasMany
+    {
+        return $this->hasMany(PayrollRun::class);
+    }
+
+    /**
      * @return HasMany<Workflow, $this>
      */
     public function workflows(): HasMany
