@@ -24,6 +24,7 @@ return [
     'prohibited' => 'The :attribute field is prohibited.',
     'timezone' => 'The :attribute field must be a valid timezone.',
     'unique' => 'The :attribute has already been taken.',
+    'leave_balance_insufficient' => 'The leave balance is insufficient for this request.',
     'custom' => [],
     'attributes' => [
         'name' => 'name',

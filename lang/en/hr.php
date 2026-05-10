@@ -45,6 +45,11 @@ return [
         'cancelled' => 'Cancelled',
         'returned' => 'Returned',
     ],
+    'leave' => [
+        'fields' => [
+            'date_range' => 'leave date range',
+        ],
+    ],
     'attendance_statuses' => [
         'present' => 'Present',
         'absent' => 'Absent',

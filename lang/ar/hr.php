@@ -45,6 +45,11 @@ return [
         'cancelled' => 'ملغي',
         'returned' => 'معاد',
     ],
+    'leave' => [
+        'fields' => [
+            'date_range' => 'نطاق تاريخ الإجازة',
+        ],
+    ],
     'attendance_statuses' => [
         'present' => 'حاضر',
         'absent' => 'غائب',

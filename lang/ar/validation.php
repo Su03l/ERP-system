@@ -24,6 +24,7 @@ return [
     'prohibited' => 'حقل :attribute غير مسموح به.',
     'timezone' => 'يجب أن يكون حقل :attribute منطقة زمنية صحيحة.',
     'unique' => 'قيمة حقل :attribute مستخدمة من قبل.',
+    'leave_balance_insufficient' => 'رصيد الإجازة غير كاف لهذا الطلب.',
     'custom' => [],
     'attributes' => [
         'name' => 'الاسم',
