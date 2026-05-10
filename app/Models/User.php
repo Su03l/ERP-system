@@ -65,6 +65,16 @@ class User extends Authenticatable implements HasLocalePreference
         return $this->hasOne(Employee::class);
     }
 
+    /**
+     * Get leave requests approved by this user.
+     *
+     * @return HasMany<LeaveRequest, $this>
+     */
+    public function approvedLeaveRequests(): HasMany
+    {
+        return $this->hasMany(LeaveRequest::class, 'approved_by');
+    }
+
     public function hasPermission(string $permissionKey, ?int $companyId = null): bool
     {
         return app(PermissionChecker::class)->userHasPermission($this, $permissionKey, $companyId);

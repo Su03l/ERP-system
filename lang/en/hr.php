@@ -33,6 +33,18 @@ return [
         'remote' => 'Remote',
         'hybrid' => 'Hybrid',
     ],
+    'leave_type_statuses' => [
+        'active' => 'Active',
+        'inactive' => 'Inactive',
+    ],
+    'leave_request_statuses' => [
+        'draft' => 'Draft',
+        'pending' => 'Pending',
+        'approved' => 'Approved',
+        'rejected' => 'Rejected',
+        'cancelled' => 'Cancelled',
+        'returned' => 'Returned',
+    ],
     'attendance_statuses' => [
         'present' => 'Present',
         'absent' => 'Absent',

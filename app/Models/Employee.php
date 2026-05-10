@@ -122,6 +122,16 @@ class Employee extends Model
     }
 
     /**
+     * Get the leave requests submitted for this employee.
+     *
+     * @return HasMany<LeaveRequest, $this>
+     */
+    public function leaveRequests(): HasMany
+    {
+        return $this->hasMany(LeaveRequest::class);
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

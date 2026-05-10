@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\LeaveTypeStatus;
 use App\Models\Concerns\BelongsToCompany;
 use Database\Factories\LeaveTypeFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -37,6 +38,16 @@ class LeaveType extends Model
     }
 
     /**
+     * Get leave requests using this leave type.
+     *
+     * @return HasMany<LeaveRequest, $this>
+     */
+    public function leaveRequests(): HasMany
+    {
+        return $this->hasMany(LeaveRequest::class);
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -48,6 +59,7 @@ class LeaveType extends Model
             'is_paid' => 'boolean',
             'requires_approval' => 'boolean',
             'allow_negative_balance' => 'boolean',
+            'status' => LeaveTypeStatus::class,
         ];
     }
 }

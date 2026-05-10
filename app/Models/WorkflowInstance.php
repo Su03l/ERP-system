@@ -65,6 +65,14 @@ class WorkflowInstance extends Model
     }
 
     /**
+     * @return HasMany<LeaveRequest, $this>
+     */
+    public function leaveRequests(): HasMany
+    {
+        return $this->hasMany(LeaveRequest::class);
+    }
+
+    /**
      * @return array<string, string>
      */
     protected function casts(): array

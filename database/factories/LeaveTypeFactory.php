@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\LeaveTypeStatus;
 use App\Models\Company;
 use App\Models\LeaveType;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -27,7 +28,7 @@ class LeaveTypeFactory extends Factory
             'is_paid' => true,
             'requires_approval' => true,
             'allow_negative_balance' => false,
-            'status' => 'active',
+            'status' => LeaveTypeStatus::Active->value,
             'description' => fake()->optional()->sentence(),
         ];
     }

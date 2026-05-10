@@ -33,6 +33,18 @@ return [
         'remote' => 'عن بعد',
         'hybrid' => 'هجين',
     ],
+    'leave_type_statuses' => [
+        'active' => 'نشط',
+        'inactive' => 'غير نشط',
+    ],
+    'leave_request_statuses' => [
+        'draft' => 'مسودة',
+        'pending' => 'قيد الانتظار',
+        'approved' => 'معتمد',
+        'rejected' => 'مرفوض',
+        'cancelled' => 'ملغي',
+        'returned' => 'معاد',
+    ],
     'attendance_statuses' => [
         'present' => 'حاضر',
         'absent' => 'غائب',

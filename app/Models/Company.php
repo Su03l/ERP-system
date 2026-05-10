@@ -119,6 +119,16 @@ class Company extends Model
     }
 
     /**
+     * Get the leave requests owned by this company.
+     *
+     * @return HasMany<LeaveRequest, $this>
+     */
+    public function leaveRequests(): HasMany
+    {
+        return $this->hasMany(LeaveRequest::class);
+    }
+
+    /**
      * @return HasMany<Workflow, $this>
      */
     public function workflows(): HasMany
