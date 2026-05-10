@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable([
@@ -126,6 +127,46 @@ class Company extends Model
     public function leaveRequests(): HasMany
     {
         return $this->hasMany(LeaveRequest::class);
+    }
+
+    /**
+     * Get this company's payroll settings.
+     *
+     * @return HasOne<PayrollSetting, $this>
+     */
+    public function payrollSetting(): HasOne
+    {
+        return $this->hasOne(PayrollSetting::class);
+    }
+
+    /**
+     * Get the salary components configured for this company.
+     *
+     * @return HasMany<SalaryComponent, $this>
+     */
+    public function salaryComponents(): HasMany
+    {
+        return $this->hasMany(SalaryComponent::class);
+    }
+
+    /**
+     * Get the employee salary packages owned by this company.
+     *
+     * @return HasMany<EmployeeSalaryPackage, $this>
+     */
+    public function employeeSalaryPackages(): HasMany
+    {
+        return $this->hasMany(EmployeeSalaryPackage::class);
+    }
+
+    /**
+     * Get the salary package items owned by this company.
+     *
+     * @return HasMany<EmployeeSalaryPackageItem, $this>
+     */
+    public function employeeSalaryPackageItems(): HasMany
+    {
+        return $this->hasMany(EmployeeSalaryPackageItem::class);
     }
 
     /**

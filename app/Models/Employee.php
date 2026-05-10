@@ -132,6 +132,16 @@ class Employee extends Model
     }
 
     /**
+     * Get the salary packages linked to this employee.
+     *
+     * @return HasMany<EmployeeSalaryPackage, $this>
+     */
+    public function salaryPackages(): HasMany
+    {
+        return $this->hasMany(EmployeeSalaryPackage::class);
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
