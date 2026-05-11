@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\EmployeeSalaryPackageStatus;
+use App\Enums\SalaryPackageStatus;
 use App\Models\Concerns\BelongsToCompany;
 use Database\Factories\EmployeeSalaryPackageFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -60,7 +60,7 @@ class EmployeeSalaryPackage extends Model
             'transportation_allowance' => 'decimal:2',
             'effective_from' => 'date',
             'effective_to' => 'date',
-            'status' => EmployeeSalaryPackageStatus::class,
+            'status' => SalaryPackageStatus::class,
             'metadata' => 'array',
         ];
     }

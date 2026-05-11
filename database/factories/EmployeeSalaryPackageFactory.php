@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Enums\EmployeeSalaryPackageStatus;
+use App\Enums\SalaryPackageStatus;
 use App\Models\Company;
 use App\Models\Employee;
 use App\Models\EmployeeSalaryPackage;
@@ -30,7 +30,7 @@ class EmployeeSalaryPackageFactory extends Factory
             'transportation_allowance' => fake()->randomFloat(2, 0, 2000),
             'effective_from' => now()->startOfMonth(),
             'effective_to' => null,
-            'status' => EmployeeSalaryPackageStatus::Active,
+            'status' => SalaryPackageStatus::Active,
             'metadata' => [],
         ];
     }

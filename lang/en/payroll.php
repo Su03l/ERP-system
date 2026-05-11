@@ -40,4 +40,11 @@ return [
         'paid' => 'Paid',
         'cancelled' => 'Cancelled',
     ],
+    'run_item_statuses' => [
+        'draft' => 'Draft',
+        'calculated' => 'Calculated',
+        'approved' => 'Approved',
+        'paid' => 'Paid',
+        'cancelled' => 'Cancelled',
+    ],
 ];

@@ -142,6 +142,16 @@ class Employee extends Model
     }
 
     /**
+     * Get payroll run items linked to this employee.
+     *
+     * @return HasMany<PayrollRunItem, $this>
+     */
+    public function payrollRunItems(): HasMany
+    {
+        return $this->hasMany(PayrollRunItem::class);
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

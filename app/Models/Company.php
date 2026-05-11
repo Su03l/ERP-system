@@ -190,6 +190,16 @@ class Company extends Model
     }
 
     /**
+     * Get payroll run items owned by this company.
+     *
+     * @return HasMany<PayrollRunItem, $this>
+     */
+    public function payrollRunItems(): HasMany
+    {
+        return $this->hasMany(PayrollRunItem::class);
+    }
+
+    /**
      * @return HasMany<Workflow, $this>
      */
     public function workflows(): HasMany

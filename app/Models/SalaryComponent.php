@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\SalaryComponentCalculationType;
+use App\Enums\SalaryCalculationType;
 use App\Enums\SalaryComponentStatus;
 use App\Enums\SalaryComponentType;
 use App\Models\Concerns\BelongsToCompany;
@@ -42,6 +42,16 @@ class SalaryComponent extends Model
     }
 
     /**
+     * Get payroll run component snapshots linked to this component.
+     *
+     * @return HasMany<PayrollRunItemComponent, $this>
+     */
+    public function payrollRunItemComponents(): HasMany
+    {
+        return $this->hasMany(PayrollRunItemComponent::class);
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -50,7 +60,7 @@ class SalaryComponent extends Model
     {
         return [
             'type' => SalaryComponentType::class,
-            'calculation_type' => SalaryComponentCalculationType::class,
+            'calculation_type' => SalaryCalculationType::class,
             'default_amount' => 'decimal:2',
             'default_percentage' => 'decimal:2',
             'is_taxable' => 'boolean',

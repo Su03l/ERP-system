@@ -1,10 +1,10 @@
 <?php
 
-use App\Enums\EmployeeSalaryPackageStatus;
 use App\Enums\PayrollCycleType;
-use App\Enums\SalaryComponentCalculationType;
+use App\Enums\SalaryCalculationType;
 use App\Enums\SalaryComponentStatus;
 use App\Enums\SalaryComponentType;
+use App\Enums\SalaryPackageStatus;
 use App\Models\Company;
 use App\Models\Employee;
 use App\Models\EmployeeSalaryPackage;
@@ -37,7 +37,7 @@ it('stores tenant scoped payroll settings with Arabic payslips by default', func
 it('stores salary components per company with enum backed fields', function () {
     $component = SalaryComponent::factory()->create([
         'type' => SalaryComponentType::Allowance,
-        'calculation_type' => SalaryComponentCalculationType::Percentage,
+        'calculation_type' => SalaryCalculationType::Percentage,
         'default_amount' => null,
         'default_percentage' => 15,
         'status' => SalaryComponentStatus::Active,
@@ -45,7 +45,7 @@ it('stores salary components per company with enum backed fields', function () {
 
     expect($component->company->salaryComponents()->whereKey($component)->exists())->toBeTrue()
         ->and($component->type)->toBe(SalaryComponentType::Allowance)
-        ->and($component->calculation_type)->toBe(SalaryComponentCalculationType::Percentage)
+        ->and($component->calculation_type)->toBe(SalaryCalculationType::Percentage)
         ->and($component->status)->toBe(SalaryComponentStatus::Active)
         ->and($component->default_percentage)->toBe('15.00');
 });
@@ -59,7 +59,7 @@ it('stores employee salary packages and dynamic component items in one company',
         'company_id' => $company->id,
         'employee_id' => $employee->id,
         'basic_salary' => 12000,
-        'status' => EmployeeSalaryPackageStatus::Active,
+        'status' => SalaryPackageStatus::Active,
     ]);
 
     $item = EmployeeSalaryPackageItem::factory()->create([
@@ -76,7 +76,7 @@ it('stores employee salary packages and dynamic component items in one company',
         ->and($item->salaryPackage->is($package))->toBeTrue()
         ->and($item->salaryComponent->is($component))->toBeTrue()
         ->and($package->basic_salary)->toBe('12000.00')
-        ->and($package->status)->toBe(EmployeeSalaryPackageStatus::Active);
+        ->and($package->status)->toBe(SalaryPackageStatus::Active);
 });
 
 it('provides localized payroll enum labels', function () {
@@ -84,7 +84,7 @@ it('provides localized payroll enum labels', function () {
 
     expect(PayrollCycleType::Monthly->label())->toBe('شهري')
         ->and(SalaryComponentType::Deduction->label())->toBe('استقطاع')
-        ->and(SalaryComponentCalculationType::Fixed->label())->toBe('مبلغ ثابت')
+        ->and(SalaryCalculationType::Fixed->label())->toBe('مبلغ ثابت')
         ->and(SalaryComponentStatus::Inactive->label())->toBe('غير نشط')
-        ->and(EmployeeSalaryPackageStatus::Active->label())->toBe('نشط');
+        ->and(SalaryPackageStatus::Active->label())->toBe('نشط');
 });

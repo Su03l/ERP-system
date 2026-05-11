@@ -40,4 +40,11 @@ return [
         'paid' => 'مدفوعة',
         'cancelled' => 'ملغاة',
     ],
+    'run_item_statuses' => [
+        'draft' => 'مسودة',
+        'calculated' => 'محسوبة',
+        'approved' => 'معتمدة',
+        'paid' => 'مدفوعة',
+        'cancelled' => 'ملغاة',
+    ],
 ];

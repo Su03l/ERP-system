@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Enums\SalaryComponentCalculationType;
+use App\Enums\SalaryCalculationType;
 use App\Enums\SalaryComponentStatus;
 use App\Enums\SalaryComponentType;
 use App\Models\Company;
@@ -27,7 +27,7 @@ class SalaryComponentFactory extends Factory
             'name_en' => fake()->words(2, true),
             'code' => fake()->unique()->bothify('COMP-###'),
             'type' => fake()->randomElement(SalaryComponentType::cases()),
-            'calculation_type' => SalaryComponentCalculationType::Fixed,
+            'calculation_type' => SalaryCalculationType::Fixed,
             'default_amount' => fake()->randomFloat(2, 100, 1500),
             'default_percentage' => null,
             'is_taxable' => false,

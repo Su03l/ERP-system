@@ -2,14 +2,14 @@
 
 namespace App\Enums;
 
-enum EmployeeSalaryPackageStatus: string
+enum SalaryCalculationType: string
 {
-    case Active = 'active';
-    case Inactive = 'inactive';
+    case Fixed = 'fixed';
+    case Percentage = 'percentage';
 
     public function label(): string
     {
-        return __("payroll.salary_package_statuses.{$this->value}");
+        return __("payroll.salary_component_calculation_types.{$this->value}");
     }
 
     /**
@@ -18,7 +18,7 @@ enum EmployeeSalaryPackageStatus: string
     public static function values(): array
     {
         return array_map(
-            fn (self $status): string => $status->value,
+            fn (self $type): string => $type->value,
             self::cases(),
         );
     }
@@ -29,9 +29,9 @@ enum EmployeeSalaryPackageStatus: string
     public static function options(): array
     {
         return array_map(
-            fn (self $status): array => [
-                'value' => $status->value,
-                'label' => $status->label(),
+            fn (self $type): array => [
+                'value' => $type->value,
+                'label' => $type->label(),
             ],
             self::cases(),
         );
