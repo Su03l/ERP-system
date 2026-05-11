@@ -30,6 +30,9 @@ return [
         'payroll_periods' => [
             'overlap' => 'لا يمكن أن تتداخل فترات الرواتب لنفس الشركة.',
         ],
+        'salary_packages' => [
+            'active_conflict' => 'توجد حزمة راتب نشطة لهذا الموظف خلال التواريخ المحددة.',
+        ],
     ],
     'attributes' => [
         'name' => 'الاسم',

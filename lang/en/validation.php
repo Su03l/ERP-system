@@ -30,6 +30,9 @@ return [
         'payroll_periods' => [
             'overlap' => 'Payroll periods may not overlap for the same company.',
         ],
+        'salary_packages' => [
+            'active_conflict' => 'An active salary package already exists for this employee during the selected dates.',
+        ],
     ],
     'attributes' => [
         'name' => 'name',
