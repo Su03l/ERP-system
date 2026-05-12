@@ -65,6 +65,11 @@ return [
             'issuable_status' => 'Only draft sales invoices can be issued.',
             'cancelable_status' => 'Only unposted and unpaid sales invoices can be cancelled.',
         ],
+        'purchase_invoices' => [
+            'editable_status' => 'Only draft, unposted purchase invoices can be edited.',
+            'approvable_status' => 'Only draft purchase invoices can be approved.',
+            'cancelable_status' => 'Only unposted and unpaid purchase invoices can be cancelled.',
+        ],
         'journal_entries' => [
             'unbalanced' => 'Journal entry debits and credits must balance before posting.',
             'single_side' => 'Each journal entry line must use either debit or credit, not both.',
