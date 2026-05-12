@@ -55,6 +55,11 @@ return [
             'parent_self' => 'An account cannot be its own parent.',
             'posted_lines' => 'Accounts with posted journal entry lines cannot be archived.',
         ],
+        'sales_invoices' => [
+            'editable_status' => 'Only draft, unposted sales invoices can be edited.',
+            'issuable_status' => 'Only draft sales invoices can be issued.',
+            'cancelable_status' => 'Only unposted and unpaid sales invoices can be cancelled.',
+        ],
         'journal_entries' => [
             'unbalanced' => 'Journal entry debits and credits must balance before posting.',
             'single_side' => 'Each journal entry line must use either debit or credit, not both.',
