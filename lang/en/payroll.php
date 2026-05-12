@@ -47,4 +47,10 @@ return [
         'paid' => 'Paid',
         'cancelled' => 'Cancelled',
     ],
+    'components' => [
+        'housing_allowance_ar' => 'Housing allowance',
+        'housing_allowance_en' => 'Housing allowance',
+        'transportation_allowance_ar' => 'Transportation allowance',
+        'transportation_allowance_en' => 'Transportation allowance',
+    ],
 ];

@@ -32,6 +32,10 @@ return [
         ],
         'salary_packages' => [
             'active_conflict' => 'An active salary package already exists for this employee during the selected dates.',
+            'missing_active' => 'No active salary package exists for this employee during the selected payroll period.',
+        ],
+        'payroll_runs' => [
+            'duplicate' => 'A payroll run already exists for the selected period.',
         ],
     ],
     'attributes' => [

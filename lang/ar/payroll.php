@@ -47,4 +47,10 @@ return [
         'paid' => 'مدفوعة',
         'cancelled' => 'ملغاة',
     ],
+    'components' => [
+        'housing_allowance_ar' => 'بدل السكن',
+        'housing_allowance_en' => 'Housing allowance',
+        'transportation_allowance_ar' => 'بدل النقل',
+        'transportation_allowance_en' => 'Transportation allowance',
+    ],
 ];

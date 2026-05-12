@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Gate;
 
 class AttendanceRecordController extends Controller
 {
+    // index used for  ==
     public function index(IndexAttendanceRecordRequest $request, AttendanceIndexQuery $attendanceIndexQuery): AnonymousResourceCollection
     {
         return AttendanceRecordResource::collection($attendanceIndexQuery->paginate($request->validated()));

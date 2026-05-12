@@ -24,6 +24,7 @@ class GeneratePayrollRunRequest extends FormRequest
             'company_id' => ['prohibited'],
             'payroll_period_id' => ['required', 'integer', Rule::exists('payroll_periods', 'id')->where('company_id', $companyId)],
             'run_number' => ['nullable', 'string', 'max:255', Rule::unique('payroll_runs', 'run_number')->where('company_id', $companyId)],
+            'allow_duplicate' => ['sometimes', 'boolean'],
             'employee_ids' => ['sometimes', 'array'],
             'employee_ids.*' => ['integer', Rule::exists('employees', 'id')->where('company_id', $companyId)],
             'metadata' => ['nullable', 'array'],

@@ -29,6 +29,7 @@ use Illuminate\Validation\ValidationException;
 
 uses(RefreshDatabase::class);
 
+// use for
 function grantSalaryPackagePermissions(User $user, array $permissionKeys): void
 {
     $role = Role::factory()->for($user->company)->create();
