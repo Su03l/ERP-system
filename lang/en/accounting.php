@@ -45,6 +45,11 @@ return [
         'cancelled' => 'Cancelled',
         'refunded' => 'Refunded',
     ],
+    'customer_statuses' => [
+        'active' => 'Active',
+        'inactive' => 'Inactive',
+        'blocked' => 'Blocked',
+    ],
     'validation' => [
         'accounts' => [
             'parent_self' => 'An account cannot be its own parent.',

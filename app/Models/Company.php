@@ -180,6 +180,16 @@ class Company extends Model
     }
 
     /**
+     * Get customers owned by this company.
+     *
+     * @return HasMany<Customer, $this>
+     */
+    public function customers(): HasMany
+    {
+        return $this->hasMany(Customer::class);
+    }
+
+    /**
      * Get the salary components configured for this company.
      *
      * @return HasMany<SalaryComponent, $this>
