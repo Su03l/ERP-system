@@ -51,6 +51,16 @@ class Account extends Model
     }
 
     /**
+     * Get the journal entry lines posted to this account.
+     *
+     * @return HasMany<JournalEntryLine, $this>
+     */
+    public function journalEntryLines(): HasMany
+    {
+        return $this->hasMany(JournalEntryLine::class);
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

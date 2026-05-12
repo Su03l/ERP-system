@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AttendanceRecordController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
@@ -42,3 +43,4 @@ Route::middleware('auth')->apiResource('payroll-periods', PayrollPeriodControlle
 Route::middleware('auth')->apiResource('payroll-runs', PayrollRunController::class)->only(['index', 'store', 'show']);
 Route::middleware('auth')->get('payroll-run-items/{payroll_run_item}/payslip', [PayrollRunItemController::class, 'payslip'])->name('payroll-run-items.payslip');
 Route::middleware('auth')->apiResource('payroll-run-items', PayrollRunItemController::class)->only(['index', 'show']);
+Route::middleware('auth')->apiResource('accounts', AccountController::class);

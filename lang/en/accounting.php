@@ -46,6 +46,10 @@ return [
         'refunded' => 'Refunded',
     ],
     'validation' => [
+        'accounts' => [
+            'parent_self' => 'An account cannot be its own parent.',
+            'posted_lines' => 'Accounts with posted journal entry lines cannot be archived.',
+        ],
         'journal_entries' => [
             'unbalanced' => 'Journal entry debits and credits must balance before posting.',
             'single_side' => 'Each journal entry line must use either debit or credit, not both.',
