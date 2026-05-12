@@ -210,6 +210,16 @@ class Company extends Model
     }
 
     /**
+     * Get vendors owned by this company.
+     *
+     * @return HasMany<Vendor, $this>
+     */
+    public function vendors(): HasMany
+    {
+        return $this->hasMany(Vendor::class);
+    }
+
+    /**
      * Get the salary components configured for this company.
      *
      * @return HasMany<SalaryComponent, $this>

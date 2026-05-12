@@ -50,6 +50,11 @@ return [
         'inactive' => 'غير نشط',
         'blocked' => 'محظور',
     ],
+    'vendor_statuses' => [
+        'active' => 'نشط',
+        'inactive' => 'غير نشط',
+        'blocked' => 'محظور',
+    ],
     'validation' => [
         'accounts' => [
             'parent_self' => 'لا يمكن أن يكون الحساب أصلا لنفسه.',

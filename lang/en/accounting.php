@@ -50,6 +50,11 @@ return [
         'inactive' => 'Inactive',
         'blocked' => 'Blocked',
     ],
+    'vendor_statuses' => [
+        'active' => 'Active',
+        'inactive' => 'Inactive',
+        'blocked' => 'Blocked',
+    ],
     'validation' => [
         'accounts' => [
             'parent_self' => 'An account cannot be its own parent.',
