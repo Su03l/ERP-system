@@ -190,6 +190,26 @@ class Company extends Model
     }
 
     /**
+     * Get sales invoices owned by this company.
+     *
+     * @return HasMany<SalesInvoice, $this>
+     */
+    public function salesInvoices(): HasMany
+    {
+        return $this->hasMany(SalesInvoice::class);
+    }
+
+    /**
+     * Get sales invoice lines owned by this company.
+     *
+     * @return HasMany<SalesInvoiceLine, $this>
+     */
+    public function salesInvoiceLines(): HasMany
+    {
+        return $this->hasMany(SalesInvoiceLine::class);
+    }
+
+    /**
      * Get the salary components configured for this company.
      *
      * @return HasMany<SalaryComponent, $this>

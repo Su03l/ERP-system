@@ -8,6 +8,7 @@ use Database\Factories\CustomerFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable([
@@ -26,6 +27,16 @@ class Customer extends Model
 {
     /** @use HasFactory<CustomerFactory> */
     use BelongsToCompany, HasFactory, SoftDeletes;
+
+    /**
+     * Get sales invoices attached to this customer.
+     *
+     * @return HasMany<SalesInvoice, $this>
+     */
+    public function salesInvoices(): HasMany
+    {
+        return $this->hasMany(SalesInvoice::class);
+    }
 
     /**
      * Get the attributes that should be cast.
