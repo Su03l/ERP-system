@@ -219,6 +219,18 @@ class Company extends Model
         return $this->hasMany(Vendor::class);
     }
 
+    /** @return HasMany<PurchaseInvoice, $this> */
+    public function purchaseInvoices(): HasMany
+    {
+        return $this->hasMany(PurchaseInvoice::class);
+    }
+
+    /** @return HasMany<PurchaseInvoiceLine, $this> */
+    public function purchaseInvoiceLines(): HasMany
+    {
+        return $this->hasMany(PurchaseInvoiceLine::class);
+    }
+
     /**
      * Get the salary components configured for this company.
      *

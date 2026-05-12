@@ -8,6 +8,7 @@ use Database\Factories\VendorFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable([
@@ -26,6 +27,12 @@ class Vendor extends Model
 {
     /** @use HasFactory<VendorFactory> */
     use BelongsToCompany, HasFactory, SoftDeletes;
+
+    /** @return HasMany<PurchaseInvoice, $this> */
+    public function purchaseInvoices(): HasMany
+    {
+        return $this->hasMany(PurchaseInvoice::class);
+    }
 
     /**
      * Get the attributes that should be cast.
