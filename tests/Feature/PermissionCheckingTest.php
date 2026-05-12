@@ -29,15 +29,15 @@ test('permission checks fail outside the users company context', function () {
     $otherCompany = Company::factory()->create();
     $user = User::factory()->for($company)->create();
     $role = Role::factory()->for($otherCompany)->create();
-    $permission = Permission::factory()->create(['key' => 'payroll.run']);
+    $permission = Permission::factory()->create(['key' => 'payroll_runs.generate']);
 
     $role->permissions()->attach($permission);
     $user->roles()->attach($role, ['company_id' => $otherCompany->id]);
 
     $this->actingAs($user);
 
-    expect($user->hasPermission('payroll.run'))->toBeFalse()
-        ->and(Gate::forUser($user)->allows('payroll.run'))->toBeFalse();
+    expect($user->hasPermission('payroll_runs.generate'))->toBeFalse()
+        ->and(Gate::forUser($user)->allows('payroll_runs.generate'))->toBeFalse();
 });
 
 test('permission checks fail when no current company is available', function () {
