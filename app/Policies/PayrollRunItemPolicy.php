@@ -15,7 +15,8 @@ class PayrollRunItemPolicy
     public function view(User $user, PayrollRunItem $payrollRunItem): bool
     {
         return $this->sameCompany($user, $payrollRunItem->company_id)
-            && $user->hasPermission('payslips.view', $payrollRunItem->company_id);
+            && ($user->hasPermission('payslips.view', $payrollRunItem->company_id)
+                || $user->employeeProfile?->id === $payrollRunItem->employee_id);
     }
 
     public function create(User $user): bool

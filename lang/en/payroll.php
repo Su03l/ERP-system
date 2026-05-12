@@ -54,4 +54,13 @@ return [
         'transportation_allowance_ar' => 'Transportation allowance',
         'transportation_allowance_en' => 'Transportation allowance',
     ],
+    'payslip' => [
+        'employee' => 'Employee',
+        'period' => 'Period',
+        'basic_salary' => 'Basic salary',
+        'allowances' => 'Allowances',
+        'deductions' => 'Deductions',
+        'gross_salary' => 'Gross salary',
+        'net_salary' => 'Net salary',
+    ],
 ];

@@ -93,7 +93,7 @@ class CreateSalaryPackage
      */
     private function authorizeSalaryChange(User $actor, int $companyId): void
     {
-        if (! $actor->hasPermission('employees.update_salary', $companyId)) {
+        if (! $actor->hasPermission('salary_packages.create', $companyId)) {
             throw new AuthorizationException('You are not authorized to manage salary packages.');
         }
     }

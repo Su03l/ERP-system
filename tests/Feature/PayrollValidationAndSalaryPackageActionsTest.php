@@ -132,7 +132,7 @@ it('creates salary packages with items in the current company and audits the cha
     $actor = User::factory()->for($company)->create();
     $employee = Employee::factory()->for($company)->create();
     $component = SalaryComponent::factory()->for($company)->create();
-    grantSalaryPackagePermissions($actor, ['employees.update_salary']);
+    grantSalaryPackagePermissions($actor, ['salary_packages.create']);
 
     $this->actingAs($actor);
 
@@ -163,7 +163,7 @@ it('updates activates and ends salary packages with audit logs', function () {
         'effective_from' => '2026-01-01',
         'effective_to' => '2026-12-31',
     ]);
-    grantSalaryPackagePermissions($actor, ['employees.update_salary']);
+    grantSalaryPackagePermissions($actor, ['salary_packages.update']);
 
     $this->actingAs($actor);
 
@@ -189,7 +189,7 @@ it('prevents conflicting active salary packages', function () {
     $company = Company::factory()->create();
     $actor = User::factory()->for($company)->create();
     $employee = Employee::factory()->for($company)->create();
-    grantSalaryPackagePermissions($actor, ['employees.update_salary']);
+    grantSalaryPackagePermissions($actor, ['salary_packages.create']);
 
     EmployeeSalaryPackage::factory()->for($company)->create([
         'employee_id' => $employee->id,

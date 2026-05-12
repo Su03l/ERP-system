@@ -54,4 +54,13 @@ return [
         'transportation_allowance_ar' => 'بدل النقل',
         'transportation_allowance_en' => 'Transportation allowance',
     ],
+    'payslip' => [
+        'employee' => 'الموظف',
+        'period' => 'الفترة',
+        'basic_salary' => 'الراتب الأساسي',
+        'allowances' => 'البدلات',
+        'deductions' => 'الاستقطاعات',
+        'gross_salary' => 'إجمالي الراتب',
+        'net_salary' => 'صافي الراتب',
+    ],
 ];
