@@ -52,6 +52,9 @@ return [
             'non_zero_line' => 'Each journal entry line must have a debit or credit amount.',
             'postable_status' => 'Only draft or approved journal entries can be posted.',
             'approvable_status' => 'Only draft or pending journal entries can be approved.',
+            'editable_status' => 'Only draft journal entries can be edited.',
+            'approval_required' => 'This journal entry must be approved before posting.',
+            'reversible_status' => 'Only posted journal entries can be reversed.',
         ],
     ],
 ];
