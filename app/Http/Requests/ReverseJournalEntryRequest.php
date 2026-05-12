@@ -1,0 +1,59 @@
+<?php
+
+namespace App\Http\Requests;
+
+use App\Enums\JournalEntryStatus;
+use App\Models\JournalEntry;
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
+
+class ReverseJournalEntryRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        $journalEntry = $this->routeJournalEntry();
+
+        return $journalEntry !== null
+            && $this->user()?->company_id !== null
+            && $this->user()->company_id === $journalEntry->company_id;
+    }
+
+    /**
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'comment' => ['nullable', 'string', 'max:1000'],
+            'metadata' => ['nullable', 'array'],
+        ];
+    }
+
+    /**
+     * @return array<int, callable>
+     */
+    public function after(): array
+    {
+        return [
+            function (Validator $validator): void {
+                $journalEntry = $this->routeJournalEntry();
+
+                if ($journalEntry !== null && $journalEntry->status !== JournalEntryStatus::Posted) {
+                    $validator->errors()->add('status', __('accounting.validation.journal_entries.reversible_status'));
+                }
+            },
+        ];
+    }
+
+    private function routeJournalEntry(): ?JournalEntry
+    {
+        $journalEntry = $this->route('journal_entry') ?? $this->route('journalEntry');
+
+        if ($journalEntry instanceof JournalEntry) {
+            return $journalEntry;
+        }
+
+        return $journalEntry === null ? null : JournalEntry::query()->find($journalEntry);
+    }
+}

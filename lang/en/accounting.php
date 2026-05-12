@@ -59,6 +59,7 @@ return [
             'editable_status' => 'Only draft journal entries can be edited.',
             'approval_required' => 'This journal entry must be approved before posting.',
             'reversible_status' => 'Only posted journal entries can be reversed.',
+            'rejectable_status' => 'Only draft or pending journal entries can be rejected.',
         ],
     ],
 ];

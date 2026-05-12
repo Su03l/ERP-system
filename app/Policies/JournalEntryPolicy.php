@@ -46,6 +46,11 @@ class JournalEntryPolicy
             && $user->hasPermission('journal_entries.approve', $journalEntry->company_id);
     }
 
+    public function reject(User $user, JournalEntry $journalEntry): bool
+    {
+        return $this->approve($user, $journalEntry);
+    }
+
     public function reverse(User $user, JournalEntry $journalEntry): bool
     {
         return $this->sameCompany($user, $journalEntry->company_id)

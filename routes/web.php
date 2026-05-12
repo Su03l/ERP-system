@@ -6,6 +6,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EmployeeSalaryPackageController;
 use App\Http\Controllers\JobTitleController;
+use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\LeaveBalanceController;
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\LeaveTypeController;
@@ -44,3 +45,8 @@ Route::middleware('auth')->apiResource('payroll-runs', PayrollRunController::cla
 Route::middleware('auth')->get('payroll-run-items/{payroll_run_item}/payslip', [PayrollRunItemController::class, 'payslip'])->name('payroll-run-items.payslip');
 Route::middleware('auth')->apiResource('payroll-run-items', PayrollRunItemController::class)->only(['index', 'show']);
 Route::middleware('auth')->apiResource('accounts', AccountController::class);
+Route::middleware('auth')->post('journal-entries/{journal_entry}/post', [JournalEntryController::class, 'post'])->name('journal-entries.post');
+Route::middleware('auth')->post('journal-entries/{journal_entry}/approve', [JournalEntryController::class, 'approve'])->name('journal-entries.approve');
+Route::middleware('auth')->post('journal-entries/{journal_entry}/reject', [JournalEntryController::class, 'reject'])->name('journal-entries.reject');
+Route::middleware('auth')->post('journal-entries/{journal_entry}/reverse', [JournalEntryController::class, 'reverse'])->name('journal-entries.reverse');
+Route::middleware('auth')->apiResource('journal-entries', JournalEntryController::class)->except(['destroy']);
