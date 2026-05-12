@@ -133,3 +133,13 @@ it('requires explicit sales invoice permissions', function () {
 
     app(CreateSalesInvoice::class)->handle(salesInvoiceActionPayload($customer), $actor);
 })->throws(AuthorizationException::class);
+
+it('prevents action-level cross-company customer references', function () {
+    $company = Company::factory()->create();
+    $actor = User::factory()->for($company)->create();
+    $otherCustomer = Customer::factory()->for(Company::factory())->create();
+    grantSalesInvoicePermissions($actor, ['sales_invoices.create']);
+    $this->actingAs($actor);
+
+    app(CreateSalesInvoice::class)->handle(salesInvoiceActionPayload($otherCustomer), $actor);
+})->throws(AuthorizationException::class);

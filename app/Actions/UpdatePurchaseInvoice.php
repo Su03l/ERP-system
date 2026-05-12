@@ -3,8 +3,10 @@
 namespace App\Actions;
 
 use App\Enums\InvoiceStatus;
+use App\Models\JournalEntry;
 use App\Models\PurchaseInvoice;
 use App\Models\User;
+use App\Models\Vendor;
 use App\Services\AuditLogger;
 use App\Services\PurchaseInvoiceCalculationService;
 use App\Support\TenantContext;
@@ -27,6 +29,7 @@ class UpdatePurchaseInvoice
         $this->ensureEditable($invoice);
         $incomingLines = $data['lines'] ?? null;
         unset($data['lines'], $data['company_id'], $data['subtotal'], $data['tax_amount'], $data['discount_amount'], $data['total_amount'], $data['balance_due']);
+        $this->ensureReferencesBelongToCompany($data, $invoice->company_id);
         $lines = is_array($incomingLines) ? $incomingLines : $this->existingLines($invoice);
         $calculation = $this->calculationService->calculate($lines, $data['paid_amount'] ?? $invoice->paid_amount);
 
@@ -47,6 +50,18 @@ class UpdatePurchaseInvoice
 
             return $invoice;
         });
+    }
+
+    /** @param array<string, mixed> $data */
+    private function ensureReferencesBelongToCompany(array $data, int $companyId): void
+    {
+        if (array_key_exists('vendor_id', $data) && $data['vendor_id'] !== null && ! Vendor::query()->where('company_id', $companyId)->whereKey($data['vendor_id'])->exists()) {
+            throw new AuthorizationException('Vendor does not belong to the current company.');
+        }
+
+        if (array_key_exists('posted_journal_entry_id', $data) && $data['posted_journal_entry_id'] !== null && ! JournalEntry::query()->where('company_id', $companyId)->whereKey($data['posted_journal_entry_id'])->exists()) {
+            throw new AuthorizationException('Posted journal entry does not belong to the current company.');
+        }
     }
 
     private function ensureEditable(PurchaseInvoice $invoice): void

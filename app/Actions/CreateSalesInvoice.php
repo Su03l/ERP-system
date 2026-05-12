@@ -3,6 +3,8 @@
 namespace App\Actions;
 
 use App\Enums\InvoiceStatus;
+use App\Models\Customer;
+use App\Models\JournalEntry;
 use App\Models\SalesInvoice;
 use App\Models\User;
 use App\Services\AuditLogger;
@@ -31,6 +33,7 @@ class CreateSalesInvoice
         $companyId = $this->companyId($actor);
         $lines = $data['lines'] ?? [];
         unset($data['lines'], $data['company_id'], $data['subtotal'], $data['tax_amount'], $data['discount_amount'], $data['total_amount'], $data['balance_due']);
+        $this->ensureReferencesBelongToCompany($data, $companyId);
         $calculation = $this->calculationService->calculate($lines, $data['paid_amount'] ?? 0);
 
         return DB::transaction(function () use ($actor, $calculation, $companyId, $data): SalesInvoice {
@@ -48,6 +51,18 @@ class CreateSalesInvoice
 
             return $invoice->refresh()->load('lines');
         });
+    }
+
+    /** @param array<string, mixed> $data */
+    private function ensureReferencesBelongToCompany(array $data, int $companyId): void
+    {
+        if (($data['customer_id'] ?? null) !== null && ! Customer::query()->where('company_id', $companyId)->whereKey($data['customer_id'])->exists()) {
+            throw new AuthorizationException('Customer does not belong to the current company.');
+        }
+
+        if (($data['posted_journal_entry_id'] ?? null) !== null && ! JournalEntry::query()->where('company_id', $companyId)->whereKey($data['posted_journal_entry_id'])->exists()) {
+            throw new AuthorizationException('Posted journal entry does not belong to the current company.');
+        }
     }
 
     /**

@@ -102,3 +102,13 @@ it('requires explicit purchase invoice permissions', function () {
 
     app(CreatePurchaseInvoice::class)->handle(purchaseInvoiceActionPayload($vendor), $actor);
 })->throws(AuthorizationException::class);
+
+it('prevents action-level cross-company vendor references', function () {
+    $company = Company::factory()->create();
+    $actor = User::factory()->for($company)->create();
+    $otherVendor = Vendor::factory()->for(Company::factory())->create();
+    grantPurchaseInvoicePermissions($actor, ['purchase_invoices.create']);
+    $this->actingAs($actor);
+
+    app(CreatePurchaseInvoice::class)->handle(purchaseInvoiceActionPayload($otherVendor), $actor);
+})->throws(AuthorizationException::class);
