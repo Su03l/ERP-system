@@ -37,6 +37,7 @@ return [
         'generated' => 'منشأة',
         'pending_approval' => 'بانتظار الاعتماد',
         'approved' => 'معتمدة',
+        'rejected' => 'مرفوضة',
         'paid' => 'مدفوعة',
         'cancelled' => 'ملغاة',
     ],

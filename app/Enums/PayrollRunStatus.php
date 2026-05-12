@@ -9,6 +9,7 @@ enum PayrollRunStatus: string
     case Generated = 'generated';
     case PendingApproval = 'pending_approval';
     case Approved = 'approved';
+    case Rejected = 'rejected';
     case Paid = 'paid';
     case Cancelled = 'cancelled';
 

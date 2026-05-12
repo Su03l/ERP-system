@@ -37,6 +37,7 @@ return [
         'generated' => 'Generated',
         'pending_approval' => 'Pending approval',
         'approved' => 'Approved',
+        'rejected' => 'Rejected',
         'paid' => 'Paid',
         'cancelled' => 'Cancelled',
     ],

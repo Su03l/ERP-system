@@ -32,7 +32,7 @@ uses(RefreshDatabase::class);
 function grantPayrollRunPermission(User $user): void
 {
     $role = Role::factory()->for($user->company)->create();
-    $permission = Permission::factory()->create(['key' => 'payroll.run']);
+    $permission = Permission::factory()->create(['key' => 'payroll_runs.generate']);
 
     $role->permissions()->attach($permission);
     $user->roles()->attach($role, ['company_id' => $user->company_id]);
@@ -156,7 +156,7 @@ it('generates payroll run items totals components and audit log', function () {
     ], $actor);
 
     expect($run->company_id)->toBe($company->id)
-        ->and($run->status)->toBe(PayrollRunStatus::Generated)
+        ->and($run->status)->toBe(PayrollRunStatus::PendingApproval)
         ->and($run->total_employees)->toBe(1)
         ->and($run->gross_amount)->toBe('13248.80')
         ->and($run->total_allowances)->toBe('2500.00')

@@ -24,6 +24,7 @@ class GeneratePayrollRun
     public function __construct(
         private readonly AuditLogger $auditLogger,
         private readonly PayrollCalculationService $payrollCalculationService,
+        private readonly SubmitPayrollRunForApproval $submitPayrollRunForApproval,
         private readonly TenantContext $tenantContext,
     ) {}
 
@@ -115,7 +116,9 @@ class GeneratePayrollRun
                 company: $companyId,
             );
 
-            return $payrollRun->refresh()->load('items.components');
+            return $this->submitPayrollRunForApproval
+                ->handle($payrollRun->refresh(), $actor)
+                ->load('items.components', 'workflowInstance');
         });
     }
 
@@ -152,7 +155,7 @@ class GeneratePayrollRun
      */
     private function authorizePayrollRun(User $actor, int $companyId): void
     {
-        if (! $actor->hasPermission('payroll.run', $companyId)) {
+        if (! $actor->hasPermission('payroll_runs.generate', $companyId)) {
             throw new AuthorizationException('You are not authorized to generate payroll runs.');
         }
     }
@@ -175,7 +178,7 @@ class GeneratePayrollRun
         $exists = PayrollRun::query()
             ->where('company_id', $period->company_id)
             ->where('payroll_period_id', $period->id)
-            ->whereNot('status', PayrollRunStatus::Cancelled->value)
+            ->whereNotIn('status', [PayrollRunStatus::Cancelled->value, PayrollRunStatus::Rejected->value])
             ->exists();
 
         if ($exists) {
