@@ -45,6 +45,10 @@ return [
         'cancelled' => 'ملغاة',
         'refunded' => 'مستردة',
     ],
+    'payment_directions' => [
+        'incoming' => 'وارد',
+        'outgoing' => 'صادر',
+    ],
     'customer_statuses' => [
         'active' => 'نشط',
         'inactive' => 'غير نشط',

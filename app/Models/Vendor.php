@@ -34,6 +34,12 @@ class Vendor extends Model
         return $this->hasMany(PurchaseInvoice::class);
     }
 
+    /** @return HasMany<Payment, $this> */
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
     /**
      * Get the attributes that should be cast.
      *

@@ -45,6 +45,10 @@ return [
         'cancelled' => 'Cancelled',
         'refunded' => 'Refunded',
     ],
+    'payment_directions' => [
+        'incoming' => 'Incoming',
+        'outgoing' => 'Outgoing',
+    ],
     'customer_statuses' => [
         'active' => 'Active',
         'inactive' => 'Inactive',

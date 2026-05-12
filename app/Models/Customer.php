@@ -38,6 +38,12 @@ class Customer extends Model
         return $this->hasMany(SalesInvoice::class);
     }
 
+    /** @return HasMany<Payment, $this> */
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
     /**
      * Get the attributes that should be cast.
      *
