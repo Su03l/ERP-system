@@ -140,6 +140,26 @@ class Company extends Model
     }
 
     /**
+     * Get this company's accounting settings.
+     *
+     * @return HasOne<AccountingSetting, $this>
+     */
+    public function accountingSetting(): HasOne
+    {
+        return $this->hasOne(AccountingSetting::class);
+    }
+
+    /**
+     * Get chart of accounts records owned by this company.
+     *
+     * @return HasMany<Account, $this>
+     */
+    public function accounts(): HasMany
+    {
+        return $this->hasMany(Account::class);
+    }
+
+    /**
      * Get the salary components configured for this company.
      *
      * @return HasMany<SalaryComponent, $this>
