@@ -160,6 +160,26 @@ class Company extends Model
     }
 
     /**
+     * Get journal entries owned by this company.
+     *
+     * @return HasMany<JournalEntry, $this>
+     */
+    public function journalEntries(): HasMany
+    {
+        return $this->hasMany(JournalEntry::class);
+    }
+
+    /**
+     * Get journal entry lines owned by this company.
+     *
+     * @return HasMany<JournalEntryLine, $this>
+     */
+    public function journalEntryLines(): HasMany
+    {
+        return $this->hasMany(JournalEntryLine::class);
+    }
+
+    /**
      * Get the salary components configured for this company.
      *
      * @return HasMany<SalaryComponent, $this>
