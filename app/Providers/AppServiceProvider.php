@@ -21,6 +21,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Gate::define('financial_reports.view', fn (User $user): bool => $user->company_id !== null && $user->hasPermission('financial_reports.view', $user->company_id));
+        Gate::define('financial_reports.export', fn (User $user): bool => $user->company_id !== null && $user->hasPermission('financial_reports.export', $user->company_id));
+
         Gate::before(function (User $user, string $ability): ?bool {
             if ($user->hasPermission($ability)) {
                 return true;
