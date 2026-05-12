@@ -48,6 +48,10 @@ return [
     'validation' => [
         'journal_entries' => [
             'unbalanced' => 'Journal entry debits and credits must balance before posting.',
+            'single_side' => 'Each journal entry line must use either debit or credit, not both.',
+            'non_zero_line' => 'Each journal entry line must have a debit or credit amount.',
+            'postable_status' => 'Only draft or approved journal entries can be posted.',
+            'approvable_status' => 'Only draft or pending journal entries can be approved.',
         ],
     ],
 ];
