@@ -200,6 +200,16 @@ class Company extends Model
     }
 
     /**
+     * Get this company's document settings.
+     *
+     * @return HasOne<DocumentSetting, $this>
+     */
+    public function documentSetting(): HasOne
+    {
+        return $this->hasOne(DocumentSetting::class);
+    }
+
+    /**
      * Get chart of accounts records owned by this company.
      *
      * @return HasMany<Account, $this>
