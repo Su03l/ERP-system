@@ -105,6 +105,16 @@ class User extends Authenticatable implements HasLocalePreference
         return $this->hasMany(PayrollRun::class, 'approved_by');
     }
 
+    /**
+     * Get CRM leads assigned to this user.
+     *
+     * @return HasMany<CrmLead, $this>
+     */
+    public function assignedCrmLeads(): HasMany
+    {
+        return $this->hasMany(CrmLead::class, 'assigned_user_id');
+    }
+
     public function hasPermission(string $permissionKey, ?int $companyId = null): bool
     {
         return app(PermissionChecker::class)->userHasPermission($this, $permissionKey, $companyId);

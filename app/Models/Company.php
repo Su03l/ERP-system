@@ -270,6 +270,16 @@ class Company extends Model
     }
 
     /**
+     * Get CRM leads owned by this company.
+     *
+     * @return HasMany<CrmLead, $this>
+     */
+    public function crmLeads(): HasMany
+    {
+        return $this->hasMany(CrmLead::class);
+    }
+
+    /**
      * Get sales invoices owned by this company.
      *
      * @return HasMany<SalesInvoice, $this>
