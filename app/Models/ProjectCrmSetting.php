@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ProjectStatus;
 use App\Models\Concerns\BelongsToCompany;
 use Database\Factories\ProjectCrmSettingFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -38,6 +39,7 @@ class ProjectCrmSetting extends Model
             'time_tracking_enabled' => 'boolean',
             'billable_time_enabled' => 'boolean',
             'crm_enabled' => 'boolean',
+            'default_project_status' => ProjectStatus::class,
             'metadata' => 'array',
         ];
     }

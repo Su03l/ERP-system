@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\LeadStatus;
 use App\Models\Concerns\BelongsToCompany;
 use Database\Factories\CrmLeadFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -60,6 +61,7 @@ class CrmLead extends Model
     {
         return [
             'expected_value' => 'decimal:2',
+            'status' => LeadStatus::class,
             'metadata' => 'array',
         ];
     }

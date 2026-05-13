@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ProjectStatus;
 use App\Models\Company;
 use App\Models\ProjectCrmSetting;
 use Illuminate\Database\QueryException;
@@ -34,7 +35,7 @@ it('stores tenant scoped project and CRM settings', function () {
         ->and($company->projectCrmSetting->is($setting))->toBeTrue()
         ->and($setting->project_code_prefix)->toBe('PRJ')
         ->and($setting->task_code_prefix)->toBe('TSK')
-        ->and($setting->default_project_status)->toBe('draft')
+        ->and($setting->default_project_status)->toBe(ProjectStatus::Draft)
         ->and($setting->project_approval_required)->toBeTrue()
         ->and($setting->task_approval_required)->toBeFalse()
         ->and($setting->time_tracking_enabled)->toBeTrue()

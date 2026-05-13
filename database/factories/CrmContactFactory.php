@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ContactStatus;
 use App\Models\Company;
 use App\Models\CrmContact;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -29,7 +30,7 @@ class CrmContactFactory extends Factory
             'position' => fake()->optional()->jobTitle(),
             'notes_ar' => fake()->optional()->sentence(),
             'notes_en' => fake()->optional()->sentence(),
-            'status' => 'active',
+            'status' => ContactStatus::Active,
             'metadata' => [],
         ];
     }

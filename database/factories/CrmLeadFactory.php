@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\LeadStatus;
 use App\Models\Company;
 use App\Models\CrmLead;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -27,7 +28,7 @@ class CrmLeadFactory extends Factory
             'email' => fake()->optional()->safeEmail(),
             'phone' => fake()->optional()->phoneNumber(),
             'source' => fake()->optional()->randomElement(['website', 'referral', 'campaign']),
-            'status' => 'new',
+            'status' => LeadStatus::New,
             'expected_value' => fake()->optional()->randomFloat(2, 1000, 100000),
             'notes_ar' => fake()->optional()->sentence(),
             'notes_en' => fake()->optional()->sentence(),

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ContactStatus;
 use App\Models\Concerns\BelongsToCompany;
 use Database\Factories\CrmContactFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -56,6 +57,7 @@ class CrmContact extends Model
     protected function casts(): array
     {
         return [
+            'status' => ContactStatus::class,
             'metadata' => 'array',
         ];
     }
