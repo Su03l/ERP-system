@@ -38,6 +38,7 @@ return [
         'assets' => [
             'category_company' => 'The asset category must belong to the same company.',
             'assigned_employee_company' => 'The assigned employee must belong to the same company.',
+            'assigned_archive' => 'Assigned assets must be returned before they can be archived.',
         ],
     ],
 ];

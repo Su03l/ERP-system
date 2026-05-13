@@ -38,6 +38,7 @@ return [
         'assets' => [
             'category_company' => 'يجب أن يتبع تصنيف الأصل لنفس الشركة.',
             'assigned_employee_company' => 'يجب أن يتبع الموظف المستلم لنفس الشركة.',
+            'assigned_archive' => 'يجب استرجاع الأصل المخصص قبل أرشفته.',
         ],
     ],
 ];
