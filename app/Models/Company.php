@@ -210,6 +210,16 @@ class Company extends Model
     }
 
     /**
+     * Get company documents owned by this company.
+     *
+     * @return HasMany<CompanyDocument, $this>
+     */
+    public function companyDocuments(): HasMany
+    {
+        return $this->hasMany(CompanyDocument::class);
+    }
+
+    /**
      * Get chart of accounts records owned by this company.
      *
      * @return HasMany<Account, $this>
