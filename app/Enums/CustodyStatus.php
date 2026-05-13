@@ -2,15 +2,17 @@
 
 namespace App\Enums;
 
-enum AssetDepreciationMethod: string
+enum CustodyStatus: string
 {
-    case StraightLine = 'straight_line';
-    case DecliningBalance = 'declining_balance';
-    case UnitsOfProduction = 'units_of_production';
+    case Pending = 'pending';
+    case Assigned = 'assigned';
+    case Returned = 'returned';
+    case Rejected = 'rejected';
+    case Cancelled = 'cancelled';
 
     public function label(): string
     {
-        return __("assets.depreciation_methods.{$this->value}");
+        return __("assets.custody_statuses.{$this->value}");
     }
 
     /**
@@ -19,7 +21,7 @@ enum AssetDepreciationMethod: string
     public static function values(): array
     {
         return array_map(
-            fn (self $method): string => $method->value,
+            fn (self $status): string => $status->value,
             self::cases(),
         );
     }
@@ -30,9 +32,9 @@ enum AssetDepreciationMethod: string
     public static function options(): array
     {
         return array_map(
-            fn (self $method): array => [
-                'value' => $method->value,
-                'label' => $method->label(),
+            fn (self $status): array => [
+                'value' => $status->value,
+                'label' => $status->label(),
             ],
             self::cases(),
         );

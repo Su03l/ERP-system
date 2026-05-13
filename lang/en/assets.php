@@ -17,6 +17,19 @@ return [
         'retired' => 'Retired',
         'lost' => 'Lost',
     ],
+    'custody_statuses' => [
+        'pending' => 'Pending',
+        'assigned' => 'Assigned',
+        'returned' => 'Returned',
+        'rejected' => 'Rejected',
+        'cancelled' => 'Cancelled',
+    ],
+    'maintenance_statuses' => [
+        'scheduled' => 'Scheduled',
+        'in_progress' => 'In progress',
+        'completed' => 'Completed',
+        'cancelled' => 'Cancelled',
+    ],
     'validation' => [
         'asset_categories' => [
             'parent_self' => 'An asset category cannot be its own parent.',

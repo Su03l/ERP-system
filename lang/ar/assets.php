@@ -17,6 +17,19 @@ return [
         'retired' => 'مستبعد',
         'lost' => 'مفقود',
     ],
+    'custody_statuses' => [
+        'pending' => 'قيد الانتظار',
+        'assigned' => 'مخصص',
+        'returned' => 'مسترجع',
+        'rejected' => 'مرفوض',
+        'cancelled' => 'ملغى',
+    ],
+    'maintenance_statuses' => [
+        'scheduled' => 'مجدولة',
+        'in_progress' => 'قيد التنفيذ',
+        'completed' => 'مكتملة',
+        'cancelled' => 'ملغاة',
+    ],
     'validation' => [
         'asset_categories' => [
             'parent_self' => 'لا يمكن أن يكون تصنيف الأصل أصلا لنفسه.',
