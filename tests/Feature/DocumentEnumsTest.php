@@ -17,7 +17,7 @@ it('provides stable document enum values', function () {
         'rejected',
         'archived',
     ])
-        ->and(DocumentType::values())->toContain('contract', 'license', 'certificate', 'policy', 'identification', 'other')
+        ->and(DocumentType::values())->toContain('contract', 'license', 'certificate', 'policy', 'identification', 'national_id', 'passport', 'other')
         ->and(DocumentOwnerType::values())->toContain('company', 'employee', 'asset', 'vendor', 'customer');
 });
 

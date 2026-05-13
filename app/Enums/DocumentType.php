@@ -9,6 +9,8 @@ enum DocumentType: string
     case Certificate = 'certificate';
     case Policy = 'policy';
     case Identification = 'identification';
+    case NationalId = 'national_id';
+    case Passport = 'passport';
     case Other = 'other';
 
     public function label(): string

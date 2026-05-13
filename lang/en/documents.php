@@ -15,6 +15,8 @@ return [
         'certificate' => 'Certificate',
         'policy' => 'Policy',
         'identification' => 'Identification',
+        'national_id' => 'National ID',
+        'passport' => 'Passport',
         'other' => 'Other',
     ],
     'owner_types' => [

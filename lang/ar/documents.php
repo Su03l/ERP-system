@@ -15,6 +15,8 @@ return [
         'certificate' => 'شهادة',
         'policy' => 'سياسة',
         'identification' => 'هوية',
+        'national_id' => 'هوية وطنية',
+        'passport' => 'جواز سفر',
         'other' => 'أخرى',
     ],
     'owner_types' => [
