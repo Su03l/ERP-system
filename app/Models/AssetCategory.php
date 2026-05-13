@@ -50,6 +50,16 @@ class AssetCategory extends Model
     }
 
     /**
+     * Get assets assigned to this category.
+     *
+     * @return HasMany<Asset, $this>
+     */
+    public function assets(): HasMany
+    {
+        return $this->hasMany(Asset::class);
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

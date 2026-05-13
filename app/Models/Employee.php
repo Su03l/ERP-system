@@ -152,6 +152,16 @@ class Employee extends Model
     }
 
     /**
+     * Get assets currently assigned to this employee.
+     *
+     * @return HasMany<Asset, $this>
+     */
+    public function assignedAssets(): HasMany
+    {
+        return $this->hasMany(Asset::class, 'assigned_employee_id');
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
