@@ -300,6 +300,16 @@ class Company extends Model
     }
 
     /**
+     * Get project tasks owned by this company.
+     *
+     * @return HasMany<ProjectTask, $this>
+     */
+    public function projectTasks(): HasMany
+    {
+        return $this->hasMany(ProjectTask::class);
+    }
+
+    /**
      * Get sales invoices owned by this company.
      *
      * @return HasMany<SalesInvoice, $this>

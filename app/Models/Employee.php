@@ -182,6 +182,16 @@ class Employee extends Model
     }
 
     /**
+     * Get project tasks assigned to this employee.
+     *
+     * @return HasMany<ProjectTask, $this>
+     */
+    public function assignedProjectTasks(): HasMany
+    {
+        return $this->hasMany(ProjectTask::class, 'assigned_employee_id');
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
