@@ -30,6 +30,11 @@ return [
         'completed' => 'Completed',
         'cancelled' => 'Cancelled',
     ],
+    'depreciation_schedule_statuses' => [
+        'draft' => 'Draft',
+        'calculated' => 'Calculated',
+        'posted' => 'Posted',
+    ],
     'validation' => [
         'asset_categories' => [
             'parent_self' => 'An asset category cannot be its own parent.',
@@ -45,6 +50,9 @@ return [
             'employee_company' => 'The custody employee must belong to the same company.',
             'asset_unavailable' => 'Only available assets can be assigned.',
             'asset_not_assigned' => 'Only assigned assets can be returned.',
+        ],
+        'depreciation_schedules' => [
+            'asset_company' => 'The depreciation schedule asset must belong to the same company.',
         ],
     ],
 ];

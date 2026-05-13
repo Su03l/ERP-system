@@ -68,6 +68,16 @@ class Asset extends Model
     }
 
     /**
+     * Get depreciation schedules for this asset.
+     *
+     * @return HasMany<DepreciationSchedule, $this>
+     */
+    public function depreciationSchedules(): HasMany
+    {
+        return $this->hasMany(DepreciationSchedule::class);
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

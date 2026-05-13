@@ -30,6 +30,11 @@ return [
         'completed' => 'مكتملة',
         'cancelled' => 'ملغاة',
     ],
+    'depreciation_schedule_statuses' => [
+        'draft' => 'مسودة',
+        'calculated' => 'محسوبة',
+        'posted' => 'مرحلة',
+    ],
     'validation' => [
         'asset_categories' => [
             'parent_self' => 'لا يمكن أن يكون تصنيف الأصل أصلا لنفسه.',
@@ -45,6 +50,9 @@ return [
             'employee_company' => 'يجب أن يتبع موظف العهدة لنفس الشركة.',
             'asset_unavailable' => 'يمكن تخصيص الأصول المتاحة فقط.',
             'asset_not_assigned' => 'يمكن استرجاع الأصول المخصصة فقط.',
+        ],
+        'depreciation_schedules' => [
+            'asset_company' => 'يجب أن يتبع أصل جدول الإهلاك لنفس الشركة.',
         ],
     ],
 ];

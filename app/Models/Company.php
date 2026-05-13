@@ -190,6 +190,16 @@ class Company extends Model
     }
 
     /**
+     * Get depreciation schedules owned by this company.
+     *
+     * @return HasMany<DepreciationSchedule, $this>
+     */
+    public function depreciationSchedules(): HasMany
+    {
+        return $this->hasMany(DepreciationSchedule::class);
+    }
+
+    /**
      * Get chart of accounts records owned by this company.
      *
      * @return HasMany<Account, $this>
