@@ -150,6 +150,16 @@ class Company extends Model
     }
 
     /**
+     * Get this company's asset management settings.
+     *
+     * @return HasOne<AssetSetting, $this>
+     */
+    public function assetSetting(): HasOne
+    {
+        return $this->hasOne(AssetSetting::class);
+    }
+
+    /**
      * Get chart of accounts records owned by this company.
      *
      * @return HasMany<Account, $this>
