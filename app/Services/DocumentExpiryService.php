@@ -6,6 +6,7 @@ use App\Models\Company;
 use App\Models\CompanyDocument;
 use App\Models\EmployeeDocument;
 use App\Support\TenantContext;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -101,7 +102,10 @@ class DocumentExpiryService
         return collect(array_values($counts))->sortBy('company_id')->values();
     }
 
-    private function employeeBase(Company|int|null $company): mixed
+    /**
+     * @return Builder<EmployeeDocument>
+     */
+    private function employeeBase(Company|int|null $company): Builder
     {
         return EmployeeDocument::query()
             ->with(['company', 'employee'])
@@ -109,7 +113,10 @@ class DocumentExpiryService
             ->whereNotNull('expiry_date');
     }
 
-    private function companyBase(Company|int|null $company): mixed
+    /**
+     * @return Builder<CompanyDocument>
+     */
+    private function companyBase(Company|int|null $company): Builder
     {
         return CompanyDocument::query()
             ->with(['company'])
