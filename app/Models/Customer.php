@@ -38,6 +38,16 @@ class Customer extends Model
         return $this->hasMany(SalesInvoice::class);
     }
 
+    /**
+     * Get CRM contacts attached to this customer.
+     *
+     * @return HasMany<CrmContact, $this>
+     */
+    public function crmContacts(): HasMany
+    {
+        return $this->hasMany(CrmContact::class);
+    }
+
     /** @return HasMany<Payment, $this> */
     public function payments(): HasMany
     {
