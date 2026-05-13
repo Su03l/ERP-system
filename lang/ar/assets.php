@@ -43,6 +43,8 @@ return [
         'asset_custodies' => [
             'asset_company' => 'يجب أن يتبع الأصل لنفس الشركة.',
             'employee_company' => 'يجب أن يتبع موظف العهدة لنفس الشركة.',
+            'asset_unavailable' => 'يمكن تخصيص الأصول المتاحة فقط.',
+            'asset_not_assigned' => 'يمكن استرجاع الأصول المخصصة فقط.',
         ],
     ],
 ];

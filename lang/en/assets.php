@@ -43,6 +43,8 @@ return [
         'asset_custodies' => [
             'asset_company' => 'The asset must belong to the same company.',
             'employee_company' => 'The custody employee must belong to the same company.',
+            'asset_unavailable' => 'Only available assets can be assigned.',
+            'asset_not_assigned' => 'Only assigned assets can be returned.',
         ],
     ],
 ];
