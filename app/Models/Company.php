@@ -160,6 +160,16 @@ class Company extends Model
     }
 
     /**
+     * Get asset categories owned by this company.
+     *
+     * @return HasMany<AssetCategory, $this>
+     */
+    public function assetCategories(): HasMany
+    {
+        return $this->hasMany(AssetCategory::class);
+    }
+
+    /**
      * Get chart of accounts records owned by this company.
      *
      * @return HasMany<Account, $this>
