@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\DocumentStatus;
+use App\Enums\DocumentType;
 use App\Models\Concerns\BelongsToCompany;
 use Database\Factories\EmployeeDocumentFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -47,6 +49,8 @@ class EmployeeDocument extends Model
         return [
             'issue_date' => 'date',
             'expiry_date' => 'date',
+            'document_type' => DocumentType::class,
+            'status' => DocumentStatus::class,
             'metadata' => 'array',
         ];
     }
