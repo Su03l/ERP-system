@@ -16,8 +16,8 @@ uses(RefreshDatabase::class);
 it('provides stable CRM and project enum values', function () {
     expect(LeadStatus::values())->toBe(['new', 'contacted', 'qualified', 'converted', 'lost'])
         ->and(ContactStatus::values())->toBe(['active', 'inactive', 'archived'])
-        ->and(ProjectStatus::values())->toBe(['draft', 'active', 'on_hold', 'completed', 'cancelled'])
-        ->and(ProjectTaskStatus::values())->toBe(['todo', 'in_progress', 'review', 'completed', 'cancelled'])
+        ->and(ProjectStatus::values())->toBe(['draft', 'pending_approval', 'active', 'on_hold', 'completed', 'cancelled'])
+        ->and(ProjectTaskStatus::values())->toBe(['todo', 'pending_approval', 'in_progress', 'review', 'completed', 'cancelled'])
         ->and(ProjectPriority::values())->toBe(['low', 'medium', 'high', 'urgent']);
 });
 

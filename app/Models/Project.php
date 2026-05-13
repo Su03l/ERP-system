@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'status',
     'priority',
     'progress_percentage',
+    'workflow_instance_id',
     'metadata',
 ])]
 class Project extends Model
@@ -63,6 +64,16 @@ class Project extends Model
     public function tasks(): HasMany
     {
         return $this->hasMany(ProjectTask::class);
+    }
+
+    /**
+     * Get the workflow instance attached to this project.
+     *
+     * @return BelongsTo<WorkflowInstance, $this>
+     */
+    public function workflowInstance(): BelongsTo
+    {
+        return $this->belongsTo(WorkflowInstance::class);
     }
 
     /**

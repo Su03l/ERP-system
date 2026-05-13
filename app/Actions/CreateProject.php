@@ -2,11 +2,14 @@
 
 namespace App\Actions;
 
+use App\Enums\ProjectStatus;
 use App\Models\Customer;
 use App\Models\Employee;
 use App\Models\Project;
 use App\Models\User;
+use App\Models\Workflow;
 use App\Services\AuditLogger;
+use App\Services\WorkflowExecutionService;
 use App\Support\TenantContext;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +18,7 @@ use Illuminate\Validation\ValidationException;
 
 class CreateProject
 {
-    public function __construct(private readonly AuditLogger $auditLogger, private readonly TenantContext $tenantContext) {}
+    public function __construct(private readonly AuditLogger $auditLogger, private readonly TenantContext $tenantContext, private readonly WorkflowExecutionService $workflowExecutionService) {}
 
     /** @param array<string, mixed> $data */
     public function handle(array $data, ?User $actor = null): Project
@@ -28,10 +31,32 @@ class CreateProject
 
         return DB::transaction(function () use ($actor, $companyId, $data): Project {
             $project = Project::create([...$data, 'company_id' => $companyId]);
+            $project->loadMissing('company.projectCrmSetting');
+
+            if (($project->company->projectCrmSetting?->project_approval_required ?? false) && $workflow = $this->workflow($companyId, 'project_approval')) {
+                $instance = $this->workflowExecutionService->start($workflow, $actor, $project, ['project_id' => $project->id]);
+                $project->forceFill([
+                    'workflow_instance_id' => $instance->id,
+                    'status' => ProjectStatus::PendingApproval,
+                ])->save();
+            }
+
             $this->auditLogger->log('project.created', $project, newValues: $project->attributesToArray(), user: $actor, company: $companyId);
 
             return $project;
         });
+    }
+
+    private function workflow(int $companyId, string $triggerType): ?Workflow
+    {
+        return Workflow::query()
+            ->where('company_id', $companyId)
+            ->where('module_key', 'projects')
+            ->where('trigger_type', $triggerType)
+            ->where('status', 'active')
+            ->with('steps')
+            ->latest('id')
+            ->first();
     }
 
     /** @param array<string, mixed> $data */

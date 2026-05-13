@@ -5,6 +5,7 @@ namespace App\Enums;
 enum ProjectTaskStatus: string
 {
     case Todo = 'todo';
+    case PendingApproval = 'pending_approval';
     case InProgress = 'in_progress';
     case Review = 'review';
     case Completed = 'completed';

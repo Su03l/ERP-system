@@ -2,11 +2,14 @@
 
 namespace App\Actions;
 
+use App\Enums\ProjectTaskStatus;
 use App\Models\Employee;
 use App\Models\Project;
 use App\Models\ProjectTask;
 use App\Models\User;
+use App\Models\Workflow;
 use App\Services\AuditLogger;
+use App\Services\WorkflowExecutionService;
 use App\Support\TenantContext;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +18,7 @@ use Illuminate\Validation\ValidationException;
 
 class CreateProjectTask
 {
-    public function __construct(private readonly AuditLogger $auditLogger, private readonly TenantContext $tenantContext, private readonly RecalculateProjectProgress $recalculateProjectProgress) {}
+    public function __construct(private readonly AuditLogger $auditLogger, private readonly TenantContext $tenantContext, private readonly RecalculateProjectProgress $recalculateProjectProgress, private readonly WorkflowExecutionService $workflowExecutionService) {}
 
     /** @param array<string, mixed> $data */
     public function handle(array $data, ?User $actor = null): ProjectTask
@@ -28,11 +31,36 @@ class CreateProjectTask
 
         return DB::transaction(function () use ($actor, $companyId, $data): ProjectTask {
             $task = ProjectTask::create([...$data, 'company_id' => $companyId]);
+            $task->loadMissing('project.company.projectCrmSetting');
+
+            if (($task->project->company->projectCrmSetting?->task_approval_required ?? false) && $workflow = $this->workflow($companyId, 'task_approval')) {
+                $instance = $this->workflowExecutionService->start($workflow, $actor, $task, [
+                    'project_id' => $task->project_id,
+                    'project_task_id' => $task->id,
+                ]);
+                $task->forceFill([
+                    'workflow_instance_id' => $instance->id,
+                    'status' => ProjectTaskStatus::PendingApproval,
+                ])->save();
+            }
+
             $this->auditLogger->log('project_task.created', $task, newValues: $task->attributesToArray(), user: $actor, company: $companyId);
             $this->recalculateProjectProgress->handle($task->project, $actor);
 
             return $task;
         });
+    }
+
+    private function workflow(int $companyId, string $triggerType): ?Workflow
+    {
+        return Workflow::query()
+            ->where('company_id', $companyId)
+            ->where('module_key', 'projects')
+            ->where('trigger_type', $triggerType)
+            ->where('status', 'active')
+            ->with('steps')
+            ->latest('id')
+            ->first();
     }
 
     /** @param array<string, mixed> $data */

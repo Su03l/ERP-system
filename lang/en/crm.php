@@ -15,6 +15,7 @@ return [
     ],
     'project_statuses' => [
         'draft' => 'Draft',
+        'pending_approval' => 'Pending approval',
         'active' => 'Active',
         'on_hold' => 'On hold',
         'completed' => 'Completed',
@@ -22,6 +23,7 @@ return [
     ],
     'project_task_statuses' => [
         'todo' => 'To do',
+        'pending_approval' => 'Pending approval',
         'in_progress' => 'In progress',
         'review' => 'Review',
         'completed' => 'Completed',

@@ -15,6 +15,7 @@ return [
     ],
     'project_statuses' => [
         'draft' => 'مسودة',
+        'pending_approval' => 'قيد الموافقة',
         'active' => 'نشط',
         'on_hold' => 'معلق',
         'completed' => 'مكتمل',
@@ -22,6 +23,7 @@ return [
     ],
     'project_task_statuses' => [
         'todo' => 'للعمل',
+        'pending_approval' => 'قيد الموافقة',
         'in_progress' => 'قيد التنفيذ',
         'review' => 'مراجعة',
         'completed' => 'مكتمل',

@@ -5,7 +5,9 @@ namespace App\Actions;
 use App\Enums\ProjectTaskStatus;
 use App\Models\ProjectTask;
 use App\Models\User;
+use App\Models\Workflow;
 use App\Services\AuditLogger;
+use App\Services\WorkflowExecutionService;
 use App\Support\TenantContext;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 class CompleteProjectTask
 {
-    public function __construct(private readonly AuditLogger $auditLogger, private readonly TenantContext $tenantContext, private readonly RecalculateProjectProgress $recalculateProjectProgress) {}
+    public function __construct(private readonly AuditLogger $auditLogger, private readonly TenantContext $tenantContext, private readonly RecalculateProjectProgress $recalculateProjectProgress, private readonly WorkflowExecutionService $workflowExecutionService) {}
 
     public function handle(ProjectTask $task, ?User $actor = null): ProjectTask
     {
@@ -23,6 +25,24 @@ class CompleteProjectTask
 
         return DB::transaction(function () use ($task, $actor): ProjectTask {
             $oldValues = $task->attributesToArray();
+            $task->loadMissing('project.company.projectCrmSetting');
+            $approvalRequired = $task->project->company->projectCrmSetting?->task_approval_required ?? false;
+
+            if ($approvalRequired && $workflow = $this->workflow($task->company_id, 'task_completion_approval')) {
+                $instance = $this->workflowExecutionService->start($workflow, $actor, $task, [
+                    'project_id' => $task->project_id,
+                    'project_task_id' => $task->id,
+                    'action' => 'complete',
+                ]);
+                $task->forceFill([
+                    'workflow_instance_id' => $instance->id,
+                    'status' => ProjectTaskStatus::PendingApproval,
+                ])->save();
+                $this->auditLogger->log('project_task.completion_approval_requested', $task, $oldValues, $task->refresh()->attributesToArray(), user: $actor, company: $task->company_id);
+
+                return $task;
+            }
+
             $task->forceFill([
                 'status' => ProjectTaskStatus::Completed,
                 'progress_percentage' => 100,
@@ -33,6 +53,18 @@ class CompleteProjectTask
 
             return $task;
         });
+    }
+
+    private function workflow(int $companyId, string $triggerType): ?Workflow
+    {
+        return Workflow::query()
+            ->where('company_id', $companyId)
+            ->where('module_key', 'projects')
+            ->where('trigger_type', $triggerType)
+            ->where('status', 'active')
+            ->with('steps')
+            ->latest('id')
+            ->first();
     }
 
     private function actor(?User $actor): User

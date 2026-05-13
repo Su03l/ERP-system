@@ -29,6 +29,7 @@ it('creates the projects schema', function () {
         'status',
         'priority',
         'progress_percentage',
+        'workflow_instance_id',
         'metadata',
         'created_at',
         'updated_at',
