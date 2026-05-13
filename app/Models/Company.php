@@ -210,6 +210,16 @@ class Company extends Model
     }
 
     /**
+     * Get this company's project and CRM settings.
+     *
+     * @return HasOne<ProjectCrmSetting, $this>
+     */
+    public function projectCrmSetting(): HasOne
+    {
+        return $this->hasOne(ProjectCrmSetting::class);
+    }
+
+    /**
      * Get company documents owned by this company.
      *
      * @return HasMany<CompanyDocument, $this>
