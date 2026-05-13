@@ -40,5 +40,9 @@ return [
             'assigned_employee_company' => 'The assigned employee must belong to the same company.',
             'assigned_archive' => 'Assigned assets must be returned before they can be archived.',
         ],
+        'asset_custodies' => [
+            'asset_company' => 'The asset must belong to the same company.',
+            'employee_company' => 'The custody employee must belong to the same company.',
+        ],
     ],
 ];

@@ -40,5 +40,9 @@ return [
             'assigned_employee_company' => 'يجب أن يتبع الموظف المستلم لنفس الشركة.',
             'assigned_archive' => 'يجب استرجاع الأصل المخصص قبل أرشفته.',
         ],
+        'asset_custodies' => [
+            'asset_company' => 'يجب أن يتبع الأصل لنفس الشركة.',
+            'employee_company' => 'يجب أن يتبع موظف العهدة لنفس الشركة.',
+        ],
     ],
 ];

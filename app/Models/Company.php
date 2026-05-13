@@ -180,6 +180,16 @@ class Company extends Model
     }
 
     /**
+     * Get asset custody records owned by this company.
+     *
+     * @return HasMany<AssetCustody, $this>
+     */
+    public function assetCustodies(): HasMany
+    {
+        return $this->hasMany(AssetCustody::class);
+    }
+
+    /**
      * Get chart of accounts records owned by this company.
      *
      * @return HasMany<Account, $this>

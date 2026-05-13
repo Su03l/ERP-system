@@ -162,6 +162,16 @@ class Employee extends Model
     }
 
     /**
+     * Get asset custody records for this employee.
+     *
+     * @return HasMany<AssetCustody, $this>
+     */
+    public function assetCustodies(): HasMany
+    {
+        return $this->hasMany(AssetCustody::class);
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
