@@ -66,6 +66,16 @@ class Project extends Model
     }
 
     /**
+     * Get time logs for this project.
+     *
+     * @return HasMany<ProjectTimeLog, $this>
+     */
+    public function timeLogs(): HasMany
+    {
+        return $this->hasMany(ProjectTimeLog::class);
+    }
+
+    /**
      * @return array<string, string>
      */
     protected function casts(): array

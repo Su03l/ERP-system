@@ -310,6 +310,16 @@ class Company extends Model
     }
 
     /**
+     * Get project time logs owned by this company.
+     *
+     * @return HasMany<ProjectTimeLog, $this>
+     */
+    public function projectTimeLogs(): HasMany
+    {
+        return $this->hasMany(ProjectTimeLog::class);
+    }
+
+    /**
      * Get sales invoices owned by this company.
      *
      * @return HasMany<SalesInvoice, $this>

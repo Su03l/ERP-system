@@ -192,6 +192,16 @@ class Employee extends Model
     }
 
     /**
+     * Get project time logs for this employee.
+     *
+     * @return HasMany<ProjectTimeLog, $this>
+     */
+    public function projectTimeLogs(): HasMany
+    {
+        return $this->hasMany(ProjectTimeLog::class);
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
