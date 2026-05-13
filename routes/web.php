@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\AssetCategoryController;
+use App\Http\Controllers\AssetController;
 use App\Http\Controllers\AttendanceRecordController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
@@ -45,6 +47,8 @@ Route::middleware('auth')->apiResource('payroll-runs', PayrollRunController::cla
 Route::middleware('auth')->get('payroll-run-items/{payroll_run_item}/payslip', [PayrollRunItemController::class, 'payslip'])->name('payroll-run-items.payslip');
 Route::middleware('auth')->apiResource('payroll-run-items', PayrollRunItemController::class)->only(['index', 'show']);
 Route::middleware('auth')->apiResource('accounts', AccountController::class);
+Route::middleware('auth')->apiResource('asset-categories', AssetCategoryController::class);
+Route::middleware('auth')->apiResource('assets', AssetController::class);
 Route::middleware('auth')->post('journal-entries/{journal_entry}/post', [JournalEntryController::class, 'post'])->name('journal-entries.post');
 Route::middleware('auth')->post('journal-entries/{journal_entry}/approve', [JournalEntryController::class, 'approve'])->name('journal-entries.approve');
 Route::middleware('auth')->post('journal-entries/{journal_entry}/reject', [JournalEntryController::class, 'reject'])->name('journal-entries.reject');
