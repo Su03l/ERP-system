@@ -48,6 +48,16 @@ class Customer extends Model
         return $this->hasMany(CrmContact::class);
     }
 
+    /**
+     * Get projects attached to this customer.
+     *
+     * @return HasMany<Project, $this>
+     */
+    public function projects(): HasMany
+    {
+        return $this->hasMany(Project::class);
+    }
+
     /** @return HasMany<Payment, $this> */
     public function payments(): HasMany
     {

@@ -172,6 +172,16 @@ class Employee extends Model
     }
 
     /**
+     * Get projects managed by this employee.
+     *
+     * @return HasMany<Project, $this>
+     */
+    public function managedProjects(): HasMany
+    {
+        return $this->hasMany(Project::class, 'project_manager_id');
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
