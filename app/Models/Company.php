@@ -220,6 +220,16 @@ class Company extends Model
     }
 
     /**
+     * Get this company's analytics and reporting settings.
+     *
+     * @return HasOne<AnalyticsSetting, $this>
+     */
+    public function analyticsSetting(): HasOne
+    {
+        return $this->hasOne(AnalyticsSetting::class);
+    }
+
+    /**
      * Get company documents owned by this company.
      *
      * @return HasMany<CompanyDocument, $this>
