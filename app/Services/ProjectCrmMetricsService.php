@@ -11,6 +11,7 @@ use App\Models\Project;
 use App\Models\ProjectTask;
 use App\Models\ProjectTimeLog;
 use App\Support\TenantContext;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 
 class ProjectCrmMetricsService
@@ -85,14 +86,16 @@ class ProjectCrmMetricsService
             ->count();
     }
 
-    private function applyCreatedRange(mixed $query, ?Carbon $dateFrom, ?Carbon $dateUntil): void
+    /** @param Builder<Project> $query */
+    private function applyCreatedRange(Builder $query, ?Carbon $dateFrom, ?Carbon $dateUntil): void
     {
         $query
             ->when($dateFrom, fn ($query) => $query->where('created_at', '>=', $dateFrom))
             ->when($dateUntil, fn ($query) => $query->where('created_at', '<=', $dateUntil));
     }
 
-    private function applyLogRange(mixed $query, ?Carbon $dateFrom, ?Carbon $dateUntil): void
+    /** @param Builder<ProjectTimeLog> $query */
+    private function applyLogRange(Builder $query, ?Carbon $dateFrom, ?Carbon $dateUntil): void
     {
         $query
             ->when($dateFrom, fn ($query) => $query->whereDate('log_date', '>=', $dateFrom->toDateString()))

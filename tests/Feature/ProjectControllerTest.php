@@ -116,6 +116,34 @@ it('manages project tasks and completion through endpoints', function () {
     expect(ProjectTask::query()->whereKey($taskId)->exists())->toBeFalse();
 });
 
+it('honors zero progress filters for projects and tasks', function () {
+    $company = Company::factory()->create();
+    $actor = User::factory()->for($company)->create();
+    $project = Project::factory()->for($company)->create(['progress_percentage' => 0]);
+    Project::factory()->for($company)->create(['progress_percentage' => 10]);
+    $task = ProjectTask::factory()->for($company)->create(['project_id' => $project->id, 'progress_percentage' => 0]);
+    ProjectTask::factory()->for($company)->create(['project_id' => $project->id, 'progress_percentage' => 10]);
+    grantProjectControllerPermissions($actor, ['projects.view', 'project_tasks.view']);
+
+    $this->actingAs($actor)
+        ->getJson(route('projects.index', [
+            'progress_min' => 0,
+            'progress_max' => 0,
+        ]))
+        ->assertSuccessful()
+        ->assertJsonPath('data.0.id', $project->id)
+        ->assertJsonCount(1, 'data');
+
+    $this->actingAs($actor)
+        ->getJson(route('project-tasks.index', [
+            'progress_min' => 0,
+            'progress_max' => 0,
+        ]))
+        ->assertSuccessful()
+        ->assertJsonPath('data.0.id', $task->id)
+        ->assertJsonCount(1, 'data');
+});
+
 it('manages project time logs through endpoints', function () {
     $company = Company::factory()->create();
     $actor = User::factory()->for($company)->create();

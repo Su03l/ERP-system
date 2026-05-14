@@ -28,7 +28,7 @@ class CrmLeadResource extends JsonResource
             'notes_ar' => $this->notes_ar,
             'notes_en' => $this->notes_en,
             'metadata' => $this->metadata,
-            'assigned_user' => $this->whenLoaded('assignedUser', fn (): array => [
+            'assigned_user' => $this->when($this->relationLoaded('assignedUser') && $this->assignedUser !== null, fn (): array => [
                 'id' => $this->assignedUser->id,
                 'name' => $this->assignedUser->name,
                 'email' => $this->assignedUser->email,

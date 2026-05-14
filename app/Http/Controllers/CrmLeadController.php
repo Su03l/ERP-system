@@ -72,5 +72,7 @@ class CrmLeadController extends Controller
     {
         Gate::authorize('convert', $crmLead);
         $action->handle($crmLead, request()->user());
+
+        return response()->noContent();
     }
 }

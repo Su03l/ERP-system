@@ -27,12 +27,12 @@ class CrmContactResource extends JsonResource
             'status' => $this->status?->value,
             'status_label' => $this->status?->label(),
             'metadata' => $this->metadata,
-            'customer' => $this->whenLoaded('customer', fn (): array => [
+            'customer' => $this->when($this->relationLoaded('customer') && $this->customer !== null, fn (): array => [
                 'id' => $this->customer->id,
                 'name_ar' => $this->customer->name_ar,
                 'name_en' => $this->customer->name_en,
             ]),
-            'lead' => CrmLeadResource::make($this->whenLoaded('lead')),
+            'lead' => $this->when($this->relationLoaded('lead') && $this->lead !== null, fn (): CrmLeadResource => CrmLeadResource::make($this->lead)),
             'created_at' => $this->created_at?->toJSON(),
             'updated_at' => $this->updated_at?->toJSON(),
         ];

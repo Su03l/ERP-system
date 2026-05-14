@@ -36,8 +36,8 @@ class ProjectTaskController extends Controller
             }))
             ->when($filters['due_from'] ?? null, fn ($query, string $date) => $query->whereDate('due_date', '>=', $date))
             ->when($filters['due_until'] ?? null, fn ($query, string $date) => $query->whereDate('due_date', '<=', $date))
-            ->when($filters['progress_min'] ?? null, fn ($query, int $progress) => $query->where('progress_percentage', '>=', $progress))
-            ->when($filters['progress_max'] ?? null, fn ($query, int $progress) => $query->where('progress_percentage', '<=', $progress))
+            ->when(isset($filters['progress_min']), fn ($query) => $query->where('progress_percentage', '>=', (int) $filters['progress_min']))
+            ->when(isset($filters['progress_max']), fn ($query) => $query->where('progress_percentage', '<=', (int) $filters['progress_max']))
             ->latest('id')
             ->paginate();
 

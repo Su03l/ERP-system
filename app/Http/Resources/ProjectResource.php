@@ -30,12 +30,12 @@ class ProjectResource extends JsonResource
             'priority_label' => $this->priority?->label(),
             'progress_percentage' => $this->progress_percentage,
             'metadata' => $this->metadata,
-            'customer' => $this->whenLoaded('customer', fn (): array => [
+            'customer' => $this->when($this->relationLoaded('customer') && $this->customer !== null, fn (): array => [
                 'id' => $this->customer->id,
                 'name_ar' => $this->customer->name_ar,
                 'name_en' => $this->customer->name_en,
             ]),
-            'project_manager' => $this->whenLoaded('projectManager', fn (): array => [
+            'project_manager' => $this->when($this->relationLoaded('projectManager') && $this->projectManager !== null, fn (): array => [
                 'id' => $this->projectManager->id,
                 'first_name_ar' => $this->projectManager->first_name_ar,
                 'last_name_ar' => $this->projectManager->last_name_ar,

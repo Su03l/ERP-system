@@ -25,7 +25,7 @@ class ProjectTimeLogResource extends JsonResource
             'notes_en' => $this->notes_en,
             'metadata' => $this->metadata,
             'project' => ProjectResource::make($this->whenLoaded('project')),
-            'project_task' => ProjectTaskResource::make($this->whenLoaded('projectTask')),
+            'project_task' => $this->when($this->relationLoaded('projectTask') && $this->projectTask !== null, fn (): ProjectTaskResource => ProjectTaskResource::make($this->projectTask)),
             'created_at' => $this->created_at?->toJSON(),
             'updated_at' => $this->updated_at?->toJSON(),
         ];
