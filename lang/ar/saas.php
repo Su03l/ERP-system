@@ -18,4 +18,18 @@ return [
         'monthly' => 'شهري',
         'yearly' => 'سنوي',
     ],
+    'limit_keys' => [
+        'users' => 'المستخدمين',
+        'employees' => 'الموظفين',
+        'storage_mb' => 'التخزين',
+        'modules' => 'الوحدات',
+        'api_access' => 'الوصول للواجهة البرمجية',
+        'advanced_reports' => 'التقارير المتقدمة',
+        'marketplace' => 'المتجر',
+    ],
+    'limits' => [
+        'allowed' => 'الميزة :limit متاحة في الخطة الحالية.',
+        'allowed_unlimited' => 'الميزة :limit غير محدودة في الخطة الحالية.',
+        'denied' => 'الميزة :limit غير متاحة أو تجاوزت حد الخطة الحالية.',
+    ],
 ];
