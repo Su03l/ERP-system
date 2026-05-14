@@ -482,6 +482,16 @@ class Company extends Model
     }
 
     /**
+     * Get usage snapshots captured for this company.
+     *
+     * @return HasMany<UsageSnapshot, $this>
+     */
+    public function usageSnapshots(): HasMany
+    {
+        return $this->hasMany(UsageSnapshot::class);
+    }
+
+    /**
      * @return HasMany<MigrationSession, $this>
      */
     public function migrationSessions(): HasMany

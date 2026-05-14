@@ -41,6 +41,11 @@ class PlanLimitsService
         );
     }
 
+    public function checkNumericUsage(Company $company, string $key, int|float $current, int|float $requested = 0): PlanLimitResult
+    {
+        return $this->checkNumericLimit($company, $key, $current, $requested);
+    }
+
     public function moduleEnabled(Company $company, CompanyModule|string $module): PlanLimitResult
     {
         $moduleKey = $module instanceof CompanyModule ? $module->value : $module;
