@@ -41,7 +41,7 @@ class UpdateAddOnRequest extends FormRequest
 
     private function addOn(): ?AddOn
     {
-        $addOn = $this->route('addOn');
+        $addOn = $this->route('addOn') ?? $this->route('add_on');
 
         if ($addOn instanceof AddOn) {
             return $addOn;

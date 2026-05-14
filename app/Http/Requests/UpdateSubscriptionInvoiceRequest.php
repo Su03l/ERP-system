@@ -44,7 +44,7 @@ class UpdateSubscriptionInvoiceRequest extends FormRequest
 
     private function subscriptionInvoice(): ?SubscriptionInvoice
     {
-        $invoice = $this->route('subscriptionInvoice');
+        $invoice = $this->route('subscriptionInvoice') ?? $this->route('subscription_invoice');
 
         if ($invoice instanceof SubscriptionInvoice) {
             return $invoice;

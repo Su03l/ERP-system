@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\AddOnController;
 use App\Http\Controllers\AssetCategoryController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\AttendanceRecordController;
+use App\Http\Controllers\CompanyAddOnController;
+use App\Http\Controllers\CompanySubscriptionController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EmployeeSalaryPackageController;
@@ -16,7 +19,9 @@ use App\Http\Controllers\PayrollPeriodController;
 use App\Http\Controllers\PayrollRunController;
 use App\Http\Controllers\PayrollRunItemController;
 use App\Http\Controllers\PayrollSettingController;
+use App\Http\Controllers\PlanController;
 use App\Http\Controllers\SalaryComponentController;
+use App\Http\Controllers\SubscriptionInvoiceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -60,4 +65,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('journal-entries/{journal_entry}/reject', [JournalEntryController::class, 'reject'])->name('journal-entries.reject');
     Route::post('journal-entries/{journal_entry}/reverse', [JournalEntryController::class, 'reverse'])->name('journal-entries.reverse');
     Route::apiResource('journal-entries', JournalEntryController::class)->except(['destroy']);
+
+    Route::post('company-subscriptions/{company_subscription}/cancel', [CompanySubscriptionController::class, 'cancel'])->name('company-subscriptions.cancel');
+    Route::post('subscription-invoices/{subscription_invoice}/mark-paid', [SubscriptionInvoiceController::class, 'markPaid'])->name('subscription-invoices.mark-paid');
+    Route::post('subscription-invoices/{subscription_invoice}/cancel', [SubscriptionInvoiceController::class, 'cancel'])->name('subscription-invoices.cancel');
+    Route::post('company-add-ons/{company_add_on}/deactivate', [CompanyAddOnController::class, 'deactivate'])->name('company-add-ons.deactivate');
+    Route::apiResource('plans', PlanController::class);
+    Route::apiResource('company-subscriptions', CompanySubscriptionController::class)->except(['destroy']);
+    Route::apiResource('subscription-invoices', SubscriptionInvoiceController::class)->except(['destroy']);
+    Route::apiResource('add-ons', AddOnController::class);
+    Route::apiResource('company-add-ons', CompanyAddOnController::class)->except(['destroy']);
 });
