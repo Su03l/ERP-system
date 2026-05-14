@@ -320,6 +320,16 @@ class Company extends Model
     }
 
     /**
+     * Get SaaS subscriptions owned by this company.
+     *
+     * @return HasMany<CompanySubscription, $this>
+     */
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(CompanySubscription::class);
+    }
+
+    /**
      * Get sales invoices owned by this company.
      *
      * @return HasMany<SalesInvoice, $this>
