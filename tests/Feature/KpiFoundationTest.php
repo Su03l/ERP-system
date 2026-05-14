@@ -2,6 +2,7 @@
 
 use App\Contracts\KpiResolver;
 use App\DTOs\KpiDateRange;
+use App\DTOs\KpiDefinition;
 use App\DTOs\KpiResult;
 use App\Models\Company;
 use App\Services\KpiRegistry;
@@ -15,6 +16,20 @@ test('kpi registry resolves export ready results for a company date range', func
     $registry = new KpiRegistry([
         new class implements KpiResolver
         {
+            public function definition(): KpiDefinition
+            {
+                return new KpiDefinition(
+                    key: $this->key(),
+                    module: $this->module(),
+                    labelAr: 'عدد الموظفين',
+                    labelEn: $this->label(),
+                    descriptionAr: null,
+                    descriptionEn: null,
+                    requiredPermission: 'employees.view',
+                    resolverClass: self::class,
+                );
+            }
+
             public function key(): string
             {
                 return 'hr.headcount';
@@ -25,9 +40,9 @@ test('kpi registry resolves export ready results for a company date range', func
                 return 'Headcount';
             }
 
-            public function category(): string
+            public function module(): string
             {
-                return 'HR';
+                return 'hr';
             }
 
             public function resolve(Company $company, KpiDateRange $dateRange): KpiResult
@@ -36,7 +51,7 @@ test('kpi registry resolves export ready results for a company date range', func
                     key: $this->key(),
                     label: $this->label(),
                     value: 0,
-                    category: $this->category(),
+                    category: $this->module(),
                     dateRange: $dateRange,
                     metadata: ['company_id' => $company->id],
                 );
@@ -44,9 +59,15 @@ test('kpi registry resolves export ready results for a company date range', func
         },
     ]);
 
-    expect($registry->available())->toBe([
-        ['key' => 'hr.headcount', 'label' => 'Headcount', 'category' => 'HR'],
-    ]);
+    $available = $registry->available()[0];
+
+    expect($available['key'])->toBe('hr.headcount')
+        ->and($available['module'])->toBe('hr')
+        ->and($available['label_ar'])->toBe('عدد الموظفين')
+        ->and($available['label_en'])->toBe('Headcount')
+        ->and($available['required_permission'])->toBe('employees.view')
+        ->and($available['supports_date_range'])->toBeTrue()
+        ->and($available['default_date_range'])->toBeNull();
 
     $export = $registry->export(['hr.headcount'], $company, $dateRange);
 
