@@ -44,4 +44,12 @@ return [
             'lead_company' => 'The lead must belong to the same company.',
         ],
     ],
+    'metrics' => [
+        'total_projects' => 'Total projects',
+        'overdue_tasks' => 'Overdue tasks',
+        'project_profitability' => 'Project profitability',
+        'total_logged_hours' => 'Total logged hours',
+        'billable_hours' => 'Billable hours',
+        'lead_conversion' => 'Lead conversion',
+    ],
 ];

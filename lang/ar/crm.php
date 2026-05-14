@@ -44,4 +44,12 @@ return [
             'lead_company' => 'يجب أن ينتمي العميل المحتمل لنفس الشركة.',
         ],
     ],
+    'metrics' => [
+        'total_projects' => 'إجمالي المشاريع',
+        'overdue_tasks' => 'المهام المتأخرة',
+        'project_profitability' => 'ربحية المشروع',
+        'total_logged_hours' => 'إجمالي الساعات المسجلة',
+        'billable_hours' => 'الساعات القابلة للفوترة',
+        'lead_conversion' => 'تحويل العملاء المحتملين',
+    ],
 ];
