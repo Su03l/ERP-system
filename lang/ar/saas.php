@@ -41,4 +41,7 @@ return [
         'cancelled' => 'ملغاة',
         'voided' => 'باطلة',
     ],
+    'subscription_invoices' => [
+        'cannot_cancel_paid' => 'لا يمكن إلغاء فواتير الاشتراك المدفوعة.',
+    ],
 ];

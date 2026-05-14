@@ -41,4 +41,7 @@ return [
         'cancelled' => 'Cancelled',
         'voided' => 'Voided',
     ],
+    'subscription_invoices' => [
+        'cannot_cancel_paid' => 'Paid subscription invoices cannot be cancelled.',
+    ],
 ];
