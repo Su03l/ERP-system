@@ -2,7 +2,7 @@
 
 namespace App\Actions;
 
-use App\Enums\SubscriptionBillingCycle;
+use App\Enums\BillingCycle;
 use App\Models\CompanySubscription;
 use App\Models\Plan;
 use App\Models\User;
@@ -14,7 +14,7 @@ class ChangeSubscriptionPlan
     public function __construct(private readonly SubscriptionLifecycleService $lifecycleService) {}
 
     /**
-     * @param  array{billing_cycle?: SubscriptionBillingCycle|string, metadata?: array<string, mixed>}  $data
+     * @param  array{billing_cycle?: BillingCycle|string, metadata?: array<string, mixed>}  $data
      */
     public function handle(CompanySubscription $subscription, Plan $plan, array $data = [], ?User $actor = null): CompanySubscription
     {
@@ -37,8 +37,8 @@ class ChangeSubscriptionPlan
         });
     }
 
-    private function billingCycle(SubscriptionBillingCycle|string $cycle): SubscriptionBillingCycle
+    private function billingCycle(BillingCycle|string $cycle): BillingCycle
     {
-        return $cycle instanceof SubscriptionBillingCycle ? $cycle : SubscriptionBillingCycle::from($cycle);
+        return $cycle instanceof BillingCycle ? $cycle : BillingCycle::from($cycle);
     }
 }

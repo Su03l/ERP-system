@@ -18,6 +18,10 @@ return [
         'monthly' => 'Monthly',
         'yearly' => 'Yearly',
     ],
+    'billing_cycles' => [
+        'monthly' => 'Monthly',
+        'yearly' => 'Yearly',
+    ],
     'limit_keys' => [
         'users' => 'users',
         'employees' => 'employees',

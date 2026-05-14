@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\SubscriptionBillingCycle;
+use App\Enums\BillingCycle;
 use App\Enums\SubscriptionStatus;
 use App\Models\Concerns\BelongsToCompany;
 use Database\Factories\CompanySubscriptionFactory;
@@ -58,7 +58,7 @@ class CompanySubscription extends Model
     {
         return [
             'status' => SubscriptionStatus::class,
-            'billing_cycle' => SubscriptionBillingCycle::class,
+            'billing_cycle' => BillingCycle::class,
             'starts_at' => 'datetime',
             'ends_at' => 'datetime',
             'trial_ends_at' => 'datetime',

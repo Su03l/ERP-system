@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Enums\SubscriptionBillingCycle;
+use App\Enums\BillingCycle;
 use App\Enums\SubscriptionStatus;
 use App\Models\Company;
 use App\Models\CompanySubscription;
@@ -25,7 +25,7 @@ class CompanySubscriptionFactory extends Factory
             'company_id' => Company::factory(),
             'plan_id' => Plan::factory(),
             'status' => SubscriptionStatus::Trialing,
-            'billing_cycle' => SubscriptionBillingCycle::Monthly,
+            'billing_cycle' => BillingCycle::Monthly,
             'starts_at' => now(),
             'ends_at' => null,
             'trial_ends_at' => now()->addDays(14),

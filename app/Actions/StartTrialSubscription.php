@@ -2,7 +2,7 @@
 
 namespace App\Actions;
 
-use App\Enums\SubscriptionBillingCycle;
+use App\Enums\BillingCycle;
 use App\Enums\SubscriptionStatus;
 use App\Models\Company;
 use App\Models\CompanySubscription;
@@ -18,7 +18,7 @@ class StartTrialSubscription
     public function __construct(private readonly SubscriptionLifecycleService $lifecycleService) {}
 
     /**
-     * @param  array{billing_cycle?: SubscriptionBillingCycle|string, starts_at?: Carbon|string|null, trial_days?: int|null, metadata?: array<string, mixed>}  $data
+     * @param  array{billing_cycle?: BillingCycle|string, starts_at?: Carbon|string|null, trial_days?: int|null, metadata?: array<string, mixed>}  $data
      *
      * @throws ValidationException
      */
@@ -34,7 +34,7 @@ class StartTrialSubscription
                 'company_id' => $company->id,
                 'plan_id' => $plan->id,
                 'status' => SubscriptionStatus::Trialing,
-                'billing_cycle' => $this->billingCycle($data['billing_cycle'] ?? SubscriptionBillingCycle::Monthly),
+                'billing_cycle' => $this->billingCycle($data['billing_cycle'] ?? BillingCycle::Monthly),
                 'starts_at' => $startsAt,
                 'ends_at' => null,
                 'trial_ends_at' => $trialDays > 0 ? $startsAt->copy()->addDays($trialDays) : $startsAt,
@@ -51,8 +51,8 @@ class StartTrialSubscription
         });
     }
 
-    private function billingCycle(SubscriptionBillingCycle|string $cycle): SubscriptionBillingCycle
+    private function billingCycle(BillingCycle|string $cycle): BillingCycle
     {
-        return $cycle instanceof SubscriptionBillingCycle ? $cycle : SubscriptionBillingCycle::from($cycle);
+        return $cycle instanceof BillingCycle ? $cycle : BillingCycle::from($cycle);
     }
 }

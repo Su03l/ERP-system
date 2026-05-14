@@ -3,7 +3,7 @@
 use App\Actions\CancelSubscriptionInvoice;
 use App\Actions\GenerateSubscriptionInvoice;
 use App\Actions\MarkSubscriptionInvoicePaid;
-use App\Enums\SubscriptionBillingCycle;
+use App\Enums\BillingCycle;
 use App\Enums\SubscriptionInvoiceStatus;
 use App\Enums\SubscriptionStatus;
 use App\Models\AuditLog;
@@ -30,7 +30,7 @@ it('generates subscription invoices from plan pricing and recalculates totals se
     ]);
     $subscription = CompanySubscription::factory()->for($company)->for($plan)->create([
         'status' => SubscriptionStatus::Active,
-        'billing_cycle' => SubscriptionBillingCycle::Yearly,
+        'billing_cycle' => BillingCycle::Yearly,
     ]);
     $actor = User::factory()->for($company)->create();
 

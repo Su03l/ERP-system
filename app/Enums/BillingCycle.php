@@ -2,14 +2,14 @@
 
 namespace App\Enums;
 
-enum SubscriptionBillingCycle: string
+enum BillingCycle: string
 {
     case Monthly = 'monthly';
     case Yearly = 'yearly';
 
     public function label(): string
     {
-        return __("saas.subscription_billing_cycles.{$this->value}");
+        return __("saas.billing_cycles.{$this->value}");
     }
 
     /**

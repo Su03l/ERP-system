@@ -6,7 +6,7 @@ use App\Actions\ChangeSubscriptionPlan;
 use App\Actions\ExpireSubscription;
 use App\Actions\RenewSubscription;
 use App\Actions\StartTrialSubscription;
-use App\Enums\SubscriptionBillingCycle;
+use App\Enums\BillingCycle;
 use App\Enums\SubscriptionStatus;
 use App\Models\AuditLog;
 use App\Models\Company;
@@ -32,7 +32,7 @@ it('starts trial subscriptions using configured trial days and audits the action
     expect($subscription->company->is($company))->toBeTrue()
         ->and($subscription->plan->is($plan))->toBeTrue()
         ->and($subscription->status)->toBe(SubscriptionStatus::Trialing)
-        ->and($subscription->billing_cycle)->toBe(SubscriptionBillingCycle::Monthly)
+        ->and($subscription->billing_cycle)->toBe(BillingCycle::Monthly)
         ->and($subscription->trial_ends_at?->toDateString())->toBe('2026-06-04')
         ->and(AuditLog::query()->where('action', 'subscription.trial_started')->where('auditable_id', $subscription->id)->exists())->toBeTrue();
 
@@ -54,7 +54,7 @@ it('activates changes cancels expires and renews subscriptions safely', function
     $secondPlan = Plan::factory()->create();
     $subscription = CompanySubscription::factory()->for($company)->for($firstPlan)->create([
         'status' => SubscriptionStatus::Trialing,
-        'billing_cycle' => SubscriptionBillingCycle::Monthly,
+        'billing_cycle' => BillingCycle::Monthly,
         'starts_at' => now(),
         'trial_ends_at' => now()->addDays(14),
     ]);
@@ -65,11 +65,11 @@ it('activates changes cancels expires and renews subscriptions safely', function
         ->and($activated->trial_ends_at)->toBeNull();
 
     $changed = app(ChangeSubscriptionPlan::class)->handle($activated, $secondPlan, [
-        'billing_cycle' => SubscriptionBillingCycle::Yearly,
+        'billing_cycle' => BillingCycle::Yearly,
         'metadata' => ['changed_by' => 'test'],
     ], $actor);
     expect($changed->plan_id)->toBe($secondPlan->id)
-        ->and($changed->billing_cycle)->toBe(SubscriptionBillingCycle::Yearly);
+        ->and($changed->billing_cycle)->toBe(BillingCycle::Yearly);
 
     $cancelled = app(CancelSubscription::class)->handle($changed, $actor);
     expect($cancelled->status)->toBe(SubscriptionStatus::Grace)

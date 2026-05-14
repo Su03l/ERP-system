@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\SubscriptionBillingCycle;
+use App\Enums\BillingCycle;
 use App\Enums\SubscriptionStatus;
 use App\Models\Company;
 use App\Models\CompanySubscription;
@@ -37,7 +37,7 @@ it('stores company subscriptions with safe company and plan relationships', func
         'company_id' => $company->id,
         'plan_id' => $plan->id,
         'status' => SubscriptionStatus::Active,
-        'billing_cycle' => SubscriptionBillingCycle::Yearly,
+        'billing_cycle' => BillingCycle::Yearly,
         'starts_at' => '2026-05-14 00:00:00',
         'ends_at' => '2027-05-14 00:00:00',
         'trial_ends_at' => null,
@@ -50,7 +50,7 @@ it('stores company subscriptions with safe company and plan relationships', func
         ->and($company->subscriptions()->whereKey($subscription)->exists())->toBeTrue()
         ->and($plan->subscriptions()->whereKey($subscription)->exists())->toBeTrue()
         ->and($subscription->status)->toBe(SubscriptionStatus::Active)
-        ->and($subscription->billing_cycle)->toBe(SubscriptionBillingCycle::Yearly)
+        ->and($subscription->billing_cycle)->toBe(BillingCycle::Yearly)
         ->and($subscription->starts_at?->toDateString())->toBe('2026-05-14')
         ->and($subscription->metadata)->toBe(['source' => 'manual']);
 });
@@ -71,7 +71,7 @@ it('provides localized subscription enum labels', function () {
     app()->setLocale('ar');
 
     expect(SubscriptionStatus::Trialing->label())->toBe('تجريبي')
-        ->and(SubscriptionBillingCycle::Monthly->label())->toBe('شهري')
+        ->and(BillingCycle::Monthly->label())->toBe('شهري')
         ->and(SubscriptionStatus::values())->toContain('active')
-        ->and(SubscriptionBillingCycle::values())->toBe(['monthly', 'yearly']);
+        ->and(BillingCycle::values())->toBe(['monthly', 'yearly']);
 });

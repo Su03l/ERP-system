@@ -18,6 +18,10 @@ return [
         'monthly' => 'شهري',
         'yearly' => 'سنوي',
     ],
+    'billing_cycles' => [
+        'monthly' => 'شهري',
+        'yearly' => 'سنوي',
+    ],
     'limit_keys' => [
         'users' => 'المستخدمين',
         'employees' => 'الموظفين',

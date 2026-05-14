@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Enums\SubscriptionBillingCycle;
+use App\Enums\BillingCycle;
 use App\Models\CompanySubscription;
 
 class SubscriptionInvoiceCalculationService
@@ -33,7 +33,7 @@ class SubscriptionInvoiceCalculationService
     {
         $plan = $subscription->plan;
 
-        if ($subscription->billing_cycle === SubscriptionBillingCycle::Yearly) {
+        if ($subscription->billing_cycle === BillingCycle::Yearly) {
             return $this->toCents($plan->price_yearly ?? ((float) $plan->price_monthly * 12));
         }
 
