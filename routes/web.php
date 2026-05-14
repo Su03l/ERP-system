@@ -18,6 +18,9 @@ use App\Http\Controllers\PayrollPeriodController;
 use App\Http\Controllers\PayrollRunController;
 use App\Http\Controllers\PayrollRunItemController;
 use App\Http\Controllers\PayrollSettingController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ProjectTaskController;
+use App\Http\Controllers\ProjectTimeLogController;
 use App\Http\Controllers\SalaryComponentController;
 use Illuminate\Support\Facades\Route;
 
@@ -57,6 +60,10 @@ Route::middleware('auth')->group(function () {
     Route::post('crm-leads/{crm_lead}/convert', [CrmLeadController::class, 'convert'])->name('crm-leads.convert');
     Route::apiResource('crm-leads', CrmLeadController::class);
     Route::apiResource('crm-contacts', CrmContactController::class);
+    Route::post('project-tasks/{project_task}/complete', [ProjectTaskController::class, 'complete'])->name('project-tasks.complete');
+    Route::apiResource('projects', ProjectController::class);
+    Route::apiResource('project-tasks', ProjectTaskController::class);
+    Route::apiResource('project-time-logs', ProjectTimeLogController::class);
     Route::apiResource('asset-categories', AssetCategoryController::class);
     Route::apiResource('assets', AssetController::class);
     Route::post('journal-entries/{journal_entry}/post', [JournalEntryController::class, 'post'])->name('journal-entries.post');
