@@ -44,4 +44,15 @@ return [
     'subscription_invoices' => [
         'cannot_cancel_paid' => 'Paid subscription invoices cannot be cancelled.',
     ],
+    'add_on_statuses' => [
+        'active' => 'Active',
+        'inactive' => 'Inactive',
+        'archived' => 'Archived',
+    ],
+    'company_add_on_statuses' => [
+        'active' => 'Active',
+        'inactive' => 'Inactive',
+        'cancelled' => 'Cancelled',
+        'expired' => 'Expired',
+    ],
 ];

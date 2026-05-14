@@ -340,6 +340,16 @@ class Company extends Model
     }
 
     /**
+     * Get marketplace add-ons enabled for this company.
+     *
+     * @return HasMany<CompanyAddOn, $this>
+     */
+    public function companyAddOns(): HasMany
+    {
+        return $this->hasMany(CompanyAddOn::class);
+    }
+
+    /**
      * Get sales invoices owned by this company.
      *
      * @return HasMany<SalesInvoice, $this>

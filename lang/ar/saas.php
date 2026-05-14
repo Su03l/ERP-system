@@ -44,4 +44,15 @@ return [
     'subscription_invoices' => [
         'cannot_cancel_paid' => 'لا يمكن إلغاء فواتير الاشتراك المدفوعة.',
     ],
+    'add_on_statuses' => [
+        'active' => 'نشطة',
+        'inactive' => 'غير نشطة',
+        'archived' => 'مؤرشفة',
+    ],
+    'company_add_on_statuses' => [
+        'active' => 'نشطة',
+        'inactive' => 'غير نشطة',
+        'cancelled' => 'ملغاة',
+        'expired' => 'منتهية',
+    ],
 ];
