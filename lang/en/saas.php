@@ -36,6 +36,23 @@ return [
         'allowed_unlimited' => ':limit is unlimited on the current plan.',
         'denied' => ':limit is unavailable or exceeds the current plan limit.',
     ],
+    'subscription_access' => [
+        'denied' => 'Company access is unavailable because the subscription status is :status.',
+    ],
+    'subscription_expiry_notifications' => [
+        'trial_expired' => 'The trial has ended and subscription access was updated.',
+        'subscription_expired' => 'The subscription period has ended and access was updated.',
+        'grace_ended' => 'The subscription grace period has ended.',
+    ],
+    'metrics' => [
+        'mrr' => 'MRR',
+        'arr' => 'ARR',
+        'active_subscriptions' => 'Active subscriptions',
+        'trial_companies' => 'Trial companies',
+        'cancelled_subscriptions' => 'Cancelled subscriptions',
+        'overdue_invoices' => 'Overdue invoices',
+        'add_on_revenue' => 'Add-on revenue',
+    ],
     'subscription_invoice_statuses' => [
         'draft' => 'Draft',
         'open' => 'Open',

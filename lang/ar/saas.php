@@ -36,6 +36,23 @@ return [
         'allowed_unlimited' => 'الميزة :limit غير محدودة في الخطة الحالية.',
         'denied' => 'الميزة :limit غير متاحة أو تجاوزت حد الخطة الحالية.',
     ],
+    'subscription_access' => [
+        'denied' => 'تعذر الوصول إلى الشركة لأن حالة الاشتراك هي :status.',
+    ],
+    'subscription_expiry_notifications' => [
+        'trial_expired' => 'انتهت الفترة التجريبية وتم تحديث وصول الاشتراك.',
+        'subscription_expired' => 'انتهت مدة الاشتراك وتم تحديث الوصول.',
+        'grace_ended' => 'انتهت فترة السماح للاشتراك.',
+    ],
+    'metrics' => [
+        'mrr' => 'الإيراد الشهري المتكرر',
+        'arr' => 'الإيراد السنوي المتكرر',
+        'active_subscriptions' => 'الاشتراكات النشطة',
+        'trial_companies' => 'الشركات التجريبية',
+        'cancelled_subscriptions' => 'الاشتراكات الملغاة',
+        'overdue_invoices' => 'الفواتير المتأخرة',
+        'add_on_revenue' => 'إيرادات الإضافات',
+    ],
     'subscription_invoice_statuses' => [
         'draft' => 'مسودة',
         'open' => 'مفتوحة',
