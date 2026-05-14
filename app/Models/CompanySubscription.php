@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable([
     'company_id',
@@ -36,6 +37,16 @@ class CompanySubscription extends Model
     public function plan(): BelongsTo
     {
         return $this->belongsTo(Plan::class);
+    }
+
+    /**
+     * Get platform billing invoices for this subscription.
+     *
+     * @return HasMany<SubscriptionInvoice, $this>
+     */
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(SubscriptionInvoice::class, 'subscription_id');
     }
 
     /**

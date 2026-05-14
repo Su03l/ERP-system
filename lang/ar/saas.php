@@ -32,4 +32,13 @@ return [
         'allowed_unlimited' => 'الميزة :limit غير محدودة في الخطة الحالية.',
         'denied' => 'الميزة :limit غير متاحة أو تجاوزت حد الخطة الحالية.',
     ],
+    'subscription_invoice_statuses' => [
+        'draft' => 'مسودة',
+        'open' => 'مفتوحة',
+        'paid' => 'مدفوعة',
+        'partially_paid' => 'مدفوعة جزئياً',
+        'overdue' => 'متأخرة',
+        'cancelled' => 'ملغاة',
+        'voided' => 'باطلة',
+    ],
 ];

@@ -32,4 +32,13 @@ return [
         'allowed_unlimited' => ':limit is unlimited on the current plan.',
         'denied' => ':limit is unavailable or exceeds the current plan limit.',
     ],
+    'subscription_invoice_statuses' => [
+        'draft' => 'Draft',
+        'open' => 'Open',
+        'paid' => 'Paid',
+        'partially_paid' => 'Partially paid',
+        'overdue' => 'Overdue',
+        'cancelled' => 'Cancelled',
+        'voided' => 'Voided',
+    ],
 ];

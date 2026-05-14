@@ -330,6 +330,16 @@ class Company extends Model
     }
 
     /**
+     * Get SaaS platform billing invoices for this company.
+     *
+     * @return HasMany<SubscriptionInvoice, $this>
+     */
+    public function subscriptionInvoices(): HasMany
+    {
+        return $this->hasMany(SubscriptionInvoice::class);
+    }
+
+    /**
      * Get sales invoices owned by this company.
      *
      * @return HasMany<SalesInvoice, $this>
