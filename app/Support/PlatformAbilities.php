@@ -28,6 +28,7 @@ final class PlatformAbilities
             'add_ons.update',
             'add_ons.delete',
             'company_add_ons.manage',
+            'kpi.saas.view',
         ];
     }
 
