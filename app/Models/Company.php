@@ -229,6 +229,18 @@ class Company extends Model
         return $this->hasOne(AnalyticsSetting::class);
     }
 
+    /** @return HasMany<DashboardWidget, $this> */
+    public function dashboardWidgets(): HasMany
+    {
+        return $this->hasMany(DashboardWidget::class);
+    }
+
+    /** @return HasMany<DashboardPreference, $this> */
+    public function dashboardPreferences(): HasMany
+    {
+        return $this->hasMany(DashboardPreference::class);
+    }
+
     /**
      * Get company documents owned by this company.
      *
