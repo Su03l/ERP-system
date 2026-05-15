@@ -229,6 +229,12 @@ class Company extends Model
         return $this->hasOne(AnalyticsSetting::class);
     }
 
+    /** @return HasOne<SecuritySetting, $this> */
+    public function securitySetting(): HasOne
+    {
+        return $this->hasOne(SecuritySetting::class);
+    }
+
     /** @return HasMany<DashboardWidget, $this> */
     public function dashboardWidgets(): HasMany
     {
