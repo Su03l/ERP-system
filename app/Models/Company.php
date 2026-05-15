@@ -235,6 +235,12 @@ class Company extends Model
         return $this->hasOne(SecuritySetting::class);
     }
 
+    /** @return HasMany<CompanyApiToken, $this> */
+    public function apiTokens(): HasMany
+    {
+        return $this->hasMany(CompanyApiToken::class);
+    }
+
     /** @return HasMany<DashboardWidget, $this> */
     public function dashboardWidgets(): HasMany
     {

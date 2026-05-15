@@ -115,6 +115,12 @@ class User extends Authenticatable implements HasLocalePreference
         return $this->hasMany(CrmLead::class, 'assigned_user_id');
     }
 
+    /** @return HasMany<CompanyApiToken, $this> */
+    public function companyApiTokens(): HasMany
+    {
+        return $this->hasMany(CompanyApiToken::class);
+    }
+
     public function hasPermission(string $permissionKey, ?int $companyId = null): bool
     {
         return app(PermissionChecker::class)->userHasPermission($this, $permissionKey, $companyId);
