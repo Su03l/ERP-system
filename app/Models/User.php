@@ -121,6 +121,12 @@ class User extends Authenticatable implements HasLocalePreference
         return $this->hasMany(CompanyApiToken::class);
     }
 
+    /** @return HasMany<UserSession, $this> */
+    public function trackedSessions(): HasMany
+    {
+        return $this->hasMany(UserSession::class);
+    }
+
     public function hasPermission(string $permissionKey, ?int $companyId = null): bool
     {
         return app(PermissionChecker::class)->userHasPermission($this, $permissionKey, $companyId);

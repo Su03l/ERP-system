@@ -253,6 +253,12 @@ class Company extends Model
         return $this->hasMany(WebhookDelivery::class);
     }
 
+    /** @return HasMany<UserSession, $this> */
+    public function userSessions(): HasMany
+    {
+        return $this->hasMany(UserSession::class);
+    }
+
     /** @return HasMany<DashboardWidget, $this> */
     public function dashboardWidgets(): HasMany
     {
