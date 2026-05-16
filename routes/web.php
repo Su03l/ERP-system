@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AddOnController;
+use App\Http\Controllers\ApiTokenController;
 use App\Http\Controllers\AssetCategoryController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\AttendanceRecordController;
+use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\ChartDataController;
 use App\Http\Controllers\CompanyAddOnController;
 use App\Http\Controllers\CompanySubscriptionController;
@@ -30,7 +32,11 @@ use App\Http\Controllers\ProjectTaskController;
 use App\Http\Controllers\ProjectTimeLogController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SalaryComponentController;
+use App\Http\Controllers\SecuritySettingController;
 use App\Http\Controllers\SubscriptionInvoiceController;
+use App\Http\Controllers\UserSessionController;
+use App\Http\Controllers\WebhookDeliveryController;
+use App\Http\Controllers\WebhookEndpointController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -98,4 +104,11 @@ Route::middleware('auth')->group(function () {
     Route::post('analytics/reports/execute', [ReportController::class, 'execute'])->name('analytics.reports.execute');
     Route::post('analytics/reports/export', [ReportController::class, 'export'])->name('analytics.reports.export');
     Route::apiResource('dashboard-widgets', DashboardWidgetController::class);
+
+    Route::apiResource('security-settings', SecuritySettingController::class)->only(['index', 'show', 'update']);
+    Route::apiResource('audit-logs', AuditLogController::class)->only(['index']);
+    Route::apiResource('api-tokens', ApiTokenController::class)->only(['index', 'store', 'destroy'])->parameters(['api-tokens' => 'company_api_token']);
+    Route::apiResource('webhook-endpoints', WebhookEndpointController::class);
+    Route::apiResource('webhook-deliveries', WebhookDeliveryController::class)->only(['index', 'show']);
+    Route::apiResource('user-sessions', UserSessionController::class)->only(['index', 'destroy']);
 });

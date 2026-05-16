@@ -7,11 +7,16 @@ use App\Models\UserSession;
 
 class UserSessionQuery
 {
-    /** @return array<int, array<string, mixed>> */
-    public function rows(User $actor): array
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<int, array<string, mixed>>
+     */
+    public function rows(User $actor, array $filters = []): array
     {
         return UserSession::query()
             ->where('company_id', $actor->company_id)
+            ->when($filters['user_id'] ?? null, fn ($query, int|string $userId) => $query->where('user_id', $userId))
+            ->when(array_key_exists('revoked', $filters), fn ($query) => $filters['revoked'] ? $query->whereNotNull('revoked_at') : $query->whereNull('revoked_at'))
             ->with('user')
             ->latest('last_activity_at')
             ->get()
