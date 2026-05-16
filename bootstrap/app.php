@@ -3,6 +3,7 @@
 use App\Http\Middleware\ApplyLocale;
 use App\Http\Middleware\AuthenticateCompanyApiToken;
 use App\Http\Middleware\EnsureCompanySubscriptionIsActive;
+use App\Http\Middleware\EnsurePublicApiRateLimit;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -20,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->alias([
             'company.api' => AuthenticateCompanyApiToken::class,
+            'company.api.throttle' => EnsurePublicApiRateLimit::class,
             'subscription.active' => EnsureCompanySubscriptionIsActive::class,
         ]);
     })

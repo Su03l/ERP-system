@@ -32,7 +32,7 @@ Route::get('/user', function (Request $request) {
 
 Route::prefix('public-api/v1')
     ->name('public-api.')
-    ->middleware('company.api:public-api.read')
+    ->middleware(['company.api:public-api.read', 'company.api.throttle:120,60'])
     ->group(function () {
         Route::get('company', [PublicApiController::class, 'company'])->name('company.show');
         Route::get('customers', [PublicApiController::class, 'customers'])->name('customers.index');
