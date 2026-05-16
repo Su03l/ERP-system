@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\ApplyLocale;
+use App\Http\Middleware\AuthenticateCompanyApiToken;
 use App\Http\Middleware\EnsureCompanySubscriptionIsActive;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -18,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
             ApplyLocale::class,
         ]);
         $middleware->alias([
+            'company.api' => AuthenticateCompanyApiToken::class,
             'subscription.active' => EnsureCompanySubscriptionIsActive::class,
         ]);
     })
