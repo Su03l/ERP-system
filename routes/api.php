@@ -20,6 +20,7 @@ use App\Http\Controllers\PayrollRunController;
 use App\Http\Controllers\PayrollRunItemController;
 use App\Http\Controllers\PayrollSettingController;
 use App\Http\Controllers\PlanController;
+use App\Http\Controllers\PublicApiController;
 use App\Http\Controllers\SalaryComponentController;
 use App\Http\Controllers\SubscriptionInvoiceController;
 use Illuminate\Http\Request;
@@ -28,6 +29,16 @@ use Illuminate\Support\Facades\Route;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+
+Route::prefix('public-api/v1')
+    ->name('public-api.')
+    ->middleware('company.api:public-api.read')
+    ->group(function () {
+        Route::get('company', [PublicApiController::class, 'company'])->name('company.show');
+        Route::get('customers', [PublicApiController::class, 'customers'])->name('customers.index');
+        Route::get('invoices', [PublicApiController::class, 'invoices'])->name('invoices.index');
+        Route::get('projects', [PublicApiController::class, 'projects'])->name('projects.index');
+    });
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('employees', EmployeeController::class);
