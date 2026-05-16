@@ -241,6 +241,18 @@ class Company extends Model
         return $this->hasMany(CompanyApiToken::class);
     }
 
+    /** @return HasMany<WebhookEndpoint, $this> */
+    public function webhookEndpoints(): HasMany
+    {
+        return $this->hasMany(WebhookEndpoint::class);
+    }
+
+    /** @return HasMany<WebhookDelivery, $this> */
+    public function webhookDeliveries(): HasMany
+    {
+        return $this->hasMany(WebhookDelivery::class);
+    }
+
     /** @return HasMany<DashboardWidget, $this> */
     public function dashboardWidgets(): HasMany
     {
