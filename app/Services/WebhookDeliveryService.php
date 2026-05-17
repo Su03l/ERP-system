@@ -102,10 +102,15 @@ class WebhookDeliveryService
         return $delivery->refresh();
     }
 
+    /**
+     * @param  array<string|int, mixed>  $payload
+     * @return array<string|int, mixed>
+     */
     private function sanitizePayload(array $payload): array
     {
         return collect($payload)
-            ->reject(fn (mixed $value, string|int $key): bool => in_array(strtolower((string) $key), ['secret', 'password', 'token'], true))
+            ->reject(fn (mixed $value, string|int $key): bool => in_array(strtolower((string) $key), ['secret', 'password', 'token', 'api_key', 'access_token'], true))
+            ->map(fn (mixed $value): mixed => is_array($value) ? $this->sanitizePayload($value) : $value)
             ->all();
     }
 }
