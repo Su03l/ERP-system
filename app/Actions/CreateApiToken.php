@@ -5,6 +5,7 @@ namespace App\Actions;
 use App\Models\CompanyApiToken;
 use App\Models\User;
 use App\Services\AuditLogger;
+use App\Services\SecurityNotificationService;
 use App\Support\TenantContext;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +17,7 @@ class CreateApiToken
 {
     public function __construct(
         private readonly AuditLogger $auditLogger,
+        private readonly SecurityNotificationService $notifications,
         private readonly TenantContext $tenantContext,
     ) {}
 
@@ -52,6 +54,7 @@ class CreateApiToken
                 user: $actor,
                 company: $companyId,
             );
+            $this->notifications->apiTokenCreated($actor, $token);
 
             return [
                 'token' => $token,

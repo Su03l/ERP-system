@@ -5,12 +5,16 @@ namespace App\Actions;
 use App\Models\SecuritySetting;
 use App\Models\User;
 use App\Services\AuditLogger;
+use App\Services\SecurityNotificationService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\DB;
 
 class UpdateSecuritySetting
 {
-    public function __construct(private readonly AuditLogger $auditLogger) {}
+    public function __construct(
+        private readonly AuditLogger $auditLogger,
+        private readonly SecurityNotificationService $notifications,
+    ) {}
 
     /**
      * @param  array<string, mixed>  $data
@@ -34,6 +38,7 @@ class UpdateSecuritySetting
                 user: $actor,
                 company: $setting->company_id,
             );
+            $this->notifications->securitySettingsChanged($actor, $setting);
 
             return $setting->refresh();
         });

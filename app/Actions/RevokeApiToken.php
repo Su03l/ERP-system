@@ -5,6 +5,7 @@ namespace App\Actions;
 use App\Models\CompanyApiToken;
 use App\Models\User;
 use App\Services\AuditLogger;
+use App\Services\SecurityNotificationService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -12,7 +13,10 @@ use Illuminate\Support\Facades\Gate;
 
 class RevokeApiToken
 {
-    public function __construct(private readonly AuditLogger $auditLogger) {}
+    public function __construct(
+        private readonly AuditLogger $auditLogger,
+        private readonly SecurityNotificationService $notifications,
+    ) {}
 
     public function handle(CompanyApiToken $token, ?User $actor = null): CompanyApiToken
     {
@@ -37,6 +41,7 @@ class RevokeApiToken
                 user: $actor,
                 company: $token->company_id,
             );
+            $this->notifications->apiTokenRevoked($actor, $token);
 
             return $token->refresh();
         });

@@ -11,6 +11,8 @@ use Illuminate\Support\Str;
 
 class WebhookDeliveryService
 {
+    public function __construct(private readonly SecurityNotificationService $notifications) {}
+
     public function createDelivery(WebhookEndpoint $endpoint, string $eventName, array $payload): WebhookDelivery
     {
         return WebhookDelivery::query()->create([
@@ -95,6 +97,7 @@ class WebhookDeliveryService
         ]);
         $endpoint->increment('failure_count');
         $endpoint->forceFill(['last_failure_at' => now()])->save();
+        $this->notifications->webhookFailureThresholdReached($endpoint->refresh());
 
         return $delivery->refresh();
     }
