@@ -59,11 +59,15 @@ class PayrollRunController extends Controller
 
     public function approve(Request $request, PayrollRun $payrollRun, ApprovePayrollRun $action): PayrollRunResource
     {
+        Gate::authorize('approve', $payrollRun);
+
         return PayrollRunResource::make($action->handle($payrollRun, $request->user(), $request->string('comment')->toString())->load(['payrollPeriod']));
     }
 
     public function reject(Request $request, PayrollRun $payrollRun, RejectPayrollRun $action): PayrollRunResource
     {
+        Gate::authorize('reject', $payrollRun);
+
         return PayrollRunResource::make($action->handle($payrollRun, $request->user(), $request->string('reason')->toString())->load(['payrollPeriod']));
     }
 }
