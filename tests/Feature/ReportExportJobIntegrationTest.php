@@ -26,6 +26,7 @@ it('creates a queue-ready export job for report exports', function () {
     Queue::fake();
     $company = Company::factory()->create();
     $user = User::factory()->for($company)->create();
+    grantReportPermission($user, 'employees.view');
 
     $job = app(ReportExportService::class)->request(
         'hr.employees',

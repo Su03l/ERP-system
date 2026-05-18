@@ -7,6 +7,7 @@ use App\DTOs\ReportFilter;
 use App\Jobs\ProcessReportExportJob;
 use App\Models\ExportJob;
 use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -17,6 +18,9 @@ class ReportExportService
     public function __construct(
         private readonly ReportSpreadsheetExportService $spreadsheets,
         private readonly PdfReportExportService $pdf,
+        private readonly SensitiveExportApprovalGuard $sensitiveExportApprovalGuard,
+        private readonly SecurityNotificationService $securityNotifications,
+        private readonly AuditLogger $auditLogger,
     ) {}
 
     public function request(string $reportKey, ReportFilter $filter, User $user, bool $queued = true): ExportJob
@@ -27,6 +31,8 @@ class ReportExportService
         if ($companyId !== null && $user->company_id !== null && $companyId !== $user->company_id) {
             throw new RuntimeException('Report export company scope does not match the current user.');
         }
+
+        $this->authorizeReportExport($definition->key, $definition->requiredPermission, $user, $companyId);
 
         $job = ExportJob::query()->create([
             'company_id' => $companyId,
@@ -47,6 +53,30 @@ class ReportExportService
         }
 
         return $this->process($job);
+    }
+
+    private function authorizeReportExport(string $reportKey, ?string $permission, User $user, ?int $companyId): void
+    {
+        if ($companyId === null || $user->company_id !== $companyId) {
+            throw new AuthorizationException('Report export requires a valid company scope.');
+        }
+
+        if ($permission !== null && ! $user->hasPermission($permission, $companyId)) {
+            throw new AuthorizationException("Missing permission [{$permission}].");
+        }
+
+        if (! $this->sensitiveExportApprovalGuard->isSensitive($reportKey)) {
+            return;
+        }
+
+        $this->auditLogger->log('sensitive_export.requested', null, newValues: ['export_key' => $reportKey], user: $user, company: $companyId);
+
+        if (! $this->sensitiveExportApprovalGuard->canExportDirectly($user, $reportKey, $companyId)) {
+            $this->securityNotifications->suspiciousExportRequested($user, $reportKey, $companyId);
+            $this->auditLogger->log('sensitive_export.approval_required', null, newValues: ['export_key' => $reportKey], user: $user, company: $companyId);
+
+            throw new AuthorizationException('This export requires approval.');
+        }
     }
 
     public function process(ExportJob $job): ExportJob
