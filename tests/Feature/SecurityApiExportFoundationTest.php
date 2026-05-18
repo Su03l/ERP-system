@@ -59,5 +59,5 @@ it('requires direct approval permission before exporting sensitive audit logs', 
 
     grantSecurityExportPermission198($user, 'exports.approve_sensitive');
 
-    expect(app(SecurityExportService::class)->auditLogs($user)['rows'][0]['action'])->toBe('api_token.revoked');
+    expect(collect(app(SecurityExportService::class)->auditLogs($user)['rows'])->pluck('action'))->toContain('api_token.revoked');
 });

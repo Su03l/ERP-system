@@ -14,6 +14,7 @@ class SecurityExportService
 {
     public function __construct(
         private readonly AuditLogExportQuery $auditLogs,
+        private readonly AuditLogger $auditLogger,
         private readonly SensitiveExportApprovalGuard $approvalGuard,
         private readonly SecurityNotificationService $notifications,
     ) {}
@@ -157,8 +158,24 @@ class SecurityExportService
 
     private function authorizeSensitiveExport(User $actor, string $exportKey): void
     {
+        $this->auditLogger->log(
+            'sensitive_export.requested',
+            null,
+            newValues: ['export_key' => $exportKey],
+            user: $actor,
+            company: $actor->company_id,
+        );
+
         if (! $this->approvalGuard->canExportDirectly($actor, $exportKey, $actor->company_id)) {
             $this->notifications->suspiciousExportRequested($actor, $exportKey, $actor->company_id);
+
+            $this->auditLogger->log(
+                'sensitive_export.approval_required',
+                null,
+                newValues: ['export_key' => $exportKey],
+                user: $actor,
+                company: $actor->company_id,
+            );
 
             throw new AuthorizationException('This export requires approval.');
         }
