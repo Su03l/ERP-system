@@ -9,6 +9,7 @@ use App\Models\WebhookDelivery;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Support\Facades\DB;
 
 class SecurityExportService
 {
@@ -158,25 +159,32 @@ class SecurityExportService
 
     private function authorizeSensitiveExport(User $actor, string $exportKey): void
     {
-        $this->auditLogger->log(
-            'sensitive_export.requested',
-            null,
-            newValues: ['export_key' => $exportKey],
-            user: $actor,
-            company: $actor->company_id,
-        );
+        $approvalRequired = false;
 
-        if (! $this->approvalGuard->canExportDirectly($actor, $exportKey, $actor->company_id)) {
-            $this->notifications->suspiciousExportRequested($actor, $exportKey, $actor->company_id);
-
+        DB::transaction(function () use ($actor, $exportKey, &$approvalRequired): void {
             $this->auditLogger->log(
-                'sensitive_export.approval_required',
+                'sensitive_export.requested',
                 null,
                 newValues: ['export_key' => $exportKey],
                 user: $actor,
                 company: $actor->company_id,
             );
 
+            if (! $this->approvalGuard->canExportDirectly($actor, $exportKey, $actor->company_id)) {
+                $approvalRequired = true;
+                $this->notifications->suspiciousExportRequested($actor, $exportKey, $actor->company_id);
+
+                $this->auditLogger->log(
+                    'sensitive_export.approval_required',
+                    null,
+                    newValues: ['export_key' => $exportKey],
+                    user: $actor,
+                    company: $actor->company_id,
+                );
+            }
+        });
+
+        if ($approvalRequired) {
             throw new AuthorizationException('This export requires approval.');
         }
     }
