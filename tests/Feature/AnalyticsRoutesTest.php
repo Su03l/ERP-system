@@ -78,6 +78,7 @@ it('accepts report export requests and creates export jobs', function () {
     $company = Company::factory()->create();
     $user = User::factory()->for($company)->create();
     grantAnalyticsPermission($user, 'reports.export');
+    grantAnalyticsPermission($user, 'employees.view');
 
     $this->actingAs($user)
         ->postJson(route('analytics.reports.export'), [
