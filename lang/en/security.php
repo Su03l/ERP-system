@@ -13,6 +13,12 @@ return [
         'actions' => [
             'api_token_created' => 'API token created',
             'api_token_revoked' => 'API token revoked',
+            'security_settings_updated' => 'Security settings updated',
+            'sensitive_export_requested' => 'Sensitive export requested',
+            'sensitive_export_approval_required' => 'Sensitive export approval required',
+            'webhook_endpoint_created' => 'Webhook endpoint created',
+            'webhook_endpoint_updated' => 'Webhook endpoint updated',
+            'webhook_endpoint_deleted' => 'Webhook endpoint deleted',
         ],
     ],
     'exports' => [

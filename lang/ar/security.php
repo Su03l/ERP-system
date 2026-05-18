@@ -13,6 +13,12 @@ return [
         'actions' => [
             'api_token_created' => 'إنشاء رمز API',
             'api_token_revoked' => 'إلغاء رمز API',
+            'security_settings_updated' => 'تحديث إعدادات الأمان',
+            'sensitive_export_requested' => 'طلب تصدير حساس',
+            'sensitive_export_approval_required' => 'يتطلب التصدير الحساس موافقة',
+            'webhook_endpoint_created' => 'إنشاء نقطة Webhook',
+            'webhook_endpoint_updated' => 'تحديث نقطة Webhook',
+            'webhook_endpoint_deleted' => 'حذف نقطة Webhook',
         ],
     ],
     'exports' => [
