@@ -10,6 +10,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Throwable;
 
 class DispatchWebhookDelivery implements ShouldQueue
@@ -43,13 +44,13 @@ class DispatchWebhookDelivery implements ShouldQueue
         $delivery->update([
             'status' => 'failed',
             'failed_at' => now(),
-            'error_message' => $exception?->getMessage(),
+            'error_message' => Str::limit($exception?->getMessage() ?? 'Webhook delivery failed.', 500),
         ]);
 
         Log::error('Webhook delivery failed.', [
             'webhook_delivery_id' => $this->webhookDeliveryId,
             'company_id' => $delivery->company_id,
-            'message' => $exception?->getMessage(),
+            'message' => Str::limit($exception?->getMessage() ?? 'Webhook delivery failed.', 500),
         ]);
     }
 }

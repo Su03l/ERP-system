@@ -16,13 +16,19 @@ class ProcessSubscriptionExpiriesJob implements ShouldBeUnique, ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public int $tries = 1;
+    public int $tries = 3;
 
     public function __construct(public ?int $companyId = null) {}
 
     public function uniqueId(): string
     {
         return 'subscription-expiry-scan:'.($this->companyId ?? 'all').':'.now()->toDateString();
+    }
+
+    /** @return array<int, int> */
+    public function backoff(): array
+    {
+        return [300, 900, 1800];
     }
 
     public function handle(SubscriptionExpiryService $expiryService): void
