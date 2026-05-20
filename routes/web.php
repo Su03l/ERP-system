@@ -3,12 +3,14 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AddOnController;
 use App\Http\Controllers\ApiTokenController;
+use App\Http\Controllers\ApprovalInboxController;
 use App\Http\Controllers\AssetCategoryController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\AttendanceRecordController;
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\ChartDataController;
 use App\Http\Controllers\CompanyAddOnController;
+use App\Http\Controllers\CompanySettingsController;
 use App\Http\Controllers\CompanySubscriptionController;
 use App\Http\Controllers\CrmContactController;
 use App\Http\Controllers\CrmLeadController;
@@ -27,13 +29,16 @@ use App\Http\Controllers\PayrollRunController;
 use App\Http\Controllers\PayrollRunItemController;
 use App\Http\Controllers\PayrollSettingController;
 use App\Http\Controllers\PlanController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectTaskController;
 use App\Http\Controllers\ProjectTimeLogController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SalaryComponentController;
 use App\Http\Controllers\SecuritySettingController;
 use App\Http\Controllers\SubscriptionInvoiceController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserSessionController;
 use App\Http\Controllers\WebhookDeliveryController;
 use App\Http\Controllers\WebhookEndpointController;
@@ -137,6 +142,25 @@ Route::middleware('auth')->group(function () {
 
     Route::post('notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
     Route::post('notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-as-read');
+
+    // Web UIs for Settings, Profile, Roles, Users and Approvals
+    Route::get('/company-settings', [CompanySettingsController::class, 'index'])->name('company-settings.index');
+    Route::post('/company-settings', [CompanySettingsController::class, 'update'])->name('company-settings.update');
+    Route::post('/company-settings/security', [CompanySettingsController::class, 'updateSecurity'])->name('company-settings.security');
+
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+    Route::delete('/profile/sessions/{userSession}', [ProfileController::class, 'revokeSession'])->name('profile.sessions.revoke');
+    Route::post('/profile/tokens', [ProfileController::class, 'createToken'])->name('profile.tokens.create');
+    Route::delete('/profile/tokens/{companyApiToken}', [ProfileController::class, 'revokeToken'])->name('profile.tokens.revoke');
+
+    Route::resource('roles', RoleController::class)->except(['show']);
+    Route::resource('users', UserController::class);
+
+    Route::get('/approval-inbox', [ApprovalInboxController::class, 'index'])->name('approvals.index');
+    Route::get('/approval-inbox/{instance}', [ApprovalInboxController::class, 'show'])->name('approvals.show');
+    Route::post('/approval-inbox/{instance}/decide', [ApprovalInboxController::class, 'decide'])->name('approvals.decide');
 
     Route::get('global-search', [GlobalSearchController::class, 'search'])->name('global-search');
 });

@@ -35,4 +35,26 @@ class UpdateSecuritySettingRequest extends FormRequest
             'metadata' => ['sometimes', 'nullable', 'array'],
         ];
     }
+
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('allowed_login_ips_raw')) {
+            $ips = array_filter(
+                array_map('trim', explode(',', $this->input('allowed_login_ips_raw') ?? ''))
+            );
+
+            $this->merge([
+                'allowed_login_ips' => empty($ips) ? null : $ips,
+            ]);
+        }
+
+        // Enforce boolean values for checkboxes/toggles
+        $this->merge([
+            'two_factor_authentication_enabled' => $this->has('two_factor_authentication_enabled') ? (bool) $this->input('two_factor_authentication_enabled') : false,
+            'export_approval_required' => $this->has('export_approval_required') ? (bool) $this->input('export_approval_required') : false,
+        ]);
+    }
 }

@@ -44,4 +44,22 @@ class UpdateCompanySettingsRequest extends FormRequest
             'notification_preferences.sms_enabled' => ['sometimes', 'boolean'],
         ];
     }
+
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('notification_preferences')) {
+            $prefs = $this->input('notification_preferences') ?? [];
+
+            $this->merge([
+                'notification_preferences' => [
+                    'email_enabled' => isset($prefs['email_enabled']) ? (bool) $prefs['email_enabled'] : false,
+                    'database_enabled' => isset($prefs['database_enabled']) ? (bool) $prefs['database_enabled'] : false,
+                    'sms_enabled' => isset($prefs['sms_enabled']) ? (bool) $prefs['sms_enabled'] : false,
+                ],
+            ]);
+        }
+    }
 }
