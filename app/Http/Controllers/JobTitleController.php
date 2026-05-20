@@ -11,38 +11,75 @@ use App\Http\Requests\UpdateJobTitleRequest;
 use App\Http\Resources\JobTitleResource;
 use App\Models\JobTitle;
 use App\Services\JobTitleIndexQuery;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Gate;
 
 class JobTitleController extends Controller
 {
-    public function index(IndexJobTitleRequest $request, JobTitleIndexQuery $query): AnonymousResourceCollection
+    public function index(IndexJobTitleRequest $request, JobTitleIndexQuery $query)
     {
-        return JobTitleResource::collection($query->paginate($request->validated()));
+        if ($request->expectsJson()) {
+            return JobTitleResource::collection($query->paginate($request->validated()));
+        }
+
+        $jobTitles = $query->paginate($request->validated());
+
+        return view('job-titles.index', compact('jobTitles'));
     }
 
-    public function store(StoreJobTitleRequest $request, CreateJobTitle $action): JobTitleResource
+    public function create()
     {
-        return JobTitleResource::make($action->handle($request->validated(), $request->user()));
+        Gate::authorize('create', JobTitle::class);
+
+        return view('job-titles.create');
     }
 
-    public function show(JobTitle $jobTitle): JobTitleResource
+    public function store(StoreJobTitleRequest $request, CreateJobTitle $action)
+    {
+        $jobTitle = $action->handle($request->validated(), $request->user());
+        if ($request->expectsJson()) {
+            return JobTitleResource::make($jobTitle);
+        }
+
+        return redirect()->route('job-titles.index')->with('success', app()->getLocale() === 'ar' ? 'تم إنشاء المسمى الوظيفي بنجاح.' : 'Job Title created successfully.');
+    }
+
+    public function show(JobTitle $jobTitle)
     {
         Gate::authorize('view', $jobTitle);
 
-        return JobTitleResource::make($jobTitle);
+        if (request()->expectsJson()) {
+            return JobTitleResource::make($jobTitle);
+        }
+
+        return view('job-titles.show', compact('jobTitle'));
     }
 
-    public function update(UpdateJobTitleRequest $request, JobTitle $jobTitle, UpdateJobTitle $action): JobTitleResource
+    public function edit(JobTitle $jobTitle)
     {
-        return JobTitleResource::make($action->handle($jobTitle, $request->validated(), $request->user()));
+        Gate::authorize('update', $jobTitle);
+
+        return view('job-titles.edit', compact('jobTitle'));
     }
 
-    public function destroy(JobTitle $jobTitle, ArchiveJobTitle $action): JsonResponse
+    public function update(UpdateJobTitleRequest $request, JobTitle $jobTitle, UpdateJobTitle $action)
+    {
+        $updatedJobTitle = $action->handle($jobTitle, $request->validated(), $request->user());
+
+        if ($request->expectsJson()) {
+            return JobTitleResource::make($updatedJobTitle);
+        }
+
+        return redirect()->route('job-titles.index')->with('success', app()->getLocale() === 'ar' ? 'تم تحديث المسمى الوظيفي بنجاح.' : 'Job Title updated successfully.');
+    }
+
+    public function destroy(JobTitle $jobTitle, ArchiveJobTitle $action)
     {
         $action->handle($jobTitle, request()->user());
 
-        return response()->json(status: 204);
+        if (request()->expectsJson()) {
+            return response()->json(status: 204);
+        }
+
+        return redirect()->route('job-titles.index')->with('success', app()->getLocale() === 'ar' ? 'تم حذف المسمى الوظيفي بنجاح.' : 'Job Title deleted successfully.');
     }
 }

@@ -18,6 +18,7 @@ use App\Http\Controllers\DashboardWidgetController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EmployeeSalaryPackageController;
+use App\Http\Controllers\HrImportExportController;
 use App\Http\Controllers\JobTitleController;
 use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\KpiController;
@@ -48,11 +49,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+use App\Http\Controllers\AttendanceDashboardController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EmployeeDocumentController;
 use App\Http\Controllers\GlobalSearchController;
 use App\Http\Controllers\HrmsDashboardController;
 use App\Http\Controllers\NotificationController;
@@ -76,11 +79,15 @@ Route::middleware('auth')->group(function () {
     Route::get('hrms/dashboard', [HrmsDashboardController::class, 'index'])->name('hrms.dashboard');
     Route::resource('employees', EmployeeController::class);
     Route::resource('departments', DepartmentController::class);
-    Route::apiResource('job-titles', JobTitleController::class);
+    Route::resource('job-titles', JobTitleController::class);
+
+    Route::resource('employee-documents', EmployeeDocumentController::class);
+    Route::get('hr-import-export', [HrImportExportController::class, 'index'])->name('hr-import-export.index');
+    Route::get('attendance/dashboard', [AttendanceDashboardController::class, 'index'])->name('attendance.dashboard');
 
     Route::post('attendance-records/clock-in', [AttendanceRecordController::class, 'clockIn'])->name('attendance-records.clock-in');
     Route::post('attendance-records/clock-out', [AttendanceRecordController::class, 'clockOut'])->name('attendance-records.clock-out');
-    Route::apiResource('attendance-records', AttendanceRecordController::class);
+    Route::resource('attendance-records', AttendanceRecordController::class);
 
     Route::post('leave-requests/{leave_request}/submit', [LeaveRequestController::class, 'submit'])->name('leave-requests.submit');
     Route::post('leave-requests/{leave_request}/approve', [LeaveRequestController::class, 'approve'])->name('leave-requests.approve');

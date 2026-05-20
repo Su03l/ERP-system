@@ -16,47 +16,80 @@ use App\Models\AttendanceRecord;
 use App\Models\Employee;
 use App\Services\AttendanceIndexQuery;
 use Carbon\CarbonImmutable;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Gate;
 
 class AttendanceRecordController extends Controller
 {
-    // index used for  ==
-    public function index(IndexAttendanceRecordRequest $request, AttendanceIndexQuery $attendanceIndexQuery): AnonymousResourceCollection
+    public function index(IndexAttendanceRecordRequest $request, AttendanceIndexQuery $attendanceIndexQuery)
     {
-        return AttendanceRecordResource::collection($attendanceIndexQuery->paginate($request->validated()));
+        if ($request->expectsJson()) {
+            return AttendanceRecordResource::collection($attendanceIndexQuery->paginate($request->validated()));
+        }
+
+        $records = $attendanceIndexQuery->paginate($request->validated());
+
+        return view('attendance.index', compact('records'));
     }
 
-    public function store(StoreAttendanceRecordRequest $request, CreateAttendanceRecord $createAttendanceRecord): AttendanceRecordResource
+    public function create()
+    {
+        Gate::authorize('create', AttendanceRecord::class);
+
+        return view('attendance.create');
+    }
+
+    public function store(StoreAttendanceRecordRequest $request, CreateAttendanceRecord $createAttendanceRecord)
     {
         $attendanceRecord = $createAttendanceRecord->handle($request->validated(), $request->user());
 
-        return AttendanceRecordResource::make($attendanceRecord->load(['employee.department', 'employee.jobTitle']));
+        if ($request->expectsJson()) {
+            return AttendanceRecordResource::make($attendanceRecord->load(['employee.department', 'employee.jobTitle']));
+        }
+
+        return redirect()->route('attendance-records.index')->with('success', app()->getLocale() === 'ar' ? 'تم تسجيل الحضور بنجاح.' : 'Attendance record created successfully.');
     }
 
-    public function show(AttendanceRecord $attendanceRecord): AttendanceRecordResource
+    public function show(AttendanceRecord $attendanceRecord)
     {
         Gate::authorize('view', $attendanceRecord);
 
-        return AttendanceRecordResource::make($attendanceRecord->load(['employee.department', 'employee.jobTitle']));
+        if (request()->expectsJson()) {
+            return AttendanceRecordResource::make($attendanceRecord->load(['employee.department', 'employee.jobTitle']));
+        }
+
+        return view('attendance.show', compact('attendanceRecord'));
+    }
+
+    public function edit(AttendanceRecord $attendanceRecord)
+    {
+        Gate::authorize('update', $attendanceRecord);
+
+        return view('attendance.edit', compact('attendanceRecord'));
     }
 
     public function update(
         UpdateAttendanceRecordRequest $request,
         AttendanceRecord $attendanceRecord,
         UpdateAttendanceRecord $updateAttendanceRecord,
-    ): AttendanceRecordResource {
+    ) {
         $attendanceRecord = $updateAttendanceRecord->handle($attendanceRecord, $request->validated(), $request->user());
 
-        return AttendanceRecordResource::make($attendanceRecord->load(['employee.department', 'employee.jobTitle']));
+        if ($request->expectsJson()) {
+            return AttendanceRecordResource::make($attendanceRecord->load(['employee.department', 'employee.jobTitle']));
+        }
+
+        return redirect()->route('attendance-records.index')->with('success', app()->getLocale() === 'ar' ? 'تم تحديث السجل بنجاح.' : 'Attendance record updated successfully.');
     }
 
-    public function destroy(AttendanceRecord $attendanceRecord, DeleteAttendanceRecord $deleteAttendanceRecord): JsonResponse
+    public function destroy(AttendanceRecord $attendanceRecord, DeleteAttendanceRecord $deleteAttendanceRecord)
     {
         $deleteAttendanceRecord->handle($attendanceRecord, request()->user());
 
-        return response()->json(status: 204);
+        if (request()->expectsJson()) {
+            return response()->json(status: 204);
+        }
+
+        return redirect()->route('attendance-records.index')->with('success', app()->getLocale() === 'ar' ? 'تم الحذف بنجاح.' : 'Attendance record deleted successfully.');
     }
 
     public function clockIn(ManualClockAttendanceRequest $request, ClockInEmployee $clockInEmployee): AttendanceRecordResource
