@@ -144,213 +144,152 @@
                     };
                 @endphp
 
-                <!-- Dynamic Widget Shell -->
-                <div class="erp-card p-6 flex flex-col justify-between overflow-hidden {{ $sizeClass }} border border-slate-200/50 dark:border-slate-800/60 {{ $moduleStyles['hover'] }}">
-                    
-                    @if($widget->type === 'kpi')
-                        <!-- 1. KPI WIDGET LAYOUT -->
-                        <div class="flex items-start justify-between gap-4">
-                            <div class="space-y-3 flex-1">
-                                <div class="flex items-center gap-2">
-                                    <span class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                                        {{ app()->getLocale() === 'ar' ? $widget->title_ar : $widget->title_en }}
-                                    </span>
-                                    <span class="text-[10px] px-1.5 py-0.5 rounded-full font-bold {{ $moduleStyles['badge'] }}">
-                                        {{ $moduleStyles['label'] }}
-                                    </span>
-                                </div>
-                                <div class="flex items-baseline gap-2">
-                                    <h3 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-                                        @if($widgetData && $widgetData->value !== null)
-                                            {{ $widgetData->formattedValue ?? $widgetData->value }}
-                                        @else
-                                            <span class="text-slate-300 dark:text-slate-700">—</span>
-                                        @endif
-                                    </h3>
-                                    @if($widgetData && $widgetData->unit)
-                                        <span class="text-xs text-slate-400 dark:text-slate-500 font-semibold">
-                                            {{ $widgetData->unit }}
+                @if($widget->type === 'kpi')
+                    <!-- 1. KPI WIDGET LAYOUT VIA REUSABLE COMPONENT -->
+                    <x-kpi-card 
+                        class="{{ $sizeClass }}"
+                        :title="app()->getLocale() === 'ar' ? $widget->title_ar : $widget->title_en"
+                        :value="$widgetData?->value"
+                        :formatted-value="$widgetData?->formattedValue"
+                        :trend="$widgetData?->trend"
+                        :comparison-value="$widgetData ? (($widgetData->trend === 'up' ? '+' : '') . ($widgetData->comparisonValue ?? '0') . '%') : null"
+                        :module="$widget->module"
+                    />
+                @else
+                    <!-- Dynamic Widget Shell for charts and tables -->
+                    <div class="erp-card p-6 flex flex-col justify-between overflow-hidden {{ $sizeClass }} border border-slate-200/50 dark:border-slate-800/60 {{ $moduleStyles['hover'] }}">
+                        
+                        @if($widget->type === 'chart')
+                            <!-- 2. CHART WIDGET LAYOUT -->
+                            <div class="space-y-4 flex-1 flex flex-col justify-between">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <h4 class="font-bold text-slate-800 dark:text-white text-sm">
+                                            {{ app()->getLocale() === 'ar' ? $widget->title_ar : $widget->title_en }}
+                                        </h4>
+                                        <span class="text-[10px] px-1.5 py-0.5 rounded-full font-bold {{ $moduleStyles['badge'] }}">
+                                            {{ $moduleStyles['label'] }}
                                         </span>
-                                    @endif
+                                    </div>
                                 </div>
-                            </div>
-                            
-                            <!-- Premium Ambient Icon Wrapper -->
-                            <div class="w-12 h-12 rounded-xl {{ $moduleStyles['bg'] }} {{ $moduleStyles['text'] }} flex items-center justify-center shrink-0">
-                                @if($widget->module === 'hr')
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                                @elseif($widget->module === 'attendance')
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                @elseif($widget->module === 'leave')
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                @elseif($widget->module === 'payroll')
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                                @elseif($widget->module === 'accounting')
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                                @elseif($widget->module === 'projects')
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
-                                @else
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                                @endif
-                            </div>
-                        </div>
 
-                        <!-- KPI Footer context / Comparison -->
-                        <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
-                            @if($widgetData && $widgetData->trend !== null)
                                 @php
-                                    $isUp = $widgetData->trend === 'up';
-                                    $trendColor = $isUp ? 'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20' : 'text-rose-600 bg-rose-50 dark:bg-rose-950/20';
+                                    $chartValues = $widgetData->metadata['values'] ?? [];
+                                    $totalSum = collect($chartValues)->sum('value') ?: 0;
+                                    $maxVal = collect($chartValues)->max('value') ?: 1;
                                 @endphp
-                                <span class="inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-full {{ $trendColor }}">
-                                    @if($isUp)
-                                        <svg class="w-3 h-3 mr-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                                    @else
-                                        <svg class="w-3 h-3 mr-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6"></path></svg>
-                                    @endif
-                                    <span>{{ $isUp ? '+' : '' }}{{ $widgetData->comparisonValue ?? '0' }}%</span>
-                                </span>
-                            @else
-                                <span class="text-[10px] text-slate-400 font-medium">
-                                    {{ app()->getLocale() === 'ar' ? 'فترة التقرير الحالية' : 'Current report window' }}
-                                </span>
-                            @endif
-                            
-                            <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
-                                {{ $moduleStyles['label'] }}
-                            </span>
-                        </div>
 
-                    @elseif($widget->type === 'chart')
-                        <!-- 2. CHART WIDGET LAYOUT -->
-                        <div class="space-y-4 flex-1 flex flex-col justify-between">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-2">
-                                    <h4 class="font-bold text-slate-800 dark:text-white text-sm">
-                                        {{ app()->getLocale() === 'ar' ? $widget->title_ar : $widget->title_en }}
-                                    </h4>
-                                    <span class="text-[10px] px-1.5 py-0.5 rounded-full font-bold {{ $moduleStyles['badge'] }}">
-                                        {{ $moduleStyles['label'] }}
-                                    </span>
-                                </div>
-                            </div>
-
-                            @php
-                                $chartValues = $widgetData->metadata['values'] ?? [];
-                                $totalSum = collect($chartValues)->sum('value') ?: 0;
-                                $maxVal = collect($chartValues)->max('value') ?: 1;
-                            @endphp
-
-                            @if(empty($chartValues))
-                                <!-- Chart Empty State -->
-                                <div class="flex-1 flex flex-col items-center justify-center p-6 text-center">
-                                    <svg class="w-8 h-8 text-slate-300 dark:text-slate-700 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 3.055A9.003 9.003 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
-                                    <span class="text-xs text-slate-400">{{ app()->getLocale() === 'ar' ? 'لا توجد بيانات للرسم البياني' : 'No chart data available' }}</span>
-                                </div>
-                            @else
-                                <!-- Dynamic Horizontal Bar Chart -->
-                                <div class="space-y-3.5 flex-1 py-1">
-                                    @foreach($chartValues as $row)
-                                        @php
-                                            $percentage = $totalSum > 0 ? round(($row['value'] / $totalSum) * 100, 1) : 0;
-                                            $widthPercent = round(($row['value'] / $maxVal) * 100);
-                                        @endphp
-                                        <div class="space-y-1">
-                                            <div class="flex justify-between text-xs font-semibold">
-                                                <span class="text-slate-700 dark:text-slate-300">{{ $row['label'] }}</span>
-                                                <span class="text-slate-500 dark:text-slate-400">
-                                                    {{ $row['value'] }} ({{ $percentage }}%)
-                                                </span>
-                                            </div>
-                                            <!-- Ambient Progress Bar -->
-                                            <div class="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                                <div class="h-full rounded-full transition-all duration-500 ease-out bg-gradient-to-r from-brand-500 to-teal-400 dark:from-brand-600 dark:to-teal-500" 
-                                                     style="width: {{ $widthPercent }}%">
+                                @if(empty($chartValues))
+                                    <!-- Chart Empty State -->
+                                    <div class="flex-1 flex flex-col items-center justify-center p-6 text-center">
+                                        <svg class="w-8 h-8 text-slate-300 dark:text-slate-700 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 3.055A9.003 9.003 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
+                                        <span class="text-xs text-slate-400">{{ app()->getLocale() === 'ar' ? 'لا توجد بيانات للرسم البياني' : 'No chart data available' }}</span>
+                                    </div>
+                                @else
+                                    <!-- Dynamic Horizontal Bar Chart -->
+                                    <div class="space-y-3.5 flex-1 py-1">
+                                        @foreach($chartValues as $row)
+                                            @php
+                                                $percentage = $totalSum > 0 ? round(($row['value'] / $totalSum) * 100, 1) : 0;
+                                                $widthPercent = round(($row['value'] / $maxVal) * 100);
+                                            @endphp
+                                            <div class="space-y-1">
+                                                <div class="flex justify-between text-xs font-semibold">
+                                                    <span class="text-slate-700 dark:text-slate-300">{{ $row['label'] }}</span>
+                                                    <span class="text-slate-500 dark:text-slate-400">
+                                                        {{ $row['value'] }} ({{ $percentage }}%)
+                                                    </span>
+                                                </div>
+                                                <!-- Ambient Progress Bar -->
+                                                <div class="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                                    <div class="h-full rounded-full transition-all duration-500 ease-out bg-gradient-to-r from-brand-500 to-teal-400 dark:from-brand-600 dark:to-teal-500" 
+                                                         style="width: {{ $widthPercent }}%">
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @endif
+                                        @endforeach
+                                    </div>
+                                @endif
 
-                            <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
-                                <span>{{ app()->getLocale() === 'ar' ? 'إجمالي المدخلات' : 'Total Inputs' }}: {{ $totalSum }}</span>
-                                <span>{{ $moduleStyles['label'] }}</span>
-                            </div>
-                        </div>
-
-                    @elseif($widget->type === 'table')
-                        <!-- 3. TABLE WIDGET LAYOUT -->
-                        <div class="space-y-4 flex-1 flex flex-col justify-between">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-2">
-                                    <h4 class="font-bold text-slate-800 dark:text-white text-sm">
-                                        {{ app()->getLocale() === 'ar' ? $widget->title_ar : $widget->title_en }}
-                                    </h4>
-                                    <span class="text-[10px] px-1.5 py-0.5 rounded-full font-bold {{ $moduleStyles['badge'] }}">
-                                        {{ $moduleStyles['label'] }}
-                                    </span>
+                                <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
+                                    <span>{{ app()->getLocale() === 'ar' ? 'إجمالي المدخلات' : 'Total Inputs' }}: {{ $totalSum }}</span>
+                                    <span>{{ $moduleStyles['label'] }}</span>
                                 </div>
                             </div>
 
-                            @php
-                                $tableRows = $widgetData->metadata['values'] ?? [];
-                            @endphp
-
-                            @if(empty($tableRows))
-                                <!-- Table Empty State -->
-                                <div class="flex-1 flex flex-col items-center justify-center p-6 text-center">
-                                    <svg class="w-8 h-8 text-slate-300 dark:text-slate-700 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                                    <span class="text-xs text-slate-400">{{ app()->getLocale() === 'ar' ? 'لا توجد بيانات للجدول' : 'No tabular data available' }}</span>
+                        @elseif($widget->type === 'table')
+                            <!-- 3. TABLE WIDGET LAYOUT -->
+                            <div class="space-y-4 flex-1 flex flex-col justify-between">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <h4 class="font-bold text-slate-800 dark:text-white text-sm">
+                                            {{ app()->getLocale() === 'ar' ? $widget->title_ar : $widget->title_en }}
+                                        </h4>
+                                        <span class="text-[10px] px-1.5 py-0.5 rounded-full font-bold {{ $moduleStyles['badge'] }}">
+                                            {{ $moduleStyles['label'] }}
+                                        </span>
+                                    </div>
                                 </div>
-                            @else
-                                <!-- Interactive ERP Inner Table -->
-                                <div class="erp-table-container max-h-[220px] overflow-y-auto">
-                                    <table class="erp-table">
-                                        <thead>
-                                            <tr>
-                                                <th class="py-2.5 px-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                                                    {{ app()->getLocale() === 'ar' ? 'التفصيل' : 'Label' }}
-                                                </th>
-                                                <th class="py-2.5 px-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider text-center">
-                                                    {{ app()->getLocale() === 'ar' ? 'العدد' : 'Count' }}
-                                                </th>
-                                                <th class="py-2.5 px-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider text-right">
-                                                    {{ app()->getLocale() === 'ar' ? 'التكلفة الإجمالية' : 'Total Amount' }}
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($tableRows as $row)
+
+                                @php
+                                    $tableRows = $widgetData->metadata['values'] ?? [];
+                                @endphp
+
+                                @if(empty($tableRows))
+                                    <!-- Table Empty State -->
+                                    <div class="flex-1 flex flex-col items-center justify-center p-6 text-center">
+                                        <svg class="w-8 h-8 text-slate-300 dark:text-slate-700 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                        <span class="text-xs text-slate-400">{{ app()->getLocale() === 'ar' ? 'لا توجد بيانات للجدول' : 'No tabular data available' }}</span>
+                                    </div>
+                                @else
+                                    <!-- Interactive ERP Inner Table -->
+                                    <div class="erp-table-container max-h-[220px] overflow-y-auto">
+                                        <table class="erp-table">
+                                            <thead>
                                                 <tr>
-                                                    <td class="py-2 px-3 text-xs font-semibold text-slate-800 dark:text-white">
-                                                        {{ $row['label'] }}
-                                                    </td>
-                                                    <td class="py-2 px-3 text-xs text-center font-medium text-slate-500">
-                                                        {{ $row['employee_count'] ?? $row['value'] ?? '—' }}
-                                                    </td>
-                                                    <td class="py-2 px-3 text-xs text-right font-black text-teal-600 dark:text-teal-400">
-                                                        @if(isset($row['total_payroll_cost']))
-                                                            {{ app()->getLocale() === 'ar' ? number_format($row['total_payroll_cost'], 2) . ' ر.س' : 'SAR ' . number_format($row['total_payroll_cost'], 2) }}
-                                                        @else
-                                                            —
-                                                        @endif
-                                                    </td>
+                                                    <th class="py-2.5 px-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                                                        {{ app()->getLocale() === 'ar' ? 'التفصيل' : 'Label' }}
+                                                    </th>
+                                                    <th class="py-2.5 px-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider text-center">
+                                                        {{ app()->getLocale() === 'ar' ? 'العدد' : 'Count' }}
+                                                    </th>
+                                                    <th class="py-2.5 px-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider text-right">
+                                                        {{ app()->getLocale() === 'ar' ? 'التكلفة الإجمالية' : 'Total Amount' }}
+                                                    </th>
                                                 </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($tableRows as $row)
+                                                    <tr>
+                                                        <td class="py-2 px-3 text-xs font-semibold text-slate-800 dark:text-white">
+                                                            {{ $row['label'] }}
+                                                        </td>
+                                                        <td class="py-2 px-3 text-xs text-center font-medium text-slate-500">
+                                                            {{ $row['employee_count'] ?? $row['value'] ?? '—' }}
+                                                        </td>
+                                                        <td class="py-2 px-3 text-xs text-right font-black text-teal-600 dark:text-teal-400">
+                                                            @if(isset($row['total_payroll_cost']))
+                                                                {{ app()->getLocale() === 'ar' ? number_format($row['total_payroll_cost'], 2) . ' ر.س' : 'SAR ' . number_format($row['total_payroll_cost'], 2) }}
+                                                            @else
+                                                                —
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @endif
+
+                                <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
+                                    <span>{{ app()->getLocale() === 'ar' ? 'مسيرة الرواتب النشطة' : 'Active payroll tracks' }}</span>
+                                    <span>{{ $moduleStyles['label'] }}</span>
                                 </div>
-                            @endif
-
-                            <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
-                                <span>{{ app()->getLocale() === 'ar' ? 'مسيرة الرواتب النشطة' : 'Active payroll tracks' }}</span>
-                                <span>{{ $moduleStyles['label'] }}</span>
                             </div>
-                        </div>
-                    @endif
+                        @endif
 
-                </div>
+                    </div>
+                @endif
             @endforeach
         </div>
     @endif
