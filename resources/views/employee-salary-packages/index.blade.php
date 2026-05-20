@@ -36,24 +36,44 @@
                 </tr></thead>
                 <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
                     @forelse($packages as $pkg)
-                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                            <td class="px-6 py-4"><div class="font-bold text-slate-900 dark:text-white">{{ $pkg->employee->first_name }} {{ $pkg->employee->last_name }}</div><div class="text-xs text-slate-500">{{ $pkg->employee->employee_number }}</div></td>
-                            <td class="px-6 py-4 font-bold text-slate-900 dark:text-white">{{ number_format($pkg->basic_salary, 2) }}</td>
-                            <td class="px-6 py-4">{{ number_format($pkg->housing_allowance, 2) }}</td>
-                            <td class="px-6 py-4">{{ number_format($pkg->transportation_allowance, 2) }}</td>
-                            <td class="px-6 py-4 font-mono text-sm">{{ $pkg->effective_from?->format('Y-m-d') }}</td>
-                            <td class="px-6 py-4 font-mono text-sm">{{ $pkg->effective_to?->format('Y-m-d') ?? '—' }}</td>
+                        <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors group">
+                            <td class="px-6 py-4">
+                                <div class="font-black text-slate-900 dark:text-white">{{ $pkg->employee->first_name }} {{ $pkg->employee->last_name }}</div>
+                                <div class="text-[10px] text-slate-400 font-bold tracking-widest uppercase">#{{ $pkg->employee->employee_number }}</div>
+                            </td>
+                            <td class="px-6 py-4 font-black text-slate-900 dark:text-white">{{ number_format($pkg->basic_salary, 2) }}</td>
+                            <td class="px-6 py-4 font-bold text-slate-600 dark:text-slate-400">{{ number_format($pkg->housing_allowance, 2) }}</td>
+                            <td class="px-6 py-4 font-bold text-slate-600 dark:text-slate-400">{{ number_format($pkg->transportation_allowance, 2) }}</td>
+                            <td class="px-6 py-4 font-mono text-xs font-bold text-slate-500">{{ $pkg->effective_from?->format('Y-m-d') }}</td>
+                            <td class="px-6 py-4 font-mono text-xs font-bold text-slate-500">{{ $pkg->effective_to?->format('Y-m-d') ?? '—' }}</td>
                             <td class="px-6 py-4">
                                 @if($pkg->status->value === 'active')
-                                    <span class="px-2 py-1 rounded-md text-xs font-bold bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">{{ app()->getLocale() === 'ar' ? 'نشط' : 'Active' }}</span>
+                                    <span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase bg-emerald-50 text-emerald-600 border border-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800">
+                                        {{ app()->getLocale() === 'ar' ? 'نشط' : 'Active' }}
+                                    </span>
                                 @else
-                                    <span class="px-2 py-1 rounded-md text-xs font-bold bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">{{ ucfirst($pkg->status->value) }}</span>
+                                    <span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase bg-slate-50 text-slate-600 border border-slate-100 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700">
+                                        {{ $pkg->status->label() }}
+                                    </span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-right"><a href="{{ route('employee-salary-packages.edit', $pkg->id) }}" class="text-brand-600 hover:text-brand-700 font-semibold">{{ app()->getLocale() === 'ar' ? 'تعديل' : 'Edit' }}</a></td>
+                            <td class="px-6 py-4 text-end">
+                                <a href="{{ route('employee-salary-packages.edit', $pkg->id) }}" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-400 hover:text-brand-600 hover:border-brand-200 transition-all shadow-sm">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                </a>
+                            </td>
                         </tr>
                     @empty
-                        <tr><td colspan="8" class="px-6 py-12 text-center text-slate-500">{{ app()->getLocale() === 'ar' ? 'لا توجد حزم رواتب.' : 'No salary packages.' }}</td></tr>
+                        <tr>
+                            <td colspan="8" class="px-6 py-12">
+                                <x-empty-state-card 
+                                    :title="app()->getLocale() === 'ar' ? 'لا توجد حزم رواتب' : 'No salary packages'"
+                                    :description="app()->getLocale() === 'ar' ? 'قم بتعريف حزم الرواتب للموظفين لبدء حسابات الرواتب.' : 'Define salary packages for employees to start payroll calculations.'"
+                                    :actionLink="route('employee-salary-packages.create')"
+                                    :actionText="app()->getLocale() === 'ar' ? 'تعريف حزمة جديدة' : 'Define New Package'"
+                                />
+                            </td>
+                        </tr>
                     @endforelse
                 </tbody>
             </table>

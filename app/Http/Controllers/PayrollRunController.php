@@ -64,7 +64,16 @@ class PayrollRunController extends Controller
             return PayrollRunResource::make($payrollRun->load(['payrollPeriod', 'items.employee']));
         }
 
-        $payrollRun->load(['payrollPeriod', 'items.employee', 'generatedBy', 'approvedBy']);
+        $payrollRun->load([
+            'payrollPeriod',
+            'items.employee',
+            'generatedBy',
+            'approvedBy',
+            'workflowInstance.workflow.steps',
+            'workflowInstance.actions.actedBy',
+            'workflowInstance.actions.workflowStep',
+            'workflowInstance.currentStep',
+        ]);
 
         return view('payroll-runs.show', compact('payrollRun'));
     }

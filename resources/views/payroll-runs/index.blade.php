@@ -29,23 +29,43 @@
                 </tr></thead>
                 <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
                     @forelse($runs as $run)
-                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                            <td class="px-6 py-4 font-bold text-slate-900 dark:text-white">{{ $run->run_number }}</td>
-                            <td class="px-6 py-4"><div class="font-semibold">{{ $run->payrollPeriod->name_ar ?? $run->payrollPeriod->name_en }}</div><div class="text-xs text-slate-500 font-mono">{{ $run->payrollPeriod->starts_on->format('M d') }} - {{ $run->payrollPeriod->ends_on->format('M d, Y') }}</div></td>
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
+                            <td class="px-6 py-4 font-black text-slate-900 dark:text-white">#{{ $run->run_number }}</td>
                             <td class="px-6 py-4">
-                                @if($run->status->value === 'approved' || $run->status->value === 'paid')<span class="px-2 py-1 rounded-md text-xs font-bold bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">{{ ucfirst($run->status->value) }}</span>
-                                @elseif($run->status->value === 'pending')<span class="px-2 py-1 rounded-md text-xs font-bold bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400">{{ app()->getLocale() === 'ar' ? 'معلق' : 'Pending' }}</span>
-                                @elseif($run->status->value === 'rejected')<span class="px-2 py-1 rounded-md text-xs font-bold bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400">{{ app()->getLocale() === 'ar' ? 'مرفوض' : 'Rejected' }}</span>
-                                @else<span class="px-2 py-1 rounded-md text-xs font-bold bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">{{ ucfirst($run->status->value) }}</span>@endif
+                                <div class="font-bold text-slate-700 dark:text-slate-300">{{ $run->payrollPeriod->name_ar ?? $run->payrollPeriod->name_en }}</div>
+                                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">{{ $run->payrollPeriod->starts_on->format('M d') }} - {{ $run->payrollPeriod->ends_on->format('M d, Y') }}</div>
                             </td>
-                            <td class="px-6 py-4 font-semibold">{{ $run->total_employees }}</td>
-                            <td class="px-6 py-4 font-mono">{{ number_format($run->gross_amount, 2) }}</td>
-                            <td class="px-6 py-4 font-mono text-rose-600">{{ number_format($run->total_deductions, 2) }}</td>
-                            <td class="px-6 py-4 font-extrabold text-slate-900 dark:text-white">{{ number_format($run->net_amount, 2) }}</td>
-                            <td class="px-6 py-4 text-right"><a href="{{ route('payroll-runs.show', $run->id) }}" class="text-brand-600 hover:text-brand-700 font-semibold">{{ app()->getLocale() === 'ar' ? 'عرض' : 'View' }}</a></td>
+                            <td class="px-6 py-4">
+                                <span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase border 
+                                    {{ $run->status->value === 'approved' ? 'bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800' : '' }}
+                                    {{ $run->status->value === 'pending' ? 'bg-amber-50 text-amber-600 border-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800' : '' }}
+                                    {{ $run->status->value === 'rejected' ? 'bg-rose-50 text-rose-600 border-rose-100 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800' : '' }}
+                                    {{ !in_array($run->status->value, ['approved', 'pending', 'rejected']) ? 'bg-slate-50 text-slate-600 border-slate-100 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700' : '' }}
+                                ">
+                                    {{ $run->status->label() }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 font-black text-slate-900 dark:text-white">{{ $run->total_employees }}</td>
+                            <td class="px-6 py-4 font-bold text-slate-600 dark:text-slate-400">{{ number_format($run->gross_amount, 2) }}</td>
+                            <td class="px-6 py-4 font-bold text-rose-600">{{ number_format($run->total_deductions, 2) }}</td>
+                            <td class="px-6 py-4 font-black text-brand-600 text-base">{{ number_format($run->net_amount, 2) }}</td>
+                            <td class="px-6 py-4 text-end">
+                                <a href="{{ route('payroll-runs.show', $run->id) }}" class="inline-flex items-center justify-center px-4 py-2 text-xs font-black text-brand-600 bg-brand-50 hover:bg-brand-100 dark:bg-brand-900/30 dark:hover:bg-brand-900/50 rounded-xl transition-all border border-brand-100 dark:border-brand-800">
+                                    {{ app()->getLocale() === 'ar' ? 'عرض التفاصيل' : 'View Details' }}
+                                </a>
+                            </td>
                         </tr>
                     @empty
-                        <tr><td colspan="8" class="px-6 py-12 text-center text-slate-500">{{ app()->getLocale() === 'ar' ? 'لا توجد تشغيلات.' : 'No payroll runs yet.' }}</td></tr>
+                        <tr>
+                            <td colspan="8" class="px-6 py-12">
+                                <x-empty-state-card 
+                                    :title="app()->getLocale() === 'ar' ? 'لا توجد تشغيلات رواتب' : 'No payroll runs'"
+                                    :description="app()->getLocale() === 'ar' ? 'ابدأ بتشغيل الرواتب لأول فترة متاحة.' : 'Start by generating payroll for the first available period.'"
+                                    :actionLink="route('payroll-runs.create')"
+                                    :actionText="app()->getLocale() === 'ar' ? 'تشغيل الرواتب الآن' : 'Generate Payroll Now'"
+                                />
+                            </td>
+                        </tr>
                     @endforelse
                 </tbody>
             </table>

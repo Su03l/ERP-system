@@ -27,20 +27,37 @@
                 </tr></thead>
                 <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
                     @forelse($periods as $period)
-                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                            <td class="px-6 py-4 font-bold text-slate-900 dark:text-white">{{ app()->getLocale() === 'ar' ? $period->name_ar : $period->name_en }}</td>
-                            <td class="px-6 py-4 font-mono text-sm">{{ $period->starts_on->format('Y-m-d') }}</td>
-                            <td class="px-6 py-4 font-mono text-sm">{{ $period->ends_on->format('Y-m-d') }}</td>
-                            <td class="px-6 py-4 font-mono text-sm">{{ $period->pay_date->format('Y-m-d') }}</td>
+                        <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors group">
+                            <td class="px-6 py-4 font-black text-slate-900 dark:text-white">{{ app()->getLocale() === 'ar' ? $period->name_ar : $period->name_en }}</td>
+                            <td class="px-6 py-4 font-mono text-xs font-bold text-slate-500">{{ $period->starts_on->format('Y-m-d') }}</td>
+                            <td class="px-6 py-4 font-mono text-xs font-bold text-slate-500">{{ $period->ends_on->format('Y-m-d') }}</td>
+                            <td class="px-6 py-4 font-mono text-xs font-bold text-slate-900 dark:text-white">{{ $period->pay_date->format('Y-m-d') }}</td>
                             <td class="px-6 py-4">
-                                @if($period->status->value === 'open')<span class="px-2 py-1 rounded-md text-xs font-bold bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">{{ app()->getLocale() === 'ar' ? 'مفتوح' : 'Open' }}</span>
-                                @elseif($period->status->value === 'closed')<span class="px-2 py-1 rounded-md text-xs font-bold bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">{{ app()->getLocale() === 'ar' ? 'مغلق' : 'Closed' }}</span>
-                                @else<span class="px-2 py-1 rounded-md text-xs font-bold bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400">{{ ucfirst($period->status->value) }}</span>@endif
+                                <span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase border 
+                                    {{ $period->status->value === 'open' ? 'bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800' : '' }}
+                                    {{ $period->status->value === 'closed' ? 'bg-slate-50 text-slate-600 border-slate-100 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700' : '' }}
+                                    {{ !in_array($period->status->value, ['open', 'closed']) ? 'bg-rose-50 text-rose-600 border-rose-100 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800' : '' }}
+                                ">
+                                    {{ $period->status->label() }}
+                                </span>
                             </td>
-                            <td class="px-6 py-4 text-right"><a href="{{ route('payroll-periods.edit', $period->id) }}" class="text-brand-600 hover:text-brand-700 font-semibold">{{ app()->getLocale() === 'ar' ? 'تعديل' : 'Edit' }}</a></td>
+                            <td class="px-6 py-4 text-end">
+                                <a href="{{ route('payroll-periods.edit', $period->id) }}" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-400 hover:text-brand-600 hover:border-brand-200 transition-all shadow-sm">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                </a>
+                            </td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" class="px-6 py-12 text-center text-slate-500">{{ app()->getLocale() === 'ar' ? 'لا توجد فترات.' : 'No payroll periods.' }}</td></tr>
+                        <tr>
+                            <td colspan="6" class="px-6 py-12">
+                                <x-empty-state-card 
+                                    :title="app()->getLocale() === 'ar' ? 'لا توجد فترات رواتب' : 'No payroll periods'"
+                                    :description="app()->getLocale() === 'ar' ? 'قم بإنشاء فترة رواتب جديدة لبدء عمليات الصرف.' : 'Create a new payroll period to start disbursement operations.'"
+                                    :actionLink="route('payroll-periods.create')"
+                                    :actionText="app()->getLocale() === 'ar' ? 'إضافة فترة جديدة' : 'Add New Period'"
+                                />
+                            </td>
+                        </tr>
                     @endforelse
                 </tbody>
             </table>
