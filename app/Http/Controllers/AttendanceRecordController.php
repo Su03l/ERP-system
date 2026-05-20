@@ -34,8 +34,9 @@ class AttendanceRecordController extends Controller
     public function create()
     {
         Gate::authorize('create', AttendanceRecord::class);
+        $employees = Employee::forCurrentCompany()->get();
 
-        return view('attendance.create');
+        return view('attendance.create', compact('employees'));
     }
 
     public function store(StoreAttendanceRecordRequest $request, CreateAttendanceRecord $createAttendanceRecord)
@@ -63,8 +64,9 @@ class AttendanceRecordController extends Controller
     public function edit(AttendanceRecord $attendanceRecord)
     {
         Gate::authorize('update', $attendanceRecord);
+        $employees = Employee::forCurrentCompany()->get();
 
-        return view('attendance.edit', compact('attendanceRecord'));
+        return view('attendance.edit', compact('attendanceRecord', 'employees'));
     }
 
     public function update(
