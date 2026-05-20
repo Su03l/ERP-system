@@ -96,7 +96,7 @@ Route::middleware('auth')->group(function () {
     Route::post('leave-requests/{leave_request}/reject', [LeaveRequestController::class, 'reject'])->name('leave-requests.reject');
     Route::post('leave-requests/{leave_request}/cancel', [LeaveRequestController::class, 'cancel'])->name('leave-requests.cancel');
     Route::post('leave-requests/{leave_request}/return', [LeaveRequestController::class, 'return'])->name('leave-requests.return');
-    Route::apiResource('leave-types', LeaveTypeController::class);
+    Route::resource('leave-types', LeaveTypeController::class);
     Route::apiResource('leave-requests', LeaveRequestController::class);
     Route::apiResource('leave-balances', LeaveBalanceController::class)->only(['index', 'show', 'update']);
 
