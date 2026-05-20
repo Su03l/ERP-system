@@ -9,12 +9,11 @@ use App\Http\Requests\StorePayrollPeriodRequest;
 use App\Http\Requests\UpdatePayrollPeriodRequest;
 use App\Http\Resources\PayrollPeriodResource;
 use App\Models\PayrollPeriod;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Gate;
 
 class PayrollPeriodController extends Controller
 {
-    public function index(IndexPayrollPeriodRequest $request): AnonymousResourceCollection
+    public function index(IndexPayrollPeriodRequest $request)
     {
         Gate::authorize('viewAny', PayrollPeriod::class);
         $filters = $request->validated();
@@ -27,24 +26,58 @@ class PayrollPeriodController extends Controller
             ->latest('id')
             ->paginate();
 
-        return PayrollPeriodResource::collection($periods);
+        if ($request->expectsJson()) {
+            return PayrollPeriodResource::collection($periods);
+        }
+
+        return view('payroll-periods.index', compact('periods'));
     }
 
-    public function store(StorePayrollPeriodRequest $request, CreatePayrollPeriod $action): PayrollPeriodResource
+    public function create()
     {
-        return PayrollPeriodResource::make($action->handle($request->validated(), $request->user()));
+        Gate::authorize('create', PayrollPeriod::class);
+
+        return view('payroll-periods.create');
     }
 
-    public function show(PayrollPeriod $payrollPeriod): PayrollPeriodResource
+    public function store(StorePayrollPeriodRequest $request, CreatePayrollPeriod $action)
+    {
+        $period = $action->handle($request->validated(), $request->user());
+
+        if ($request->expectsJson()) {
+            return PayrollPeriodResource::make($period);
+        }
+
+        return redirect()->route('payroll-periods.index')->with('success', app()->getLocale() === 'ar' ? 'تم إنشاء الفترة بنجاح.' : 'Payroll period created.');
+    }
+
+    public function show(PayrollPeriod $payrollPeriod)
     {
         Gate::authorize('view', $payrollPeriod);
 
-        return PayrollPeriodResource::make($payrollPeriod);
+        if (request()->expectsJson()) {
+            return PayrollPeriodResource::make($payrollPeriod);
+        }
+
+        return redirect()->route('payroll-periods.edit', $payrollPeriod->id);
     }
 
-    public function update(UpdatePayrollPeriodRequest $request, PayrollPeriod $payrollPeriod, UpdatePayrollPeriod $action): PayrollPeriodResource
+    public function edit(PayrollPeriod $payrollPeriod)
     {
-        return PayrollPeriodResource::make($action->handle($payrollPeriod, $request->validated(), $request->user()));
+        Gate::authorize('update', $payrollPeriod);
+
+        return view('payroll-periods.edit', compact('payrollPeriod'));
+    }
+
+    public function update(UpdatePayrollPeriodRequest $request, PayrollPeriod $payrollPeriod, UpdatePayrollPeriod $action)
+    {
+        $result = $action->handle($payrollPeriod, $request->validated(), $request->user());
+
+        if ($request->expectsJson()) {
+            return PayrollPeriodResource::make($result);
+        }
+
+        return redirect()->route('payroll-periods.index')->with('success', app()->getLocale() === 'ar' ? 'تم تحديث الفترة بنجاح.' : 'Payroll period updated.');
     }
 
     public function destroy(PayrollPeriod $payrollPeriod): never

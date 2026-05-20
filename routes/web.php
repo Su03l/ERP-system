@@ -59,7 +59,6 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmployeeDocumentController;
 use App\Http\Controllers\GlobalSearchController;
-use App\Http\Controllers\HrmsDashboardController;
 use App\Http\Controllers\LeaveDashboardController;
 use App\Http\Controllers\NotificationController;
 

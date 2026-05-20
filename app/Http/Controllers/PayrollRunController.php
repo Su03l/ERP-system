@@ -11,12 +11,11 @@ use App\Http\Resources\PayrollRunResource;
 use App\Models\PayrollPeriod;
 use App\Models\PayrollRun;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Gate;
 
 class PayrollRunController extends Controller
 {
-    public function index(IndexPayrollRunRequest $request): AnonymousResourceCollection
+    public function index(IndexPayrollRunRequest $request)
     {
         Gate::authorize('viewAny', PayrollRun::class);
         $filters = $request->validated();
@@ -29,22 +28,45 @@ class PayrollRunController extends Controller
             ->latest('id')
             ->paginate();
 
-        return PayrollRunResource::collection($runs);
+        if ($request->expectsJson()) {
+            return PayrollRunResource::collection($runs);
+        }
+
+        return view('payroll-runs.index', compact('runs'));
     }
 
-    public function store(GeneratePayrollRunRequest $request, GeneratePayrollRun $action): PayrollRunResource
+    public function create()
+    {
+        Gate::authorize('generate', PayrollRun::class);
+        $periods = PayrollPeriod::forCurrentCompany()->where('status', 'open')->latest('id')->get();
+
+        return view('payroll-runs.create', compact('periods'));
+    }
+
+    public function store(GeneratePayrollRunRequest $request, GeneratePayrollRun $action)
     {
         Gate::authorize('generate', PayrollRun::class);
         $period = PayrollPeriod::query()->forCurrentCompany()->findOrFail((int) $request->validated('payroll_period_id'));
+        $run = $action->handle($period, $request->validated(), $request->user())->load(['payrollPeriod', 'items']);
 
-        return PayrollRunResource::make($action->handle($period, $request->validated(), $request->user())->load(['payrollPeriod', 'items']));
+        if ($request->expectsJson()) {
+            return PayrollRunResource::make($run);
+        }
+
+        return redirect()->route('payroll-runs.show', $run->id)->with('success', app()->getLocale() === 'ar' ? 'تم تشغيل الرواتب بنجاح.' : 'Payroll run generated successfully.');
     }
 
-    public function show(PayrollRun $payrollRun): PayrollRunResource
+    public function show(PayrollRun $payrollRun)
     {
         Gate::authorize('view', $payrollRun);
 
-        return PayrollRunResource::make($payrollRun->load(['payrollPeriod', 'items.employee']));
+        if (request()->expectsJson()) {
+            return PayrollRunResource::make($payrollRun->load(['payrollPeriod', 'items.employee']));
+        }
+
+        $payrollRun->load(['payrollPeriod', 'items.employee', 'generatedBy', 'approvedBy']);
+
+        return view('payroll-runs.show', compact('payrollRun'));
     }
 
     public function update(Request $request, PayrollRun $payrollRun): never
@@ -57,17 +79,27 @@ class PayrollRunController extends Controller
         abort(405);
     }
 
-    public function approve(Request $request, PayrollRun $payrollRun, ApprovePayrollRun $action): PayrollRunResource
+    public function approve(Request $request, PayrollRun $payrollRun, ApprovePayrollRun $action)
     {
         Gate::authorize('approve', $payrollRun);
+        $result = $action->handle($payrollRun, $request->user(), $request->string('comment')->toString())->load(['payrollPeriod']);
 
-        return PayrollRunResource::make($action->handle($payrollRun, $request->user(), $request->string('comment')->toString())->load(['payrollPeriod']));
+        if ($request->expectsJson()) {
+            return PayrollRunResource::make($result);
+        }
+
+        return redirect()->back()->with('success', app()->getLocale() === 'ar' ? 'تمت الموافقة على تشغيل الرواتب.' : 'Payroll run approved.');
     }
 
-    public function reject(Request $request, PayrollRun $payrollRun, RejectPayrollRun $action): PayrollRunResource
+    public function reject(Request $request, PayrollRun $payrollRun, RejectPayrollRun $action)
     {
         Gate::authorize('reject', $payrollRun);
+        $result = $action->handle($payrollRun, $request->user(), $request->string('reason')->toString())->load(['payrollPeriod']);
 
-        return PayrollRunResource::make($action->handle($payrollRun, $request->user(), $request->string('reason')->toString())->load(['payrollPeriod']));
+        if ($request->expectsJson()) {
+            return PayrollRunResource::make($result);
+        }
+
+        return redirect()->back()->with('success', app()->getLocale() === 'ar' ? 'تم رفض تشغيل الرواتب.' : 'Payroll run rejected.');
     }
 }

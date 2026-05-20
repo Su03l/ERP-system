@@ -7,12 +7,11 @@ use App\Http\Resources\PayrollRunItemResource;
 use App\Http\Resources\PayslipResource;
 use App\Models\PayrollRunItem;
 use App\Services\PayslipDataService;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Gate;
 
 class PayrollRunItemController extends Controller
 {
-    public function index(IndexPayrollRunItemRequest $request): AnonymousResourceCollection
+    public function index(IndexPayrollRunItemRequest $request)
     {
         Gate::authorize('viewAny', PayrollRunItem::class);
         $filters = $request->validated();
@@ -26,20 +25,35 @@ class PayrollRunItemController extends Controller
             ->latest('id')
             ->paginate();
 
-        return PayrollRunItemResource::collection($items);
+        if ($request->expectsJson()) {
+            return PayrollRunItemResource::collection($items);
+        }
+
+        return view('payroll-run-items.index', compact('items'));
     }
 
-    public function show(PayrollRunItem $payrollRunItem): PayrollRunItemResource
+    public function show(PayrollRunItem $payrollRunItem)
     {
         Gate::authorize('view', $payrollRunItem);
+        $payrollRunItem->load(['company', 'employee.department', 'employee.jobTitle', 'payrollRun.payrollPeriod', 'components']);
 
-        return PayrollRunItemResource::make($payrollRunItem->load(['employee', 'payrollRun.payrollPeriod', 'components']));
+        if (request()->expectsJson()) {
+            return PayrollRunItemResource::make($payrollRunItem);
+        }
+
+        return view('payroll-run-items.show', compact('payrollRunItem'));
     }
 
-    public function payslip(PayrollRunItem $payrollRunItem, PayslipDataService $payslipDataService): PayslipResource
+    public function payslip(PayrollRunItem $payrollRunItem, PayslipDataService $payslipDataService)
     {
         Gate::authorize('view', $payrollRunItem);
+        $payrollRunItem->load(['company', 'employee.department', 'employee.jobTitle', 'payrollRun.payrollPeriod', 'components']);
+        $payslipData = $payslipDataService->make($payrollRunItem);
 
-        return PayslipResource::make($payslipDataService->make($payrollRunItem));
+        if (request()->expectsJson()) {
+            return PayslipResource::make($payslipData);
+        }
+
+        return view('payroll-run-items.payslip', compact('payrollRunItem', 'payslipData'));
     }
 }
