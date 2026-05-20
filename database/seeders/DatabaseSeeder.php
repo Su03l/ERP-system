@@ -69,5 +69,8 @@ class DatabaseSeeder extends Seeder
             'department_id' => fn () => $departments->random()->id,
             'job_title_id' => fn () => $jobTitles->random()->id,
         ]);
+
+        // Call the permissions seeder
+        $this->call(PermissionsSeeder::class);
     }
 }
