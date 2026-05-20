@@ -1,20 +1,37 @@
-<aside class="hidden md:flex flex-col w-64 shrink-0 bg-slate-900 border-e border-slate-800 text-slate-300 h-full select-none" id="sidebar-container">
+<div 
+    x-show="mobileSidebarOpen" 
+    class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-30 md:hidden" 
+    x-cloak 
+    @click="mobileSidebarOpen = false"
+></div>
+
+<aside 
+    :class="mobileSidebarOpen ? 'flex fixed inset-y-0 {{ app()->getLocale() === 'ar' ? 'right-0' : 'left-0' }} z-40' : 'hidden md:flex'"
+    class="flex-col w-64 shrink-0 bg-slate-900 border-e border-slate-800 text-slate-300 h-full select-none transition-all duration-300" 
+    id="sidebar-container"
+>
     <!-- Header Branding / Logo -->
-    <div class="h-16 flex items-center px-6 border-b border-slate-800 gap-3">
-        <!-- Abstract Brand Icon (Emerald Gradient Seed/Core) -->
-        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center shadow-lg shadow-brand-500/20">
-            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path>
-            </svg>
+    <div class="h-16 flex items-center px-6 border-b border-slate-800 gap-3 justify-between">
+        <div class="flex items-center gap-3">
+            <!-- Abstract Brand Icon (Emerald Gradient Seed/Core) -->
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center shadow-lg shadow-brand-500/20">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path>
+                </svg>
+            </div>
+            <div class="flex flex-col">
+                <span class="font-bold text-white text-base tracking-tight leading-none">
+                    {{ app()->getLocale() === 'ar' ? 'نواة ERP' : 'Nawwat ERP' }}
+                </span>
+                <span class="text-[10px] text-slate-500 font-semibold tracking-wider uppercase mt-1">
+                    {{ app()->getLocale() === 'ar' ? 'نظام السحابي المتكامل' : 'SaaS Enterprise Core' }}
+                </span>
+            </div>
         </div>
-        <div class="flex flex-col">
-            <span class="font-bold text-white text-base tracking-tight leading-none">
-                {{ app()->getLocale() === 'ar' ? 'نواة ERP' : 'Nawwat ERP' }}
-            </span>
-            <span class="text-[10px] text-slate-500 font-semibold tracking-wider uppercase mt-1">
-                {{ app()->getLocale() === 'ar' ? 'نظام السحابي المتكامل' : 'SaaS Enterprise Core' }}
-            </span>
-        </div>
+        <!-- Mobile Sidebar Close Trigger -->
+        <button @click="mobileSidebarOpen = false" class="md:hidden p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors focus:outline-none">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
     </div>
 
     <!-- Navigation List (Scrollable Scrollbar hidden) -->
