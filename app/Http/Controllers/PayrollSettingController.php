@@ -10,24 +10,40 @@ use Illuminate\Support\Facades\Gate;
 
 class PayrollSettingController extends Controller
 {
-    public function index(): PayrollSettingResource
+    public function index()
     {
         Gate::authorize('viewAny', PayrollSetting::class);
 
         $setting = PayrollSetting::query()->forCurrentCompany()->firstOrFail();
 
-        return PayrollSettingResource::make($setting);
+        if (request()->expectsJson()) {
+            return PayrollSettingResource::make($setting);
+        }
+
+        return view('payroll-settings.edit', compact('setting'));
     }
 
-    public function show(PayrollSetting $payrollSetting): PayrollSettingResource
+    public function show(PayrollSetting $payrollSetting)
     {
         Gate::authorize('view', $payrollSetting);
 
-        return PayrollSettingResource::make($payrollSetting);
+        if (request()->expectsJson()) {
+            return PayrollSettingResource::make($payrollSetting);
+        }
+
+        $setting = $payrollSetting;
+
+        return view('payroll-settings.edit', compact('setting'));
     }
 
-    public function update(UpdatePayrollSettingRequest $request, PayrollSetting $payrollSetting, UpdatePayrollSetting $action): PayrollSettingResource
+    public function update(UpdatePayrollSettingRequest $request, PayrollSetting $payrollSetting, UpdatePayrollSetting $action)
     {
-        return PayrollSettingResource::make($action->handle($payrollSetting, $request->validated(), $request->user()));
+        $result = $action->handle($payrollSetting, $request->validated(), $request->user());
+
+        if ($request->expectsJson()) {
+            return PayrollSettingResource::make($result);
+        }
+
+        return redirect()->back()->with('success', app()->getLocale() === 'ar' ? 'تم تحديث إعدادات الرواتب بنجاح.' : 'Payroll settings updated successfully.');
     }
 }

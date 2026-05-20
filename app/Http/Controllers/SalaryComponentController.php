@@ -9,12 +9,11 @@ use App\Http\Requests\StoreSalaryComponentRequest;
 use App\Http\Requests\UpdateSalaryComponentRequest;
 use App\Http\Resources\SalaryComponentResource;
 use App\Models\SalaryComponent;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Gate;
 
 class SalaryComponentController extends Controller
 {
-    public function index(IndexSalaryComponentRequest $request): AnonymousResourceCollection
+    public function index(IndexSalaryComponentRequest $request)
     {
         Gate::authorize('viewAny', SalaryComponent::class);
         $filters = $request->validated();
@@ -29,24 +28,58 @@ class SalaryComponentController extends Controller
             ->latest('id')
             ->paginate();
 
-        return SalaryComponentResource::collection($components);
+        if ($request->expectsJson()) {
+            return SalaryComponentResource::collection($components);
+        }
+
+        return view('salary-components.index', compact('components'));
     }
 
-    public function store(StoreSalaryComponentRequest $request, CreateSalaryComponent $action): SalaryComponentResource
+    public function create()
     {
-        return SalaryComponentResource::make($action->handle($request->validated(), $request->user()));
+        Gate::authorize('create', SalaryComponent::class);
+
+        return view('salary-components.create');
     }
 
-    public function show(SalaryComponent $salaryComponent): SalaryComponentResource
+    public function store(StoreSalaryComponentRequest $request, CreateSalaryComponent $action)
+    {
+        $component = $action->handle($request->validated(), $request->user());
+
+        if ($request->expectsJson()) {
+            return SalaryComponentResource::make($component);
+        }
+
+        return redirect()->route('salary-components.index')->with('success', app()->getLocale() === 'ar' ? 'تم إنشاء المكون بنجاح.' : 'Salary component created.');
+    }
+
+    public function show(SalaryComponent $salaryComponent)
     {
         Gate::authorize('view', $salaryComponent);
 
-        return SalaryComponentResource::make($salaryComponent);
+        if (request()->expectsJson()) {
+            return SalaryComponentResource::make($salaryComponent);
+        }
+
+        return redirect()->route('salary-components.edit', $salaryComponent->id);
     }
 
-    public function update(UpdateSalaryComponentRequest $request, SalaryComponent $salaryComponent, UpdateSalaryComponent $action): SalaryComponentResource
+    public function edit(SalaryComponent $salaryComponent)
     {
-        return SalaryComponentResource::make($action->handle($salaryComponent, $request->validated(), $request->user()));
+        Gate::authorize('update', $salaryComponent);
+
+        return view('salary-components.edit', compact('salaryComponent'));
+    }
+
+    public function update(UpdateSalaryComponentRequest $request, SalaryComponent $salaryComponent, UpdateSalaryComponent $action)
+    {
+        $result = $action->handle($salaryComponent, $request->validated(), $request->user());
+
+        if ($request->expectsJson()) {
+            return SalaryComponentResource::make($result);
+        }
+
+        return redirect()->route('salary-components.index')->with('success', app()->getLocale() === 'ar' ? 'تم تحديث المكون بنجاح.' : 'Salary component updated.');
     }
 
     public function destroy(SalaryComponent $salaryComponent): never
