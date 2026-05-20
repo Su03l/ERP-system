@@ -9,31 +9,47 @@ use App\Models\LeaveBalance;
 use App\Services\AuditLogger;
 use App\Services\LeaveBalanceIndexQuery;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Gate;
 
 class LeaveBalanceController extends Controller
 {
-    public function index(IndexLeaveBalanceRequest $request, LeaveBalanceIndexQuery $query): AnonymousResourceCollection
+    public function index(IndexLeaveBalanceRequest $request, LeaveBalanceIndexQuery $query)
     {
-        return LeaveBalanceResource::collection($query->paginate($request->validated()));
+        if ($request->expectsJson()) {
+            return LeaveBalanceResource::collection($query->paginate($request->validated()));
+        }
+
+        $leaveBalances = $query->paginate($request->validated());
+        $leaveBalances->load(['employee', 'leaveType']);
+
+        return view('leave-balances.index', compact('leaveBalances'));
     }
 
-    public function show(LeaveBalance $leaveBalance): LeaveBalanceResource
+    public function show(LeaveBalance $leaveBalance)
     {
         Gate::authorize('view', $leaveBalance);
 
-        return LeaveBalanceResource::make($leaveBalance->load(['employee', 'leaveType']));
+        if (request()->expectsJson()) {
+            return LeaveBalanceResource::make($leaveBalance->load(['employee', 'leaveType']));
+        }
+
+        $leaveBalance->load(['employee', 'leaveType']);
+
+        return view('leave-balances.show', compact('leaveBalance'));
     }
 
-    public function update(UpdateLeaveBalanceRequest $request, LeaveBalance $leaveBalance, AuditLogger $auditLogger): LeaveBalanceResource
+    public function update(UpdateLeaveBalanceRequest $request, LeaveBalance $leaveBalance, AuditLogger $auditLogger)
     {
         Gate::authorize('update', $leaveBalance);
         $oldValues = $leaveBalance->attributesToArray();
         $leaveBalance->update($request->validated());
         $auditLogger->log('leave_balance.updated', $leaveBalance, $oldValues, $leaveBalance->refresh()->attributesToArray(), user: $request->user(), company: $leaveBalance->company_id);
 
-        return LeaveBalanceResource::make($leaveBalance->load(['employee', 'leaveType']));
+        if ($request->expectsJson()) {
+            return LeaveBalanceResource::make($leaveBalance->load(['employee', 'leaveType']));
+        }
+
+        return redirect()->back()->with('success', app()->getLocale() === 'ar' ? 'تم تحديث الرصيد بنجاح.' : 'Leave balance updated successfully.');
     }
 
     public function store(): never
