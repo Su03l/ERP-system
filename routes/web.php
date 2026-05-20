@@ -48,6 +48,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\NotificationController;
 
 Route::get('/login', [LoginController::class, 'show'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
@@ -132,4 +133,7 @@ Route::middleware('auth')->group(function () {
     Route::apiResource('webhook-endpoints', WebhookEndpointController::class);
     Route::apiResource('webhook-deliveries', WebhookDeliveryController::class)->only(['index', 'show']);
     Route::apiResource('user-sessions', UserSessionController::class)->only(['index', 'destroy']);
+
+    Route::post('notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
+    Route::post('notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-as-read');
 });
