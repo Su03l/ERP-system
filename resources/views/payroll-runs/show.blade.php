@@ -25,6 +25,7 @@
             </div>
         </div>
         <div class="flex items-center gap-3">
+            @can('export', App\Models\PayrollRun::class)
             <div class="flex bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-1 shadow-sm">
                 <button class="p-2 text-slate-500 hover:text-brand-600 transition-colors tooltip" title="{{ app()->getLocale() === 'ar' ? 'تصدير PDF' : 'Export PDF' }}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
@@ -33,6 +34,7 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                 </button>
             </div>
+            @endcan
             <a href="{{ route('payroll-runs.index') }}" class="inline-flex items-center px-4 py-2.5 text-sm font-bold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 rounded-xl transition-all">
                 {{ app()->getLocale() === 'ar' ? 'عودة' : 'Back' }}
             </a>

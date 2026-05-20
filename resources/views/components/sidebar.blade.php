@@ -81,13 +81,49 @@
                     <span>{{ app()->getLocale() === 'ar' ? 'طلبات الإجازات' : 'Leave Requests' }}</span>
                 </a>
 
-                <!-- Payroll -->
-                <a href="{{ url('/payroll-runs') }}" class="group flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 {{ request()->is('payroll*') ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/10' : 'hover:bg-slate-800 hover:text-white' }}">
-                    <svg class="w-5 h-5 shrink-0 {{ request()->is('payroll*') ? 'text-white' : 'text-slate-400 group-hover:text-white' }} {{ app()->getLocale() === 'ar' ? 'ml-3' : 'mr-3' }} transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <span>{{ app()->getLocale() === 'ar' ? 'مسيرات الرواتب' : 'Payroll Runs' }}</span>
-                </a>
+                <!-- Payroll Group (Task 277 & 279) -->
+                @if(auth()->user()->hasAnyPermission(['payroll_runs.view', 'salary_packages.view', 'salary_components.view', 'payroll_periods.view']))
+                <div x-data="{ open: {{ request()->is('payroll*') || request()->is('employee-salary-packages*') || request()->is('salary-components*') || request()->is('payroll-periods*') || request()->is('payroll-runs*') ? 'true' : 'false' }} }" class="space-y-1">
+                    <button @click="open = !open" class="w-full group flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 {{ request()->is('payroll*') || request()->is('employee-salary-packages*') || request()->is('salary-components*') || request()->is('payroll-periods*') || request()->is('payroll-runs*') ? 'bg-slate-800 text-white' : 'hover:bg-slate-800 hover:text-white' }}">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 shrink-0 {{ request()->is('payroll*') || request()->is('employee-salary-packages*') || request()->is('salary-components*') || request()->is('payroll-periods*') || request()->is('payroll-runs*') ? 'text-brand-400' : 'text-slate-400 group-hover:text-white' }} {{ app()->getLocale() === 'ar' ? 'ml-3' : 'mr-3' }} transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>{{ app()->getLocale() === 'ar' ? 'نظام الرواتب' : 'Payroll System' }}</span>
+                        </div>
+                        <svg class="w-4 h-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    
+                    <div x-show="open" x-cloak x-collapse class="{{ app()->getLocale() === 'ar' ? 'pr-8' : 'pl-8' }} space-y-1 mt-1">
+                        @can('viewAny', App\Models\PayrollRun::class)
+                        <a href="{{ route('payroll.dashboard') }}" class="block py-2 text-xs font-medium {{ request()->is('payroll/dashboard') ? 'text-brand-400' : 'text-slate-400 hover:text-white' }} transition-colors">
+                            {{ app()->getLocale() === 'ar' ? 'لوحة التحكم' : 'Dashboard' }}
+                        </a>
+                        <a href="{{ route('payroll-runs.index') }}" class="block py-2 text-xs font-medium {{ request()->is('payroll-runs*') ? 'text-brand-400' : 'text-slate-400 hover:text-white' }} transition-colors">
+                            {{ app()->getLocale() === 'ar' ? 'مسيرات الرواتب' : 'Payroll Runs' }}
+                        </a>
+                        @endcan
+                        
+                        @can('viewAny', App\Models\PayrollPeriod::class)
+                        <a href="{{ route('payroll-periods.index') }}" class="block py-2 text-xs font-medium {{ request()->is('payroll-periods*') ? 'text-brand-400' : 'text-slate-400 hover:text-white' }} transition-colors">
+                            {{ app()->getLocale() === 'ar' ? 'فترات الرواتب' : 'Payroll Periods' }}
+                        </a>
+                        @endcan
+
+                        @can('viewAny', App\Models\EmployeeSalaryPackage::class)
+                        <a href="{{ route('employee-salary-packages.index') }}" class="block py-2 text-xs font-medium {{ request()->is('employee-salary-packages*') ? 'text-brand-400' : 'text-slate-400 hover:text-white' }} transition-colors">
+                            {{ app()->getLocale() === 'ar' ? 'باقات الرواتب' : 'Salary Packages' }}
+                        </a>
+                        @endcan
+
+                        @can('viewAny', App\Models\SalaryComponent::class)
+                        <a href="{{ route('salary-components.index') }}" class="block py-2 text-xs font-medium {{ request()->is('salary-components*') ? 'text-brand-400' : 'text-slate-400 hover:text-white' }} transition-colors">
+                            {{ app()->getLocale() === 'ar' ? 'مكونات الراتب' : 'Salary Components' }}
+                        </a>
+                        @endcan
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
 
