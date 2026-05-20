@@ -14,10 +14,42 @@
             </span>
             <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
         </div>
+
+        <!-- Global Search Bar Trigger (Desktop) -->
+        <div class="relative hidden md:block w-60 lg:w-72">
+            <button 
+                type="button" 
+                onclick="openGlobalSearchModal()"
+                class="w-full flex items-center justify-between px-3 py-1.5 text-[11px] text-slate-400 bg-slate-50 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800/80 rounded-lg hover:bg-slate-100/50 dark:hover:bg-slate-900 transition-colors focus:outline-none cursor-pointer"
+            >
+                <div class="flex items-center gap-2">
+                    <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <span>{{ app()->getLocale() === 'ar' ? 'البحث عن أي شيء...' : 'Search anything...' }}</span>
+                </div>
+                <kbd class="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[9px] font-bold text-slate-400 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded shadow-sm">
+                    <span>Ctrl</span>
+                    <span>K</span>
+                </kbd>
+            </button>
+        </div>
     </div>
 
     <!-- Right Hand: Localized utilities and user settings -->
     <div class="flex items-center gap-4">
+        <!-- Mobile Search Trigger Button -->
+        <button 
+            type="button" 
+            onclick="openGlobalSearchModal()"
+            class="md:hidden p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none cursor-pointer"
+            aria-label="{{ app()->getLocale() === 'ar' ? 'البحث' : 'Search' }}"
+        >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+        </button>
+
         <!-- Language Switcher Placeholder -->
         <div class="flex items-center">
             @if(app()->getLocale() === 'ar')

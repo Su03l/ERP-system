@@ -48,6 +48,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GlobalSearchController;
 use App\Http\Controllers\NotificationController;
 
 Route::get('/login', [LoginController::class, 'show'])->name('login');
@@ -136,4 +137,6 @@ Route::middleware('auth')->group(function () {
 
     Route::post('notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
     Route::post('notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-as-read');
+
+    Route::get('global-search', [GlobalSearchController::class, 'search'])->name('global-search');
 });

@@ -61,5 +61,8 @@
             </main>
         </div>
     </div>
+
+    <!-- Reusable Unified Search Modal Overlay -->
+    <x-global-search />
 </body>
 </html>
