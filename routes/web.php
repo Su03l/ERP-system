@@ -58,6 +58,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmployeeDocumentController;
 use App\Http\Controllers\GlobalSearchController;
 use App\Http\Controllers\HrmsDashboardController;
+use App\Http\Controllers\LeaveDashboardController;
 use App\Http\Controllers\NotificationController;
 
 Route::get('/login', [LoginController::class, 'show'])->name('login');
@@ -84,6 +85,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('employee-documents', EmployeeDocumentController::class);
     Route::get('hr-import-export', [HrImportExportController::class, 'index'])->name('hr-import-export.index');
     Route::get('attendance/dashboard', [AttendanceDashboardController::class, 'index'])->name('attendance.dashboard');
+    Route::get('leave/dashboard', [LeaveDashboardController::class, 'index'])->name('leave.dashboard');
     Route::get('attendance-records/self-service', [AttendanceRecordController::class, 'selfService'])->name('attendance.self-service');
     Route::post('attendance-records/clock-in', [AttendanceRecordController::class, 'clockIn'])->name('attendance-records.clock-in');
     Route::post('attendance-records/clock-out', [AttendanceRecordController::class, 'clockOut'])->name('attendance-records.clock-out');
