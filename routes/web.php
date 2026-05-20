@@ -140,6 +140,7 @@ Route::middleware('auth')->group(function () {
     Route::apiResource('webhook-deliveries', WebhookDeliveryController::class)->only(['index', 'show']);
     Route::apiResource('user-sessions', UserSessionController::class)->only(['index', 'destroy']);
 
+    Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
     Route::post('notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-as-read');
 

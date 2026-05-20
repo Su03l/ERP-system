@@ -7,6 +7,29 @@ use Illuminate\Notifications\DatabaseNotification;
 class NotificationController extends Controller
 {
     /**
+     * Display a listing of the notifications.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\View\View
+     */
+    public function index(\Illuminate\Http\Request $request): \Illuminate\View\View
+    {
+        $user = auth()->user();
+        $tab = $request->query('tab', 'unread');
+
+        $query = match ($tab) {
+            'read' => $user->readNotifications(),
+            'all' => $user->notifications(),
+            default => $user->unreadNotifications(),
+        };
+
+        $notifications = $query->latest('created_at')
+            ->paginate(15)
+            ->withQueryString();
+
+        return view('notifications.index', compact('notifications', 'tab'));
+    }
+    /**
      * Mark a specific notification as read.
      */
     public function markAsRead(DatabaseNotification $notification)
