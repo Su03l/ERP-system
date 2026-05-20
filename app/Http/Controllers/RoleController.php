@@ -53,7 +53,7 @@ class RoleController extends Controller
         $user = $request->user();
         $validated = $request->validated();
 
-        $role = DB::transaction(function () use ($validated, $user) {
+        $role = DB::connection()->transaction(function () use ($validated, $user) {
             $role = Role::create([
                 'company_id' => $user->company_id,
                 'name' => $validated['name'],
@@ -104,7 +104,7 @@ class RoleController extends Controller
         $user = $request->user();
         $validated = $request->validated();
 
-        DB::transaction(function () use ($role, $validated, $user) {
+        DB::connection()->transaction(function () use ($role, $validated, $user) {
             $oldValues = $role->only(['name', 'key', 'description']);
 
             $role->update([
@@ -153,7 +153,7 @@ class RoleController extends Controller
             return redirect()->route('roles.index')->with('error', app()->getLocale() === 'ar' ? 'لا يمكن حذف دور مدير النظام الأساسي.' : 'Cannot delete the system administrator role.');
         }
 
-        DB::transaction(function () use ($role, $user) {
+        DB::connection()->transaction(function () use ($role, $user) {
             $oldValues = $role->only(['name', 'key', 'description']);
 
             $role->permissions()->sync([]);

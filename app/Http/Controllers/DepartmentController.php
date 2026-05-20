@@ -10,43 +10,86 @@ use App\Http\Requests\StoreDepartmentRequest;
 use App\Http\Requests\UpdateDepartmentRequest;
 use App\Http\Resources\DepartmentResource;
 use App\Models\Department;
+use App\Models\Employee;
 use App\Services\DepartmentIndexQuery;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Gate;
 
 class DepartmentController extends Controller
 {
-    public function index(IndexDepartmentRequest $request, DepartmentIndexQuery $departmentIndexQuery): AnonymousResourceCollection
+    public function index(IndexDepartmentRequest $request, DepartmentIndexQuery $departmentIndexQuery)
     {
-        return DepartmentResource::collection($departmentIndexQuery->paginate($request->validated()));
+        $departments = $departmentIndexQuery->paginate($request->validated());
+
+        if ($request->expectsJson()) {
+            return DepartmentResource::collection($departments);
+        }
+
+        return view('departments.index', compact('departments'));
     }
 
-    public function store(StoreDepartmentRequest $request, CreateDepartment $createDepartment): DepartmentResource
+    public function create(Request $request)
+    {
+        $user = $request->user();
+        Gate::authorize('create', Department::class);
+
+        $departments = Department::forCurrentCompany()->get();
+        $managers = Employee::forCompany($user->company)->get();
+
+        return view('departments.create', compact('departments', 'managers'));
+    }
+
+    public function store(StoreDepartmentRequest $request, CreateDepartment $createDepartment)
     {
         $department = $createDepartment->handle($request->validated(), $request->user());
 
-        return DepartmentResource::make($department->load('parent'));
+        if ($request->expectsJson()) {
+            return DepartmentResource::make($department->load('parent'));
+        }
+
+        return redirect()->route('departments.index')->with('success', __('hr.department_created_successfully'));
     }
 
-    public function show(Department $department): DepartmentResource
+    public function show(Department $department)
     {
         Gate::authorize('view', $department);
 
-        return DepartmentResource::make($department->load('parent'));
+        if (request()->expectsJson()) {
+            return DepartmentResource::make($department->load('parent'));
+        }
+
+        return view('departments.show', compact('department'));
     }
 
-    public function update(UpdateDepartmentRequest $request, Department $department, UpdateDepartment $updateDepartment): DepartmentResource
+    public function edit(Request $request, Department $department)
+    {
+        Gate::authorize('update', $department);
+
+        $user = $request->user();
+        $departments = Department::forCurrentCompany()->where('id', '!=', $department->id)->get();
+        $managers = Employee::forCompany($user->company)->get();
+
+        return view('departments.edit', compact('department', 'departments', 'managers'));
+    }
+
+    public function update(UpdateDepartmentRequest $request, Department $department, UpdateDepartment $updateDepartment)
     {
         $department = $updateDepartment->handle($department, $request->validated(), $request->user());
 
-        return DepartmentResource::make($department->load('parent'));
+        if ($request->expectsJson()) {
+            return DepartmentResource::make($department->load('parent'));
+        }
+
+        return redirect()->route('departments.index')->with('success', __('hr.department_updated_successfully'));
     }
 
-    public function destroy(Department $department, ArchiveDepartment $archiveDepartment): JsonResponse
+    public function destroy(Department $department, ArchiveDepartment $archiveDepartment)
     {
         $archiveDepartment->handle($department, request()->user());
 
-        return response()->json(status: 204);
+        if (request()->expectsJson()) {
+            return response()->json(status: 204);
+        }
+
+        return redirect()->route('departments.index')->with('success', __('hr.department_deleted_successfully'));
     }
 }

@@ -70,7 +70,7 @@ class UserController extends Controller
             'roles.*' => ['integer', Rule::exists('roles', 'id')->where('company_id', $user->company_id)],
         ]);
 
-        $newUser = DB::transaction(function () use ($validated, $user) {
+        $newUser = DB::connection()->transaction(function () use ($validated, $user) {
             $newUser = User::create([
                 'company_id' => $user->company_id,
                 'name' => $validated['name'],
@@ -151,7 +151,7 @@ class UserController extends Controller
             'roles.*' => ['integer', Rule::exists('roles', 'id')->where('company_id', $authUser->company_id)],
         ]);
 
-        DB::transaction(function () use ($user, $validated, $authUser) {
+        DB::connection()->transaction(function () use ($user, $validated, $authUser) {
             $oldValues = $user->only(['name', 'email']);
 
             $updateData = [
@@ -203,7 +203,7 @@ class UserController extends Controller
             return redirect()->route('users.index')->with('error', app()->getLocale() === 'ar' ? 'لا يمكنك حذف حسابك الشخصي.' : 'You cannot delete your own account.');
         }
 
-        DB::transaction(function () use ($user, $authUser) {
+        DB::connection()->transaction(function () use ($user, $authUser) {
             $oldValues = $user->only(['name', 'email']);
 
             $user->roles()->sync([]);

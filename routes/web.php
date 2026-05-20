@@ -54,6 +54,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GlobalSearchController;
+use App\Http\Controllers\HrmsDashboardController;
 use App\Http\Controllers\NotificationController;
 
 Route::get('/login', [LoginController::class, 'show'])->name('login');
@@ -72,8 +73,9 @@ Route::post('/verify-email/resend', [VerifyEmailController::class, 'resend'])->n
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::apiResource('employees', EmployeeController::class);
-    Route::apiResource('departments', DepartmentController::class);
+    Route::get('hrms/dashboard', [HrmsDashboardController::class, 'index'])->name('hrms.dashboard');
+    Route::resource('employees', EmployeeController::class);
+    Route::resource('departments', DepartmentController::class);
     Route::apiResource('job-titles', JobTitleController::class);
 
     Route::post('attendance-records/clock-in', [AttendanceRecordController::class, 'clockIn'])->name('attendance-records.clock-in');
