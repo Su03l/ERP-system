@@ -97,7 +97,7 @@ Route::middleware('auth')->group(function () {
     Route::post('leave-requests/{leave_request}/cancel', [LeaveRequestController::class, 'cancel'])->name('leave-requests.cancel');
     Route::post('leave-requests/{leave_request}/return', [LeaveRequestController::class, 'return'])->name('leave-requests.return');
     Route::resource('leave-types', LeaveTypeController::class);
-    Route::apiResource('leave-requests', LeaveRequestController::class);
+    Route::resource('leave-requests', LeaveRequestController::class);
     Route::resource('leave-balances', LeaveBalanceController::class)->only(['index', 'show', 'update']);
 
     Route::apiResource('payroll-settings', PayrollSettingController::class)->only(['index', 'show', 'update']);
