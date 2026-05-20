@@ -156,68 +156,32 @@
                         :module="$widget->module"
                     />
                 @else
-                    <!-- Dynamic Widget Shell for charts and tables -->
-                    <div class="erp-card p-6 flex flex-col justify-between overflow-hidden {{ $sizeClass }} border border-slate-200/50 dark:border-slate-800/60 {{ $moduleStyles['hover'] }}">
-                        
-                        @if($widget->type === 'chart')
-                            <!-- 2. CHART WIDGET LAYOUT -->
-                            <div class="space-y-4 flex-1 flex flex-col justify-between">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center gap-2">
-                                        <h4 class="font-bold text-slate-800 dark:text-white text-sm">
-                                            {{ app()->getLocale() === 'ar' ? $widget->title_ar : $widget->title_en }}
-                                        </h4>
-                                        <span class="text-[10px] px-1.5 py-0.5 rounded-full font-bold {{ $moduleStyles['badge'] }}">
-                                            {{ $moduleStyles['label'] }}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                @php
-                                    $chartValues = $widgetData->metadata['values'] ?? [];
-                                    $totalSum = collect($chartValues)->sum('value') ?: 0;
-                                    $maxVal = collect($chartValues)->max('value') ?: 1;
-                                @endphp
-
-                                @if(empty($chartValues))
-                                    <!-- Chart Empty State -->
-                                    <div class="flex-1 flex flex-col items-center justify-center p-6 text-center">
-                                        <svg class="w-8 h-8 text-slate-300 dark:text-slate-700 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 3.055A9.003 9.003 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
-                                        <span class="text-xs text-slate-400">{{ app()->getLocale() === 'ar' ? 'لا توجد بيانات للرسم البياني' : 'No chart data available' }}</span>
-                                    </div>
-                                @else
-                                    <!-- Dynamic Horizontal Bar Chart -->
-                                    <div class="space-y-3.5 flex-1 py-1">
-                                        @foreach($chartValues as $row)
-                                            @php
-                                                $percentage = $totalSum > 0 ? round(($row['value'] / $totalSum) * 100, 1) : 0;
-                                                $widthPercent = round(($row['value'] / $maxVal) * 100);
-                                            @endphp
-                                            <div class="space-y-1">
-                                                <div class="flex justify-between text-xs font-semibold">
-                                                    <span class="text-slate-700 dark:text-slate-300">{{ $row['label'] }}</span>
-                                                    <span class="text-slate-500 dark:text-slate-400">
-                                                        {{ $row['value'] }} ({{ $percentage }}%)
-                                                    </span>
-                                                </div>
-                                                <!-- Ambient Progress Bar -->
-                                                <div class="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                                    <div class="h-full rounded-full transition-all duration-500 ease-out bg-gradient-to-r from-brand-500 to-teal-400 dark:from-brand-600 dark:to-teal-500" 
-                                                         style="width: {{ $widthPercent }}%">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                @endif
-
-                                <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
-                                    <span>{{ app()->getLocale() === 'ar' ? 'إجمالي المدخلات' : 'Total Inputs' }}: {{ $totalSum }}</span>
-                                    <span>{{ $moduleStyles['label'] }}</span>
-                                </div>
-                            </div>
-
-                        @elseif($widget->type === 'table')
+                    @if($widget->type === 'chart')
+                        @php
+                            $chartValues = $widgetData->metadata['values'] ?? [];
+                            $labels = collect($chartValues)->pluck('label')->toArray();
+                            $values = collect($chartValues)->pluck('value')->toArray();
+                            
+                            $chartType = match($widget->widget_key) {
+                                'hr.employees_by_department' => 'donut',
+                                default => 'bar'
+                            };
+                        @endphp
+                        <!-- 2. CHART WIDGET LAYOUT VIA REUSABLE COMPONENT -->
+                        <x-chart-wrapper 
+                            class="{{ $sizeClass }}"
+                            :type="$chartType"
+                            :title="app()->getLocale() === 'ar' ? $widget->title_ar : $widget->title_en"
+                            :module="$widget->module"
+                            :labels="$labels"
+                            :values="$values"
+                            :loading="false"
+                            :empty="empty($values)"
+                            height="h-48"
+                        />
+                    @elseif($widget->type === 'table')
+                        <!-- Dynamic Widget Shell for tables -->
+                        <div class="erp-card p-6 flex flex-col justify-between overflow-hidden {{ $sizeClass }} border border-slate-200/50 dark:border-slate-800/60 {{ $moduleStyles['hover'] }}">
                             <!-- 3. TABLE WIDGET LAYOUT -->
                             <div class="space-y-4 flex-1 flex flex-col justify-between">
                                 <div class="flex items-center justify-between">
@@ -286,9 +250,8 @@
                                     <span>{{ $moduleStyles['label'] }}</span>
                                 </div>
                             </div>
-                        @endif
-
-                    </div>
+                        </div>
+                    @endif
                 @endif
             @endforeach
         </div>
