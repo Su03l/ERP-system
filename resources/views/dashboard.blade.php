@@ -1,208 +1,357 @@
 <x-app-layout>
     <!-- Dynamic Header -->
     <x-slot name="header">
-        <h1 class="text-2xl font-bold text-slate-900 dark:text-white leading-tight">
-            {{ app()->getLocale() === 'ar' ? 'لوحة التحكم والمؤشرات' : 'Dashboard & Analytics' }}
-        </h1>
-        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            {{ app()->getLocale() === 'ar' ? 'متابعة أداء الأقسام، الموظفين، والعمليات المالية والتشغيلية.' : 'Monitor department performance, employees, and financial operations.' }}
-        </p>
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-900 dark:text-white leading-tight">
+                    {{ app()->getLocale() === 'ar' ? 'لوحة التحكم والمؤشرات' : 'Dashboard & Analytics' }}
+                </h1>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                    {{ app()->getLocale() === 'ar' ? 'متابعة أداء الأقسام والعمليات التشغيلية والمالية مباشرة.' : 'Monitor department performance, operations, and financials in real-time.' }}
+                </p>
+            </div>
+        </div>
     </x-slot>
 
     <!-- Slot for actions (Quick Actions) -->
     <x-slot name="actions">
-        <button class="btn-secondary">
-            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-            <span>{{ app()->getLocale() === 'ar' ? 'تصدير التقارير' : 'Export Reports' }}</span>
-        </button>
-        <button class="btn-primary">
-            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
-            <span>{{ app()->getLocale() === 'ar' ? 'إجراء سريع' : 'Quick Action' }}</span>
+        <button onclick="window.print()" class="btn-secondary">
+            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+            <span>{{ app()->getLocale() === 'ar' ? 'طباعة التقرير' : 'Print Report' }}</span>
         </button>
     </x-slot>
 
-    <!-- KPI Grid (SaaS Metrics) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <!-- Card 1: Total Employees -->
-        <div class="erp-card p-6 flex items-center justify-between">
-            <div class="space-y-2">
-                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                    {{ app()->getLocale() === 'ar' ? 'إجمالي الموظفين' : 'Total Employees' }}
-                </span>
-                <h3 class="text-3xl font-bold text-slate-800 dark:text-white">124</h3>
-                <span class="inline-flex items-center text-xs font-semibold text-emerald-500 bg-emerald-50 dark:bg-emerald-950/20 px-2 py-0.5 rounded-full">
-                    +4.8% {{ app()->getLocale() === 'ar' ? 'الشهر الحالي' : 'this month' }}
-                </span>
+    <!-- Interactive Date Filter Panel -->
+    <div class="erp-card p-5 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80">
+        <form method="GET" action="{{ route('dashboard') }}" class="flex flex-col lg:flex-row items-stretch lg:items-end gap-4">
+            <div class="flex-1">
+                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">
+                    {{ app()->getLocale() === 'ar' ? 'من تاريخ' : 'Date From' }}
+                </label>
+                <div class="relative">
+                    <input type="date" name="date_from" value="{{ $dateFrom }}" class="erp-input w-full pl-3 pr-10 focus:ring-2 focus:ring-brand-500/20">
+                </div>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-teal-50 dark:bg-teal-950/20 text-brand-600 dark:text-emerald-400 flex items-center justify-center">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            <div class="flex-1">
+                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">
+                    {{ app()->getLocale() === 'ar' ? 'إلى تاريخ' : 'Date To' }}
+                </label>
+                <div class="relative">
+                    <input type="date" name="date_to" value="{{ $dateTo }}" class="erp-input w-full pl-3 pr-10 focus:ring-2 focus:ring-brand-500/20">
+                </div>
             </div>
-        </div>
-
-        <!-- Card 2: Operating Cash Balance -->
-        <div class="erp-card p-6 flex items-center justify-between">
-            <div class="space-y-2">
-                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                    {{ app()->getLocale() === 'ar' ? 'رصيد التشغيل' : 'Operating Cash' }}
-                </span>
-                <h3 class="text-3xl font-bold text-slate-800 dark:text-white">
-                    {{ app()->getLocale() === 'ar' ? '450,230 ر.س' : 'SAR 450,230' }}
-                </h3>
-                <span class="inline-flex items-center text-xs font-semibold text-emerald-500 bg-emerald-50 dark:bg-emerald-950/20 px-2 py-0.5 rounded-full">
-                    +12.4% {{ app()->getLocale() === 'ar' ? 'الربع الحالي' : 'this quarter' }}
-                </span>
-            </div>
-            <div class="w-12 h-12 rounded-xl bg-teal-50 dark:bg-teal-950/20 text-brand-600 dark:text-emerald-400 flex items-center justify-center">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-            </div>
-        </div>
-
-        <!-- Card 3: Active Projects -->
-        <div class="erp-card p-6 flex items-center justify-between">
-            <div class="space-y-2">
-                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                    {{ app()->getLocale() === 'ar' ? 'المشاريع النشطة' : 'Active Projects' }}
-                </span>
-                <h3 class="text-3xl font-bold text-slate-800 dark:text-white">12</h3>
-                <span class="inline-flex items-center text-xs font-semibold text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full">
-                    3 {{ app()->getLocale() === 'ar' ? 'معلقة' : 'pending' }}
-                </span>
-            </div>
-            <div class="w-12 h-12 rounded-xl bg-teal-50 dark:bg-teal-950/20 text-brand-600 dark:text-emerald-400 flex items-center justify-center">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
-            </div>
-        </div>
-
-        <!-- Card 4: Approvals Pending -->
-        <div class="erp-card p-6 flex items-center justify-between">
-            <div class="space-y-2">
-                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                    {{ app()->getLocale() === 'ar' ? 'طلبات بانتظار الاعتماد' : 'Pending Approvals' }}
-                </span>
-                <h3 class="text-3xl font-bold text-slate-800 dark:text-white">5</h3>
-                <span class="inline-flex items-center text-xs font-semibold text-rose-500 bg-rose-50 dark:bg-rose-950/20 px-2 py-0.5 rounded-full">
-                    {{ app()->getLocale() === 'ar' ? 'تحتاج إجراء عاجل' : 'Action Required' }}
-                </span>
-            </div>
-            <div class="w-12 h-12 rounded-xl bg-rose-50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-400 flex items-center justify-center">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
-            </div>
-        </div>
-    </div>
-
-    <!-- Details Section (Dynamic list grids) -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Section 1: Recent Activity / Logs Table (2 columns width) -->
-        <div class="erp-card p-6 lg:col-span-2 space-y-4">
-            <div class="flex items-center justify-between">
-                <h4 class="font-bold text-slate-800 dark:text-white">
-                    {{ app()->getLocale() === 'ar' ? 'آخر العمليات والتسجيلات' : 'Recent Activities' }}
-                </h4>
-                <a href="#" class="text-xs font-semibold text-brand-500 hover:text-brand-600 transition-colors">
-                    {{ app()->getLocale() === 'ar' ? 'عرض الكل' : 'View All' }}
+            <div class="flex gap-3 shrink-0">
+                <button type="submit" class="btn-primary px-6 py-2.5 font-semibold text-sm shadow-md shadow-brand-500/10 hover:shadow-brand-500/20 active:scale-98 transition-transform">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+                    <span>{{ app()->getLocale() === 'ar' ? 'تحديث الفلترة' : 'Update Filter' }}</span>
+                </button>
+                <a href="{{ route('dashboard') }}" class="btn-secondary px-5 py-2.5 text-sm hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
+                    {{ app()->getLocale() === 'ar' ? 'إعادة تعيين' : 'Reset' }}
                 </a>
             </div>
-
-            <!-- Standard ERP table -->
-            <div class="erp-table-container">
-                <table class="erp-table">
-                    <thead>
-                        <tr>
-                            <th>{{ app()->getLocale() === 'ar' ? 'الموظف' : 'Employee' }}</th>
-                            <th>{{ app()->getLocale() === 'ar' ? 'القسم' : 'Department' }}</th>
-                            <th>{{ app()->getLocale() === 'ar' ? 'نوع الإجراء' : 'Activity' }}</th>
-                            <th>{{ app()->getLocale() === 'ar' ? 'الحالة' : 'Status' }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="font-medium text-slate-800 dark:text-white">أحمد المحمد</td>
-                            <td>تقنية المعلومات</td>
-                            <td>تسجيل حضور (08:02 ص)</td>
-                            <td><span class="erp-badge erp-badge-success">{{ app()->getLocale() === 'ar' ? 'منتظم' : 'On Time' }}</span></td>
-                        </tr>
-                        <tr>
-                            <td class="font-medium text-slate-800 dark:text-white">خالد العتيبي</td>
-                            <td>المالية والرواتب</td>
-                            <td>طلب إجازة سنوية (5 أيام)</td>
-                            <td><span class="erp-badge erp-badge-warning">{{ app()->getLocale() === 'ar' ? 'معلق' : 'Pending' }}</span></td>
-                        </tr>
-                        <tr>
-                            <td class="font-medium text-slate-800 dark:text-white">سارة الشمري</td>
-                            <td>الموارد البشرية</td>
-                            <td>تسجيل انصراف (04:55 م)</td>
-                            <td><span class="erp-badge erp-badge-success">{{ app()->getLocale() === 'ar' ? 'مكتمل' : 'Completed' }}</span></td>
-                        </tr>
-                        <tr>
-                            <td class="font-medium text-slate-800 dark:text-white">عبدالعزيز القحطاني</td>
-                            <td>المبيعات والعملاء</td>
-                            <td>طلب سلفة استثنائية</td>
-                            <td><span class="erp-badge erp-badge-danger">{{ app()->getLocale() === 'ar' ? 'مرفوض' : 'Rejected' }}</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Section 2: Quick Action / System Context Panel -->
-        <div class="erp-card p-6 space-y-6">
-            <h4 class="font-bold text-slate-800 dark:text-white">
-                {{ app()->getLocale() === 'ar' ? 'تحديثات وحالة النظام' : 'System Overview' }}
-            </h4>
-
-            <div class="space-y-4">
-                <!-- HR Block -->
-                <div class="flex items-start gap-3">
-                    <div class="w-8 h-8 rounded-lg bg-teal-50 dark:bg-teal-950/20 text-brand-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <div>
-                        <h5 class="text-sm font-semibold text-slate-800 dark:text-white">
-                            {{ app()->getLocale() === 'ar' ? 'مسيرة الرواتب جاهزة' : 'Payroll Run Ready' }}
-                        </h5>
-                        <p class="text-xs text-slate-400 mt-1">
-                            {{ app()->getLocale() === 'ar' ? 'تم الانتهاء من مراجعة ساعات حضور شهر مايو لجميع الموظفين.' : 'May attendance logs have been verified for all departments.' }}
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Accounting Block -->
-                <div class="flex items-start gap-3">
-                    <div class="w-8 h-8 rounded-lg bg-teal-50 dark:bg-teal-950/20 text-brand-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                    </div>
-                    <div>
-                        <h5 class="text-sm font-semibold text-slate-800 dark:text-white">
-                            {{ app()->getLocale() === 'ar' ? 'أرصدة حسابات غير متطابقة' : 'Unbalanced Journal Entries' }}
-                        </h5>
-                        <p class="text-xs text-slate-400 mt-1">
-                            {{ app()->getLocale() === 'ar' ? 'هناك قيود يومية معلقة تحتاج لمطابقة الأرصدة المدنية والدائنة.' : 'There are draft entries that require balance matching.' }}
-                        </p>
-                    </div>
-                </div>
-
-                <!-- CRM Block -->
-                <div class="flex items-start gap-3">
-                    <div class="w-8 h-8 rounded-lg bg-teal-50 dark:bg-teal-950/20 text-brand-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 10.742l3.6-1.8A1 1 0 0013 8V4a1 1 0 00-1-1H4a1 1 0 00-1 1v8a1 1 0 001 1h4a1 1 0 00.684-.258l3.6 1.8A1 1 0 0013 14v4a1 1 0 00-1 1H4a1 1 0 00-1-1v-8a1 1 0 001-1h4a1 1 0 00.684.258z"></path></svg>
-                    </div>
-                    <div>
-                        <h5 class="text-sm font-semibold text-slate-800 dark:text-white">
-                            {{ app()->getLocale() === 'ar' ? 'فرص مبيعات جديدة' : 'New CRM Leads' }}
-                        </h5>
-                        <p class="text-xs text-slate-400 mt-1">
-                            {{ app()->getLocale() === 'ar' ? 'تم إدراج 3 فرص جديدة في لوحة التحكم اليوم.' : '3 new leads have been funneled to the pipeline today.' }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Dashboard Preferences / Configuration Quick Link -->
-            <div class="pt-4 border-t border-slate-200 dark:border-slate-800">
-                <button class="w-full btn-secondary text-xs">
-                    {{ app()->getLocale() === 'ar' ? 'تخصيص لوحة المؤشرات' : 'Customize Dashboard' }}
-                </button>
-            </div>
-        </div>
+        </form>
     </div>
+
+    <!-- Widgets Container -->
+    @if($widgets->isEmpty())
+        <!-- Empty State Dashboard -->
+        <div class="erp-card p-12 text-center border-2 border-dashed border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center space-y-4">
+            <div class="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-900 text-slate-400 dark:text-slate-600 flex items-center justify-center">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-slate-800 dark:text-white">
+                    {{ app()->getLocale() === 'ar' ? 'لوحة تحكم خالية' : 'Empty Dashboard' }}
+                </h3>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-md mx-auto">
+                    {{ app()->getLocale() === 'ar' ? 'لا توجد أي مؤشرات أو بطاقات مضافة للمؤسسة حالياً. يرجى تهيئة إعدادات لوحة التحكم.' : 'No active widgets have been configured for your company yet.' }}
+                </p>
+            </div>
+        </div>
+    @else
+        <!-- Widget Grid Layout (Dynamic 4-column responsive setup) -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            @foreach($widgets as $widget)
+                @php
+                    $sizeClass = match($widget->default_size) {
+                        'small' => 'col-span-1',
+                        'medium' => 'col-span-1 md:col-span-2',
+                        'large' => 'col-span-1 md:col-span-3',
+                        'full' => 'col-span-1 md:col-span-4',
+                        default => 'col-span-1 md:col-span-2'
+                    };
+
+                    $widgetData = $resolvedData[$widget->id] ?? null;
+                    
+                    // Curated harmonic module colors
+                    $moduleStyles = match($widget->module) {
+                        'hr' => [
+                            'bg' => 'bg-teal-50 dark:bg-teal-950/20',
+                            'text' => 'text-teal-600 dark:text-teal-400',
+                            'hover' => 'hover:border-teal-500/20 dark:hover:border-teal-500/10',
+                            'badge' => 'bg-teal-500/10 text-teal-700 dark:text-teal-400',
+                            'label' => app()->getLocale() === 'ar' ? 'الموارد البشرية' : 'HR',
+                        ],
+                        'attendance' => [
+                            'bg' => 'bg-indigo-50 dark:bg-indigo-950/20',
+                            'text' => 'text-indigo-600 dark:text-indigo-400',
+                            'hover' => 'hover:border-indigo-500/20 dark:hover:border-indigo-500/10',
+                            'badge' => 'bg-indigo-500/10 text-indigo-700 dark:text-indigo-400',
+                            'label' => app()->getLocale() === 'ar' ? 'التحضير' : 'Attendance',
+                        ],
+                        'leave' => [
+                            'bg' => 'bg-amber-50 dark:bg-amber-950/20',
+                            'text' => 'text-amber-600 dark:text-amber-400',
+                            'hover' => 'hover:border-amber-500/20 dark:hover:border-amber-500/10',
+                            'badge' => 'bg-amber-500/10 text-amber-700 dark:text-amber-400',
+                            'label' => app()->getLocale() === 'ar' ? 'الإجازات' : 'Leaves',
+                        ],
+                        'payroll' => [
+                            'bg' => 'bg-violet-50 dark:bg-violet-950/20',
+                            'text' => 'text-violet-600 dark:text-violet-400',
+                            'hover' => 'hover:border-violet-500/20 dark:hover:border-violet-500/10',
+                            'badge' => 'bg-violet-500/10 text-violet-700 dark:text-violet-400',
+                            'label' => app()->getLocale() === 'ar' ? 'الرواتب' : 'Payroll',
+                        ],
+                        'accounting' => [
+                            'bg' => 'bg-cyan-50 dark:bg-cyan-950/20',
+                            'text' => 'text-cyan-600 dark:text-cyan-400',
+                            'hover' => 'hover:border-cyan-500/20 dark:hover:border-cyan-500/10',
+                            'badge' => 'bg-cyan-500/10 text-cyan-700 dark:text-cyan-400',
+                            'label' => app()->getLocale() === 'ar' ? 'الحسابات' : 'Accounting',
+                        ],
+                        'projects' => [
+                            'bg' => 'bg-rose-50 dark:bg-rose-950/20',
+                            'text' => 'text-rose-600 dark:text-rose-400',
+                            'hover' => 'hover:border-rose-500/20 dark:hover:border-rose-500/10',
+                            'badge' => 'bg-rose-500/10 text-rose-700 dark:text-rose-400',
+                            'label' => app()->getLocale() === 'ar' ? 'المشاريع' : 'Projects',
+                        ],
+                        'saas' => [
+                            'bg' => 'bg-sky-50 dark:bg-sky-950/20',
+                            'text' => 'text-sky-600 dark:text-sky-400',
+                            'hover' => 'hover:border-sky-500/20 dark:hover:border-sky-500/10',
+                            'badge' => 'bg-sky-500/10 text-sky-700 dark:text-sky-400',
+                            'label' => app()->getLocale() === 'ar' ? 'النظام' : 'System',
+                        ],
+                        default => [
+                            'bg' => 'bg-slate-50 dark:bg-slate-950/20',
+                            'text' => 'text-slate-600 dark:text-slate-400',
+                            'hover' => 'hover:border-slate-500/20 dark:hover:border-slate-500/10',
+                            'badge' => 'bg-slate-500/10 text-slate-700 dark:text-slate-400',
+                            'label' => app()->getLocale() === 'ar' ? 'عام' : 'General',
+                        ],
+                    };
+                @endphp
+
+                <!-- Dynamic Widget Shell -->
+                <div class="erp-card p-6 flex flex-col justify-between overflow-hidden {{ $sizeClass }} border border-slate-200/50 dark:border-slate-800/60 {{ $moduleStyles['hover'] }}">
+                    
+                    @if($widget->type === 'kpi')
+                        <!-- 1. KPI WIDGET LAYOUT -->
+                        <div class="flex items-start justify-between gap-4">
+                            <div class="space-y-3 flex-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                                        {{ app()->getLocale() === 'ar' ? $widget->title_ar : $widget->title_en }}
+                                    </span>
+                                    <span class="text-[10px] px-1.5 py-0.5 rounded-full font-bold {{ $moduleStyles['badge'] }}">
+                                        {{ $moduleStyles['label'] }}
+                                    </span>
+                                </div>
+                                <div class="flex items-baseline gap-2">
+                                    <h3 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+                                        @if($widgetData && $widgetData->value !== null)
+                                            {{ $widgetData->formattedValue ?? $widgetData->value }}
+                                        @else
+                                            <span class="text-slate-300 dark:text-slate-700">—</span>
+                                        @endif
+                                    </h3>
+                                    @if($widgetData && $widgetData->unit)
+                                        <span class="text-xs text-slate-400 dark:text-slate-500 font-semibold">
+                                            {{ $widgetData->unit }}
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                            
+                            <!-- Premium Ambient Icon Wrapper -->
+                            <div class="w-12 h-12 rounded-xl {{ $moduleStyles['bg'] }} {{ $moduleStyles['text'] }} flex items-center justify-center shrink-0">
+                                @if($widget->module === 'hr')
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                                @elseif($widget->module === 'attendance')
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                @elseif($widget->module === 'leave')
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                @elseif($widget->module === 'payroll')
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                                @elseif($widget->module === 'accounting')
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                                @elseif($widget->module === 'projects')
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
+                                @else
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- KPI Footer context / Comparison -->
+                        <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+                            @if($widgetData && $widgetData->trend !== null)
+                                @php
+                                    $isUp = $widgetData->trend === 'up';
+                                    $trendColor = $isUp ? 'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20' : 'text-rose-600 bg-rose-50 dark:bg-rose-950/20';
+                                @endphp
+                                <span class="inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-full {{ $trendColor }}">
+                                    @if($isUp)
+                                        <svg class="w-3 h-3 mr-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                                    @else
+                                        <svg class="w-3 h-3 mr-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6"></path></svg>
+                                    @endif
+                                    <span>{{ $isUp ? '+' : '' }}{{ $widgetData->comparisonValue ?? '0' }}%</span>
+                                </span>
+                            @else
+                                <span class="text-[10px] text-slate-400 font-medium">
+                                    {{ app()->getLocale() === 'ar' ? 'فترة التقرير الحالية' : 'Current report window' }}
+                                </span>
+                            @endif
+                            
+                            <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
+                                {{ $moduleStyles['label'] }}
+                            </span>
+                        </div>
+
+                    @elseif($widget->type === 'chart')
+                        <!-- 2. CHART WIDGET LAYOUT -->
+                        <div class="space-y-4 flex-1 flex flex-col justify-between">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <h4 class="font-bold text-slate-800 dark:text-white text-sm">
+                                        {{ app()->getLocale() === 'ar' ? $widget->title_ar : $widget->title_en }}
+                                    </h4>
+                                    <span class="text-[10px] px-1.5 py-0.5 rounded-full font-bold {{ $moduleStyles['badge'] }}">
+                                        {{ $moduleStyles['label'] }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            @php
+                                $chartValues = $widgetData->metadata['values'] ?? [];
+                                $totalSum = collect($chartValues)->sum('value') ?: 0;
+                                $maxVal = collect($chartValues)->max('value') ?: 1;
+                            @endphp
+
+                            @if(empty($chartValues))
+                                <!-- Chart Empty State -->
+                                <div class="flex-1 flex flex-col items-center justify-center p-6 text-center">
+                                    <svg class="w-8 h-8 text-slate-300 dark:text-slate-700 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 3.055A9.003 9.003 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
+                                    <span class="text-xs text-slate-400">{{ app()->getLocale() === 'ar' ? 'لا توجد بيانات للرسم البياني' : 'No chart data available' }}</span>
+                                </div>
+                            @else
+                                <!-- Dynamic Horizontal Bar Chart -->
+                                <div class="space-y-3.5 flex-1 py-1">
+                                    @foreach($chartValues as $row)
+                                        @php
+                                            $percentage = $totalSum > 0 ? round(($row['value'] / $totalSum) * 100, 1) : 0;
+                                            $widthPercent = round(($row['value'] / $maxVal) * 100);
+                                        @endphp
+                                        <div class="space-y-1">
+                                            <div class="flex justify-between text-xs font-semibold">
+                                                <span class="text-slate-700 dark:text-slate-300">{{ $row['label'] }}</span>
+                                                <span class="text-slate-500 dark:text-slate-400">
+                                                    {{ $row['value'] }} ({{ $percentage }}%)
+                                                </span>
+                                            </div>
+                                            <!-- Ambient Progress Bar -->
+                                            <div class="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                                <div class="h-full rounded-full transition-all duration-500 ease-out bg-gradient-to-r from-brand-500 to-teal-400 dark:from-brand-600 dark:to-teal-500" 
+                                                     style="width: {{ $widthPercent }}%">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
+
+                            <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
+                                <span>{{ app()->getLocale() === 'ar' ? 'إجمالي المدخلات' : 'Total Inputs' }}: {{ $totalSum }}</span>
+                                <span>{{ $moduleStyles['label'] }}</span>
+                            </div>
+                        </div>
+
+                    @elseif($widget->type === 'table')
+                        <!-- 3. TABLE WIDGET LAYOUT -->
+                        <div class="space-y-4 flex-1 flex flex-col justify-between">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <h4 class="font-bold text-slate-800 dark:text-white text-sm">
+                                        {{ app()->getLocale() === 'ar' ? $widget->title_ar : $widget->title_en }}
+                                    </h4>
+                                    <span class="text-[10px] px-1.5 py-0.5 rounded-full font-bold {{ $moduleStyles['badge'] }}">
+                                        {{ $moduleStyles['label'] }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            @php
+                                $tableRows = $widgetData->metadata['values'] ?? [];
+                            @endphp
+
+                            @if(empty($tableRows))
+                                <!-- Table Empty State -->
+                                <div class="flex-1 flex flex-col items-center justify-center p-6 text-center">
+                                    <svg class="w-8 h-8 text-slate-300 dark:text-slate-700 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                    <span class="text-xs text-slate-400">{{ app()->getLocale() === 'ar' ? 'لا توجد بيانات للجدول' : 'No tabular data available' }}</span>
+                                </div>
+                            @else
+                                <!-- Interactive ERP Inner Table -->
+                                <div class="erp-table-container max-h-[220px] overflow-y-auto">
+                                    <table class="erp-table">
+                                        <thead>
+                                            <tr>
+                                                <th class="py-2.5 px-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                                                    {{ app()->getLocale() === 'ar' ? 'التفصيل' : 'Label' }}
+                                                </th>
+                                                <th class="py-2.5 px-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider text-center">
+                                                    {{ app()->getLocale() === 'ar' ? 'العدد' : 'Count' }}
+                                                </th>
+                                                <th class="py-2.5 px-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider text-right">
+                                                    {{ app()->getLocale() === 'ar' ? 'التكلفة الإجمالية' : 'Total Amount' }}
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($tableRows as $row)
+                                                <tr>
+                                                    <td class="py-2 px-3 text-xs font-semibold text-slate-800 dark:text-white">
+                                                        {{ $row['label'] }}
+                                                    </td>
+                                                    <td class="py-2 px-3 text-xs text-center font-medium text-slate-500">
+                                                        {{ $row['employee_count'] ?? $row['value'] ?? '—' }}
+                                                    </td>
+                                                    <td class="py-2 px-3 text-xs text-right font-black text-teal-600 dark:text-teal-400">
+                                                        @if(isset($row['total_payroll_cost']))
+                                                            {{ app()->getLocale() === 'ar' ? number_format($row['total_payroll_cost'], 2) . ' ر.س' : 'SAR ' . number_format($row['total_payroll_cost'], 2) }}
+                                                        @else
+                                                            —
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            @endif
+
+                            <div class="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
+                                <span>{{ app()->getLocale() === 'ar' ? 'مسيرة الرواتب النشطة' : 'Active payroll tracks' }}</span>
+                                <span>{{ $moduleStyles['label'] }}</span>
+                            </div>
+                        </div>
+                    @endif
+
+                </div>
+            @endforeach
+        </div>
+    @endif
 </x-app-layout>
