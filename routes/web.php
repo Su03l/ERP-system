@@ -84,7 +84,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('employee-documents', EmployeeDocumentController::class);
     Route::get('hr-import-export', [HrImportExportController::class, 'index'])->name('hr-import-export.index');
     Route::get('attendance/dashboard', [AttendanceDashboardController::class, 'index'])->name('attendance.dashboard');
-
+    Route::get('attendance-records/self-service', [AttendanceRecordController::class, 'selfService'])->name('attendance.self-service');
     Route::post('attendance-records/clock-in', [AttendanceRecordController::class, 'clockIn'])->name('attendance-records.clock-in');
     Route::post('attendance-records/clock-out', [AttendanceRecordController::class, 'clockOut'])->name('attendance-records.clock-out');
     Route::resource('attendance-records', AttendanceRecordController::class);

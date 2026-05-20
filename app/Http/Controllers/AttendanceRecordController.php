@@ -16,6 +16,7 @@ use App\Models\AttendanceRecord;
 use App\Models\Employee;
 use App\Services\AttendanceIndexQuery;
 use Carbon\CarbonImmutable;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
 
 class AttendanceRecordController extends Controller
@@ -94,7 +95,26 @@ class AttendanceRecordController extends Controller
         return redirect()->route('attendance-records.index')->with('success', app()->getLocale() === 'ar' ? 'تم الحذف بنجاح.' : 'Attendance record deleted successfully.');
     }
 
-    public function clockIn(ManualClockAttendanceRequest $request, ClockInEmployee $clockInEmployee): AttendanceRecordResource
+    public function selfService()
+    {
+        $employee = Employee::query()
+            ->forCurrentCompany()
+            ->where('user_id', request()->user()->id)
+            ->first();
+
+        // Get the latest attendance record for today to show current status
+        $todayRecord = null;
+        if ($employee) {
+            $todayRecord = AttendanceRecord::query()
+                ->where('employee_id', $employee->id)
+                ->whereDate('attendance_date', now()->toDateString())
+                ->first();
+        }
+
+        return view('attendance.self-service', compact('employee', 'todayRecord'));
+    }
+
+    public function clockIn(ManualClockAttendanceRequest $request, ClockInEmployee $clockInEmployee): AttendanceRecordResource|RedirectResponse
     {
         $employee = Employee::query()
             ->forCurrentCompany()
@@ -107,10 +127,14 @@ class AttendanceRecordController extends Controller
             actor: $request->user(),
         );
 
-        return AttendanceRecordResource::make($attendanceRecord->load(['employee.department', 'employee.jobTitle']));
+        if ($request->expectsJson()) {
+            return AttendanceRecordResource::make($attendanceRecord->load(['employee.department', 'employee.jobTitle']));
+        }
+
+        return redirect()->back()->with('success', app()->getLocale() === 'ar' ? 'تم تسجيل الحضور بنجاح.' : 'Clock in successful.');
     }
 
-    public function clockOut(ManualClockAttendanceRequest $request, ClockOutEmployee $clockOutEmployee): AttendanceRecordResource
+    public function clockOut(ManualClockAttendanceRequest $request, ClockOutEmployee $clockOutEmployee): AttendanceRecordResource|RedirectResponse
     {
         $employee = Employee::query()
             ->forCurrentCompany()
@@ -123,6 +147,10 @@ class AttendanceRecordController extends Controller
             actor: $request->user(),
         );
 
-        return AttendanceRecordResource::make($attendanceRecord->load(['employee.department', 'employee.jobTitle']));
+        if ($request->expectsJson()) {
+            return AttendanceRecordResource::make($attendanceRecord->load(['employee.department', 'employee.jobTitle']));
+        }
+
+        return redirect()->back()->with('success', app()->getLocale() === 'ar' ? 'تم تسجيل الانصراف بنجاح.' : 'Clock out successful.');
     }
 }
