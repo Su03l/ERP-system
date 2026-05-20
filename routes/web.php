@@ -19,12 +19,14 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EmployeeSalaryPackageController;
 use App\Http\Controllers\HrImportExportController;
+use App\Http\Controllers\HrmsDashboardController;
 use App\Http\Controllers\JobTitleController;
 use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\KpiController;
 use App\Http\Controllers\LeaveBalanceController;
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\LeaveTypeController;
+use App\Http\Controllers\PayrollDashboardController;
 use App\Http\Controllers\PayrollPeriodController;
 use App\Http\Controllers\PayrollRunController;
 use App\Http\Controllers\PayrollRunItemController;
@@ -78,6 +80,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('hrms/dashboard', [HrmsDashboardController::class, 'index'])->name('hrms.dashboard');
+    Route::get('payroll/dashboard', [PayrollDashboardController::class, 'index'])->name('payroll.dashboard');
     Route::resource('employees', EmployeeController::class);
     Route::resource('departments', DepartmentController::class);
     Route::resource('job-titles', JobTitleController::class);
@@ -100,15 +103,15 @@ Route::middleware('auth')->group(function () {
     Route::resource('leave-requests', LeaveRequestController::class);
     Route::resource('leave-balances', LeaveBalanceController::class)->only(['index', 'show', 'update']);
 
-    Route::apiResource('payroll-settings', PayrollSettingController::class)->only(['index', 'show', 'update']);
-    Route::apiResource('salary-components', SalaryComponentController::class)->except(['destroy']);
-    Route::apiResource('salary-packages', EmployeeSalaryPackageController::class)->except(['destroy'])->parameters(['salary-packages' => 'employeeSalaryPackage']);
+    Route::resource('payroll-settings', PayrollSettingController::class)->only(['index', 'show', 'update']);
+    Route::resource('salary-components', SalaryComponentController::class)->except(['destroy']);
+    Route::resource('employee-salary-packages', EmployeeSalaryPackageController::class)->except(['destroy'])->parameters(['employee-salary-packages' => 'employeeSalaryPackage']);
     Route::post('payroll-runs/{payroll_run}/approve', [PayrollRunController::class, 'approve'])->name('payroll-runs.approve');
     Route::post('payroll-runs/{payroll_run}/reject', [PayrollRunController::class, 'reject'])->name('payroll-runs.reject');
-    Route::apiResource('payroll-periods', PayrollPeriodController::class)->except(['destroy']);
-    Route::apiResource('payroll-runs', PayrollRunController::class)->only(['index', 'store', 'show']);
+    Route::resource('payroll-periods', PayrollPeriodController::class)->except(['destroy']);
+    Route::resource('payroll-runs', PayrollRunController::class)->only(['index', 'create', 'store', 'show']);
     Route::get('payroll-run-items/{payroll_run_item}/payslip', [PayrollRunItemController::class, 'payslip'])->name('payroll-run-items.payslip');
-    Route::apiResource('payroll-run-items', PayrollRunItemController::class)->only(['index', 'show']);
+    Route::resource('payroll-run-items', PayrollRunItemController::class)->only(['index', 'show']);
 
     Route::apiResource('accounts', AccountController::class);
     Route::post('crm-leads/{crm_lead}/convert', [CrmLeadController::class, 'convert'])->name('crm-leads.convert');
